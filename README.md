@@ -50,6 +50,7 @@ cars <- structure(
 )
 get_stats <- function(x) {
   list(min(x), max(x), mean(x))
+}
 .destructure_tmp_ <- get_stats(cars$speed)
 lo <- .destructure_tmp_[[1]]
 hi <- .destructure_tmp_[[2]]
