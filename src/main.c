@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "include.h"
 #include "depends.h"
@@ -14,7 +15,7 @@
 #include "log.h"
 #include "r.h"
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 
 static int build(BuildContext *ctx)
 {
@@ -23,7 +24,7 @@ static int build(BuildContext *ctx)
 
   if (ctx->must_clean) {
     printf("%s Cleaning: %s and testthat/\n", LOG_INFO, ctx->output);
-    walk(ctx->output, ctx->output, clean, NULL, ctx->plugins);
+    walk(ctx->output, clean);
   }
 
   RFile *files = NULL;
@@ -58,10 +59,28 @@ static int build(BuildContext *ctx)
     .append = ctx->append,
     .sourcemap = ctx->sourcemap,
     .deadcode = ctx->deadcode,
-    .registry = &ctx->registry
+    .registry = &ctx->registry,
+    .dry_run = ctx->dry_run
   };
 
   int result = two_pass(&args);
+
+  if(ctx->diff) {
+    printf("%s Running diff\n", LOG_INFO);
+
+    RFile *current = files;
+    while(current != NULL) {
+      if(!current->dst) {
+        current = current->next;
+        continue;
+      }
+      char *cmd = malloc(strlen(current->src) + strlen(current->dst) + strlen("diff") + 3);
+      sprintf(cmd, "diff %s %s", current->src, current->dst);
+      system(cmd);
+      free(cmd);
+      current = current->next;
+    }
+  }
 
   free_rfile(files);
   free_array(defines);
@@ -110,6 +129,8 @@ int main(int argc, char *argv[])
     printf("  -watch                  Watch input directory and rebuild on changes\n");
     printf("  -deadcode               Enable dead variable/function detection\n");
     printf("  -sourcemap              Enable source map generation\n");
+    printf("  -dry-run                Build to temporary directory without modifying output\n");
+    printf("  -diff                   Show differences between input and output (requires -dry-run)\n");
     printf("\n");
 
     printf("Preprocessing:\n");
@@ -183,16 +204,32 @@ int main(int argc, char *argv[])
   if (output == NULL && cfg != NULL && cfg->output != NULL) {
     output = strdup(cfg->output);
   }
+
+  int dry_run = has_arg(argc, argv, "-dry-run");
+  if(dry_run) {
+    char *template = strdup("/tmp/dryrun-XXXXXX");
+    free(output);
+    output = mkdtemp(template);
+    if(output == NULL) {
+      printf("%s Failed to create temporary directory\n", LOG_ERROR);
+      free_config(cfg);
+      free(input);
+      return 1;
+    }
+  }
+  
   if (output == NULL) {
     output = strdup("R/");
     printf("%s No -output, defaulting to R\n", LOG_WARNING);
   }
+
   if (output == NULL) {
     printf("%s Failed to allocate memory\n", LOG_ERROR);
     free_config(cfg);
     free(input);
     return 1;
   }
+
   if (!exists(output)) {
     printf("%s Output directory does not exist\n", LOG_ERROR);
     free_config(cfg);
@@ -200,6 +237,7 @@ int main(int argc, char *argv[])
     free(output);
     return 1;
   }
+
   output = ensure_dir(output);
 
   Value *imports = get_arg_values(argc, argv, "-import");
@@ -291,7 +329,6 @@ int main(int argc, char *argv[])
     watch_mode = cfg->watch;
   }
 
-  // Parse CLI -reader arguments: -reader type function
   for (int i = 1; i < argc - 2; i++) {
     if (strcmp(argv[i], "-reader") == 0) {
       push_registry(&registry, argv[i + 1], argv[i + 2]);
@@ -300,6 +337,12 @@ int main(int argc, char *argv[])
   }
 
   free_config(cfg);
+
+  int diff = has_arg(argc, argv, "-diff");
+  if(diff && !dry_run) {
+    printf("%s -diff requires -dry-run\n", LOG_ERROR);
+    return 1;
+  }
 
   BuildContext ctx = {
     .argc = argc,
@@ -316,7 +359,9 @@ int main(int argc, char *argv[])
     .watch = watch_mode,
     .plugins = plugins,
     .registry = registry,
-    .depends = depends
+    .depends = depends,
+    .diff = diff,
+    .dry_run = dry_run
   };
 
   int result = 0;
@@ -352,6 +397,11 @@ int main(int argc, char *argv[])
   free_value(imports);
   free_value(depends);
   free(input);
+
+  if(has_arg(argc, argv, "-dry-run")) {
+    walk(output, clean);
+    rmdir(output);
+  }
   free(output);
 
   Rf_endEmbeddedR(0);

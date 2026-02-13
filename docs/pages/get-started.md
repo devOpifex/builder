@@ -128,4 +128,14 @@ devtools::document()
 devtools::check()
 ```
 
+## Previewing Changes
+
+Use `-dry-run` to build to a temporary directory without modifying your output. Add `-diff` to see what changes builder will make:
+
+```bash
+builder -dry-run -diff
+```
+
+See [Dry Run Mode](/dry-run) for details.
+
 See the full documentation for more features.

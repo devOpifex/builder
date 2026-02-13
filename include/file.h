@@ -16,11 +16,12 @@ struct RFile_t {
 
 typedef struct RFile_t RFile;
 
-typedef int(*Callback)(char *src, char *dst, Define **defs, Plugins *plugins);
+typedef int(*Callback)(char *src);
 
 struct Arguments_t {
   int deadcode;
   int sourcemap;
+  int dry_run;
   char *src;
   char *dst;
   char *append;
@@ -36,8 +37,8 @@ typedef struct Arguments_t Arguments;
 int exists(char *path);
 char *strip_last_slash(char *path);
 char *ensure_dir(char *path);
-int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *plugins);
-int clean(char *src, char *dst, Define **defs, Plugins *plugins);
+int walk(char *src_dir, Callback func);
+int clean(char *src);
 char *remove_leading_spaces(char *line);
 int collect_files(RFile **files, char *src_dir, char *dst_dir);
 int resolve_imports(RFile **files, Value *cli_imports);

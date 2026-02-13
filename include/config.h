@@ -21,6 +21,8 @@ typedef struct {
   int must_clean;
   int sourcemap;
   int watch;
+  int dry_run;
+  int diff;
 } BuildContext;
 
 int has_config();

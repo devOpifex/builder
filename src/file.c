@@ -70,7 +70,7 @@ char *ensure_dir(char *path)
   return path;
 }
 
-int clean(char *src, char *dst, Define **defs, Plugins *plugins)
+int clean(char *src)
 {
   // Remove the output file
   int result = remove(src);
@@ -223,7 +223,7 @@ static char *make_dest_path(char *src, char *dst)
   snprintf(path, l, "%s%s", dst, replaced);
   free(replaced);
 
-  char *slash = strchr(path, '/');
+  char *slash = strrchr(path, '/');
   char *start = (slash != NULL) ? slash + 1 : path;
   char *hyphen = strchr(start, '-');
 
@@ -262,7 +262,7 @@ static char *append_buffer(char *buffer, char *line)
   return new_buffer;
 }
 
-int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *plugins)
+int walk(char *src_dir, Callback func)
 {
   DIR *source;
   struct dirent *entry;
@@ -283,11 +283,11 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
 
     // it's a directory, recurse
     if (entry->d_type == DT_DIR) {
-      walk(path, dst_dir, func, defs, plugins);
+      walk(path, func);
     } else {
       char *ext = strrchr(path, '.');
       if(strcmp(ext, ".R") != 0 && strcmp(ext, ".r") != 0) continue;
-      func(path, dst_dir, defs, plugins);
+      func(path);
     }
   }
   
@@ -700,7 +700,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap, Registry **registry)
+static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap, Registry **registry, int dry_run)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -890,7 +890,9 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     fclose(dst_file);
     free(buffer);
 
-    write_tests(tc.tests, current->src);
+    if(!dry_run) {
+      write_tests(tc.tests, current->src);
+    }
 
     free(line_number_str);
 
@@ -907,7 +909,16 @@ int two_pass(Arguments *args)
     return 1;
   }
 
-  int second_pass_result = second_pass(args->files, args->defs, args->plugins, args->prepend, args->append, args->sourcemap, args->registry);
+  int second_pass_result = second_pass(
+    args->files,
+    args->defs,
+    args->plugins,
+    args->prepend,
+    args->append,
+    args->sourcemap,
+    args->registry,
+    args->dry_run
+  );
   if(second_pass_result) {
     return 1;
   }

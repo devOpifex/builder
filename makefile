@@ -78,6 +78,9 @@ uninstall:
 dev: build
 	$(CMD)
 
+dryrun: build
+	$(CMD) -dry-run -diff
+
 debug: build-debug
 	valgrind --leak-check=full $(CMD_DEBUG)
 
