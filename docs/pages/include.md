@@ -43,6 +43,7 @@ Builder includes readers for common file types:
 | `xlsx` | `readxl::read_excel` | readxl |
 | `parquet` | `arrow::read_parquet` | arrow |
 | `fst` | `fst::read_fst` | fst |
+| `base64` | `base64enc::base64encode` | base64enc |
 
 ## Basic Examples
 
@@ -77,6 +78,22 @@ lookup_data <- structure(list(id = 1:3, name = c("a", "b", "c")), class = "data.
 ```r
 #> include:json config/settings.json app_config
 ```
+
+### Embedding Binary Files as Base64
+
+Embed images or other binary files as base64-encoded strings:
+
+```r
+#> include:base64 assets/logo.png logo_data
+```
+
+**Expands to:**
+
+```r
+logo_data <- "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ..."
+```
+
+This is useful for embedding small assets directly in your R code without external file dependencies at runtime.
 
 ## Custom Readers
 

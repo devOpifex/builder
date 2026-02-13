@@ -222,6 +222,13 @@
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">&quot;builder&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;-input&quot;</span>, <span class="st">&quot;srcr&quot;</span>, <span class="st">&quot;-output&quot;</span>, <span class="st">&quot;R&quot;</span>))</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">document</span>()</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check</span>()</span></code></pre></div>
+      <h2 id="previewing-changes">Previewing Changes</h2>
+      <p>Use <code>-dry-run</code> to build to a temporary directory
+      without modifying your output. Add <code>-diff</code> to see what
+      changes builder will make:</p>
+      <div class="sourceCode" id="cb12"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
+      <p>See <a href="/dry-run">Dry Run Mode</a> for details.</p>
       <p>See the full documentation for more features.</p>
     </main>
   </body>

@@ -232,6 +232,11 @@
       <td><code>fst::read_fst</code></td>
       <td>fst</td>
       </tr>
+      <tr class="odd">
+      <td><code>base64</code></td>
+      <td><code>base64enc::base64encode</code></td>
+      <td>base64enc</td>
+      </tr>
       </tbody>
       </table>
       <h2 id="basic-examples">Basic Examples</h2>
@@ -253,17 +258,28 @@
       Configuration</h3>
       <div class="sourceCode" id="cb6"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; include:json config/settings.json app_config</span></span></code></pre></div>
+      <h3 id="embedding-binary-files-as-base64">Embedding Binary Files
+      as Base64</h3>
+      <p>Embed images or other binary files as base64-encoded
+      strings:</p>
+      <div class="sourceCode" id="cb7"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; include:base64 assets/logo.png logo_data</span></span></code></pre></div>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>logo_data <span class="ot">&lt;-</span> <span class="st">&quot;iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ...&quot;</span></span></code></pre></div>
+      <p>This is useful for embedding small assets directly in your R
+      code without external file dependencies at runtime.</p>
       <h2 id="custom-readers">Custom Readers</h2>
       <p>You can define custom readers for new file types or override
       the defaults using the <code>-reader</code> CLI argument or
       <code>reader:</code> config option.</p>
       <h3 id="via-cli">Via CLI</h3>
-      <div class="sourceCode" id="cb7"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-reader</span> tsv <span class="st">&#39;\(x) read.delim(x, sep=&quot;\t&quot;, header=FALSE)&#39;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb9"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-reader</span> tsv <span class="st">&#39;\(x) read.delim(x, sep=&quot;\t&quot;, header=FALSE)&#39;</span></span></code></pre></div>
       <h3 id="via-config-file">Via Config File</h3>
-      <div class="sourceCode" id="cb8"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat \(x) mypackage::read_myformat(x)</span></span></code></pre></div>
+      <div class="sourceCode" id="cb10"><pre
+      class="sourceCode ini"><code class="sourceCode ini"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat \(x) mypackage::read_myformat(x)</span></span></code></pre></div>
       <h3 id="custom-reader-format">Custom Reader Format</h3>
       <p>The reader function must accept a single argument (the file
       path). You can use:</p>
@@ -298,21 +314,21 @@
       <code>include</code> hook. This allows you to intercept and
       transform <code>#&gt; include</code> directives with custom
       logic.</p>
-      <div class="sourceCode" id="cb10"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file) {</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># type = file type (e.g., &quot;csv&quot;)</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="co"># path = file path to include</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># object = variable name for result</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># file = source file being processed</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NULL to use default processing</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Or return a replacement line</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+      <div class="sourceCode" id="cb12"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># type = file type (e.g., &quot;csv&quot;)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="co"># path = file path to include</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># object = variable name for result</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># file = source file being processed</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NULL to use default processing</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Or return a replacement line</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
       <p>See <a href="/plugins">Plugins</a> for more details.</p>
       <h2 id="important-notes">Important Notes</h2>
       <ul>

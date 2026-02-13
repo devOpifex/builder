@@ -60,6 +60,7 @@ Registry *initialize_registry()
   push_registry(&registry, "xlsx", "readxl::read_excel");
   push_registry(&registry, "parquet", "arrow::read_parquet");
   push_registry(&registry, "fst", "fst::read_fst");
+  push_registry(&registry, "base64", "base64enc::base64encode");
   return registry;
 }
 
