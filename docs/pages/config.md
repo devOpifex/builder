@@ -37,6 +37,7 @@ builder
 | `import` | list | - | Space-separated imports |
 | `depends` | list | - | Space-separated dev dependencies to check |
 | `reader` | string | - | Define custom file type reader (format: `type function`) |
+| `strip` | bool | `false` | Strip comments from output (preserves `#'` special comments) |
 
 ## Full Example
 
@@ -54,6 +55,7 @@ deadcode: true
 sourcemap: false
 clean: true
 watch: false
+strip: false
 
 # Plugins and imports (space-separated)
 plugin: mypkg::minify mypkg::lint
