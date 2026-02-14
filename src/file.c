@@ -585,11 +585,11 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
 // first pass:
 // - capture defines
 // - Run preflight
-static int first_pass(RFile *files, Define **defs, Plugins *plugins)
+static int first_pass(Arguments *args)
 {
-  RFile *current = files;
+  RFile *current = args->files;
   while(current != NULL) {
-    overwrite(defs, "..FILE..", current->src);
+    overwrite(args->defs, "..FILE..", current->src);
 
     // state
     char *buffer = NULL;
@@ -616,7 +616,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
-      overwrite(defs, "..LINE..", line_number_str);
+      overwrite(args->defs, "..LINE..", line_number_str);
 
       if(enter_macro(line)) {
         in_macro = 1;
@@ -627,7 +627,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 
       if(strncmp(line, "#> endmacro", 11) == 0) {
         in_macro = 0;
-        push_macro(defs, buffer, current->ns);
+        push_macro(args->defs, buffer, current->ns);
         buffer = NULL;
         free(line);
         continue;
@@ -639,7 +639,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
         continue;
       }
       
-      capture_define(defs, line, current->ns);
+      capture_define(args->defs, line, current->ns);
 
       if(strncmp(line, "#> import ", 10) == 0) {
         free(line);
@@ -687,7 +687,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
     free(line_number_str);
     free(buffer);  // Free buffer if preflight wasn't properly closed
 
-    char *output = plugins_call(plugins, "preprocess", current->content, current->src);
+    char *output = plugins_call(args->plugins, "preprocess", current->content, current->src);
     if(output != NULL) {
       free(current->content);
       current->content = strdup(output);
@@ -700,26 +700,16 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-static int second_pass(
-  RFile *files,
-  Define **defs,
-  Plugins *plugins,
-  char *prepend,
-  char *append,
-  int sourcemap,
-  Registry **registry,
-  int dry_run,
-  int strip
-)
+static int second_pass(Arguments *args)
 {
-  RFile *current = files;
+  RFile *current = args->files;
   while(current != NULL) {
     if(current->dst == NULL) {
       current = current->next;
       continue;
     }
     printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
-    overwrite(defs, "..FILE..", current->src);
+    overwrite(args->defs, "..FILE..", current->src);
 
     // state
     char *buffer = NULL;
@@ -732,7 +722,7 @@ static int second_pass(
     int in_for = 0;
     int err = 0;
 
-    // Test collector
+    // test collector
     TestCollector tc = {NULL, NULL, NULL, 0};
 
     // line
@@ -749,7 +739,7 @@ static int second_pass(
 
       char *line = NULL;
 
-      if(!sourcemap) {
+      if(!args->sourcemap) {
         line = malloc(len + 1);
         strncpy(line, pos, len);
         line[len] = '\0';
@@ -809,15 +799,15 @@ static int second_pass(
 
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
-      overwrite(defs, "..LINE..", line_number_str);
-      increment_counter(defs, line);
+      overwrite(args->defs, "..LINE..", line_number_str);
+      increment_counter(args->defs, line);
 
       char *fstring_result = fstring_replace(line, 0);
-      char *included = include_replace(fstring_result, plugins, current->src, registry);
+      char *included = include_replace(fstring_result, args->plugins, current->src, args->registry);
       if(fstring_result != line) free(line);
       if(included != fstring_result) free(fstring_result);
 
-      char *replaced = define_replace(defs, included);
+      char *replaced = define_replace(args->defs, included);
       free(included);
 
       char *deconstructed = deconstruct_replace(replaced);
@@ -835,7 +825,7 @@ static int second_pass(
       // skip directives
       char *directive_check = remove_leading_spaces(cnst);
       if(strncmp(directive_check, "#> ", 3) == 0) {
-        should_write = should_write_line(should_write, &branch_taken, cnst, defs);
+        should_write = should_write_line(should_write, &branch_taken, cnst, args->defs);
         free(cnst);
         continue;
       }
@@ -846,7 +836,7 @@ static int second_pass(
         continue;
       }
 
-      if(strip && strncmp(directive_check, "#", 1) == 0 && strncmp(directive_check, "#'", 2) != 0){
+      if(args->strip && strncmp(directive_check, "#", 1) == 0 && strncmp(directive_check, "#'", 2) != 0){
         free(cnst);
         continue;
       }
@@ -867,11 +857,11 @@ static int second_pass(
       printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
       return 1;
     }
-    char *output = plugins_call(plugins, "postprocess", buffer, current->src);
-    if(prepend != NULL) {
-      FILE *prepend_file = fopen(prepend, "r");
+    char *output = plugins_call(args->plugins, "postprocess", buffer, current->src);
+    if(args->prepend != NULL) {
+      FILE *prepend_file = fopen(args->prepend, "r");
       if(prepend_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, prepend);
+        printf("%s Failed to open %s\n", LOG_ERROR, args->prepend);
         return 1;
       }
       char prepend_buffer[1024];
@@ -888,10 +878,10 @@ static int second_pass(
       fputs(buffer, dst_file);
     }
 
-    if(append != NULL) {
-      FILE *append_file = fopen(append, "r");
+    if(args->append != NULL) {
+      FILE *append_file = fopen(args->append, "r");
       if(append_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, append);
+        printf("%s Failed to open %s\n", LOG_ERROR, args->append);
         return 1;
       }
       char append_buffer[1024];
@@ -904,7 +894,7 @@ static int second_pass(
     fclose(dst_file);
     free(buffer);
 
-    if(!dry_run) {
+    if(!args->dry_run) {
       write_tests(tc.tests, current->src);
     }
 
@@ -918,22 +908,12 @@ static int second_pass(
 
 int two_pass(Arguments *args)
 {
-  int first_pass_result = first_pass(args->files, args->defs, args->plugins);
+  int first_pass_result = first_pass(args);
   if(first_pass_result) {
     return 1;
   }
 
-  int second_pass_result = second_pass(
-    args->files,
-    args->defs,
-    args->plugins,
-    args->prepend,
-    args->append,
-    args->sourcemap,
-    args->registry,
-    args->dry_run,
-    args->strip
-  );
+  int second_pass_result = second_pass(args);
 
   if(second_pass_result) {
     return 1;
