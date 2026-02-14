@@ -1,7 +1,15 @@
+pre,
+code {
+  background-color: #080808;
+}
+
 pre {
   overflow: auto;
   padding: 0.5rem !important;
-  border: 1px solid #504945;
+}
+
+code {
+  padding: 0.1rem 0.3rem;
 }
 
 th {
@@ -10,7 +18,7 @@ th {
 
 table {
   width: 100%;
-  border-color: #504945;
+  border-color: #444444;
 }
 
 * {
@@ -22,8 +30,8 @@ body {
   font-family: "Open Sans", sans-serif;
   line-height: 1.75em;
   font-size: 16px;
-  background-color: #282828;
-  color: #ebdbb2;
+  background-color: #191919;
+  color: #deeeed;
 }
 
 .simple-container {
@@ -47,7 +55,7 @@ body {
 }
 
 .simple-ext-info {
-  border-top: 1px solid #504945;
+  border-top: 1px solid #444444;
 }
 
 p {
@@ -73,18 +81,18 @@ h3 {
 
 hr {
   height: 1px;
-  background-color: #504945;
+  background-color: #444444;
   border: none;
   width: 100%;
   margin: 0px;
 }
 
 a[href] {
-  color: #83a598;
+  color: #7788aa;
 }
 
 a[href]:hover {
-  color: #8ec07c;
+  color: #789978;
 }
 
 img {
@@ -100,7 +108,7 @@ aside,
 [id*="sidebar"] {
   max-width: 90%;
   margin: 0 auto;
-  border: 1px solid #504945;
+  border: 1px solid #444444;
   padding: 5px 15px;
 }
 
@@ -133,11 +141,11 @@ main {
 
 .dropdown summary {
   cursor: pointer;
-  color: #83a598;
+  color: #7788aa;
 }
 
 .dropdown summary:hover {
-  color: #8ec07c;
+  color: #789978;
 }
 
 .dropdown summary::marker {
@@ -159,7 +167,7 @@ main {
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #1d2021;
+  background: #080808;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 

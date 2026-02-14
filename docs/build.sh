@@ -6,7 +6,7 @@ for md in docs/pages/*.md; do
   name=$(basename "$md" .md)
   pandoc "$md" \
     --template=docs/template.html \
-    --highlight-style=docs/gruvbox.theme \
+    --highlight-style=docs/lackluster.theme \
     --css=style.css \
     -o "docs/site/${name}.html"
 done
