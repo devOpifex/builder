@@ -42,6 +42,7 @@ CMD = ./bin/$(NAME) \
 	-deadcode \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
+	-strip \
 	-sourcemap
 
 CMD_DEBUG = ./bin/$(NAME)-debug \
@@ -50,6 +51,7 @@ CMD_DEBUG = ./bin/$(NAME)-debug \
 	-deadcode \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
+	-strip \
 	-sourcemap
 
 .PHONY: all build build-debug clean install uninstall dev debug site

@@ -23,6 +23,7 @@ typedef struct {
   int watch;
   int dry_run;
   int diff;
+  int strip;
 } BuildContext;
 
 int has_config();

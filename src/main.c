@@ -60,7 +60,8 @@ static int build(BuildContext *ctx)
     .sourcemap = ctx->sourcemap,
     .deadcode = ctx->deadcode,
     .registry = &ctx->registry,
-    .dry_run = ctx->dry_run
+    .dry_run = ctx->dry_run,
+    .strip = ctx->strip
   };
 
   int result = two_pass(&args);
@@ -114,7 +115,6 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-
   if (has_arg(argc, argv, "-help")) {
     printf("builder - R package preprocessor with macro support\n\n");
     printf("Usage: builder [OPTIONS]\n\n");
@@ -131,6 +131,7 @@ int main(int argc, char *argv[])
     printf("  -sourcemap              Enable source map generation\n");
     printf("  -dry-run                Build to temporary directory without modifying output\n");
     printf("  -diff                   Show differences between input and output (requires -dry-run)\n");
+    printf("  -strip                  Strip comments, preserves special comments: #'\n");
     printf("\n");
 
     printf("Preprocessing:\n");
@@ -361,7 +362,8 @@ int main(int argc, char *argv[])
     .registry = registry,
     .depends = depends,
     .diff = diff,
-    .dry_run = dry_run
+    .dry_run = dry_run,
+    .strip = has_arg(argc, argv, "-strip")
   };
 
   int result = 0;

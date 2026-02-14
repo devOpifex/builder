@@ -700,7 +700,17 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap, Registry **registry, int dry_run)
+static int second_pass(
+  RFile *files,
+  Define **defs,
+  Plugins *plugins,
+  char *prepend,
+  char *append,
+  int sourcemap,
+  Registry **registry,
+  int dry_run,
+  int strip
+)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -822,8 +832,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         continue;
       }
 
-      // Check for preprocessor directives
-      // Lines starting with #> are directives - always skip
+      // skip directives
       char *directive_check = remove_leading_spaces(cnst);
       if(strncmp(directive_check, "#> ", 3) == 0) {
         should_write = should_write_line(should_write, &branch_taken, cnst, defs);
@@ -833,6 +842,11 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
       // For content lines (including # comments), check if we should write
       if(!should_write) {
+        free(cnst);
+        continue;
+      }
+
+      if(strip && strncmp(directive_check, "#", 1) == 0 && strncmp(directive_check, "#'", 2) != 0){
         free(cnst);
         continue;
       }
@@ -917,8 +931,10 @@ int two_pass(Arguments *args)
     args->append,
     args->sourcemap,
     args->registry,
-    args->dry_run
+    args->dry_run,
+    args->strip
   );
+
   if(second_pass_result) {
     return 1;
   }
