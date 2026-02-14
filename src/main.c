@@ -75,8 +75,8 @@ static int build(BuildContext *ctx)
         current = current->next;
         continue;
       }
-      char *cmd = malloc(strlen(current->src) + strlen(current->dst) + strlen("diff") + 3);
-      sprintf(cmd, "diff %s %s", current->src, current->dst);
+      char *cmd = malloc(strlen(current->src) + strlen(current->dst) + strlen("diff --color") + 3);
+      sprintf(cmd, "diff --color %s %s", current->src, current->dst);
       system(cmd);
       free(cmd);
       current = current->next;
