@@ -32,15 +32,7 @@ char *replace_for(char *buffer, char *line)
   int start;
   int end;
 
-  int found = 0;
-
-  found = sscanf(for_statement, "#> for %63s in %d:%d", token, &start, &end);
-
-  if(found != 3) {
-    found = sscanf(for_statement, "#> for %63s in %d", token, &start);
-  }
-
-  if(found != 3) {
+  if(sscanf(for_statement, "#> for %63s in %d:%d", token, &start, &end) != 3) {
     printf("%s Error: invalid #> for statement\n", LOG_ERROR);
     return "";
   }
