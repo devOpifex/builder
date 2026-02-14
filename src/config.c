@@ -159,6 +159,11 @@ BuildContext *get_config(Registry **registry)
       continue;
     }
 
+    if (strstr(line, "strip:") != NULL) {
+      ctx->strip = get_bool(line);
+      continue;
+    }
+
     if (strstr(line, "depends:") != NULL) {
       Value *depends = parse_values(line);
       if (ctx->depends == NULL) {
