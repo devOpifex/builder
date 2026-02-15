@@ -150,15 +150,16 @@
       temporary directory</li>
       <li>Tests are not written in dry-run mode</li>
       <li>If <code>-diff</code> is specified, shows differences between
-      source and processed files</li>
+      current output and newly processed files</li>
       <li>Cleans up the temporary directory automatically when
       finished</li>
       </ol>
       <h2 id="the--diff-flag">The -diff Flag</h2>
       <p>The <code>-diff</code> flag is a companion to
       <code>-dry-run</code> that shows line-by-line differences between
-      your source files and the processed output. This lets you see
-      exactly what transformations builder will apply.</p>
+      your current output files and the newly processed output. This
+      lets you see exactly what would change in your output
+      directory.</p>
       <div class="sourceCode" id="cb2"><pre
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
       <p>The <code>-diff</code> flag requires <code>-dry-run</code> to
@@ -170,13 +171,16 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Cleaning: /tmp/dryrun-abc123/ and testthat/</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Copying srcr/main.R to /tmp/dryrun-abc123/main.R</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Running diff</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">3c3</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> cat<span class="kw">(</span><span class="st">&quot;Version:&quot;</span><span class="ex">,</span> VERSION<span class="kw">)</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> cat<span class="kw">(</span><span class="st">&quot;Version:&quot;</span><span class="ex">,</span> 2<span class="kw">)</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">[SUCCESS]</span> All built!</span></code></pre></div>
-      <p>In this example, the diff shows that <code>VERSION</code> was
-      replaced with its defined value <code>2</code>.</p>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span> R/main.R</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">+++</span> /tmp/dryrun-abc123/main.R</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">3c3</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> cat<span class="kw">(</span><span class="st">&quot;Version:&quot;</span><span class="ex">,</span> 2<span class="kw">)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> cat<span class="kw">(</span><span class="st">&quot;Version:&quot;</span><span class="ex">,</span> 3<span class="kw">)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[SUCCESS]</span> All built!</span></code></pre></div>
+      <p>In this example, the diff shows that the <code>VERSION</code>
+      value would change from <code>2</code> to <code>3</code> in your
+      output.</p>
       <h2 id="options">Options</h2>
       <table>
       <colgroup>
@@ -196,8 +200,8 @@
       </tr>
       <tr class="even">
       <td><code>-diff</code></td>
-      <td>Show differences between source and processed output (requires
-      <code>-dry-run</code>)</td>
+      <td>Show differences between current output and newly processed
+      output (requires <code>-dry-run</code>)</td>
       </tr>
       </tbody>
       </table>

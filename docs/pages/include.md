@@ -29,21 +29,21 @@ The directive consists of three space-separated parts:
 
 Builder includes readers for common file types:
 
-| Type | Function | Package |
-|------|----------|---------|
-| `txt` | `readLines` | base |
-| `sql` | `readLines` | base |
-| `csv` | `read.csv` | base |
-| `tsv` | `read.delim` | base |
-| `rds` | `readRDS` | base |
-| `json` | `jsonlite::fromJSON` | jsonlite |
-| `yml` | `yaml::read_yaml` | yaml |
-| `yaml` | `yaml::read_yaml` | yaml |
-| `xml` | `xml2::read_xml` | xml2 |
-| `xlsx` | `readxl::read_excel` | readxl |
-| `parquet` | `arrow::read_parquet` | arrow |
-| `fst` | `fst::read_fst` | fst |
-| `base64` | `base64enc::base64encode` | base64enc |
+| Type | Function |
+|------|----------|
+| `txt` | `readLines` |
+| `sql` | `readLines` |
+| `csv` | `read.csv` |
+| `tsv` | `read.delim` |
+| `rds` | `readRDS` |
+| `json` | `jsonlite::fromJSON` |
+| `yml` | `yaml::read_yaml` |
+| `yaml` | `yaml::read_yaml` |
+| `xml` | `xml2::read_xml` |
+| `xlsx` | `readxl::read_excel` |
+| `parquet` | `arrow::read_parquet` |
+| `fst` | `fst::read_fst` |
+| `base64` | `base64enc::base64encode` |
 
 ## Basic Examples
 
