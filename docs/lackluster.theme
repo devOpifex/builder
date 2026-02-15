@@ -21,30 +21,30 @@
             "strike-through" : false
         },
         "Keyword" : {
-            "text-color" : "#deeeed",
-            "selected-text-color" : "#deeeed",
+            "text-color" : "#666666",
+            "selected-text-color" : "#666666",
             "bold" : true
         },
         "Function" : {
-            "text-color" : "#708090",
-            "selected-text-color" : "#708090"
+            "text-color" : "#7a7a7a",
+            "selected-text-color" : "#7a7a7a"
         },
         "Variable" : {
-            "text-color" : "#7788AA",
-            "selected-text-color" : "#7788AA"
+            "text-color" : "#cccccc",
+            "selected-text-color" : "#cccccc"
         },
         "ControlFlow" : {
-            "text-color" : "#D70000",
-            "selected-text-color" : "#D70000",
+            "text-color" : "#666666",
+            "selected-text-color" : "#666666",
             "bold" : true
         },
         "Operator" : {
-            "text-color" : "#deeeed",
-            "selected-text-color" : "#deeeed"
+            "text-color" : "#7a7a7a",
+            "selected-text-color" : "#7a7a7a"
         },
         "BuiltIn" : {
-            "text-color" : "#ffaa88",
-            "selected-text-color" : "#ffaa88"
+            "text-color" : "#555555",
+            "selected-text-color" : "#555555"
         },
         "Extension" : {
             "text-color" : "#708090",
@@ -60,20 +60,20 @@
             "selected-text-color" : "#abab77"
         },
         "Char" : {
-            "text-color" : "#789978",
-            "selected-text-color" : "#789978"
+            "text-color" : "#708090",
+            "selected-text-color" : "#708090"
         },
         "SpecialChar" : {
             "text-color" : "#789978",
             "selected-text-color" : "#789978"
         },
         "String" : {
-            "text-color" : "#789978",
-            "selected-text-color" : "#789978"
+            "text-color" : "#708090",
+            "selected-text-color" : "#708090"
         },
         "VerbatimString" : {
-            "text-color" : "#789978",
-            "selected-text-color" : "#789978"
+            "text-color" : "#708090",
+            "selected-text-color" : "#708090"
         },
         "SpecialString" : {
             "text-color" : "#789978",
@@ -84,29 +84,29 @@
             "selected-text-color" : "#708090"
         },
         "DataType" : {
-            "text-color" : "#7788AA",
-            "selected-text-color" : "#7788AA"
+            "text-color" : "#aaaaaa",
+            "selected-text-color" : "#aaaaaa"
         },
         "DecVal" : {
-            "text-color" : "#ffaa88",
-            "selected-text-color" : "#ffaa88"
+            "text-color" : "#aaaaaa",
+            "selected-text-color" : "#aaaaaa"
         },
         "BaseN" : {
-            "text-color" : "#ffaa88",
-            "selected-text-color" : "#ffaa88"
+            "text-color" : "#aaaaaa",
+            "selected-text-color" : "#aaaaaa"
         },
         "Float" : {
-            "text-color" : "#ffaa88",
-            "selected-text-color" : "#ffaa88"
+            "text-color" : "#aaaaaa",
+            "selected-text-color" : "#aaaaaa"
         },
         "Constant" : {
-            "text-color" : "#abab77",
-            "selected-text-color" : "#abab77",
+            "text-color" : "#aaaaaa",
+            "selected-text-color" : "#aaaaaa",
             "bold" : true
         },
         "Comment" : {
-            "text-color" : "#7a7a7a",
-            "selected-text-color" : "#aaaaaa"
+            "text-color" : "#3A3A3A",
+            "selected-text-color" : "#555555"
         },
         "Documentation" : {
             "text-color" : "#789978",
@@ -117,12 +117,12 @@
             "selected-text-color" : "#789978"
         },
         "CommentVar" : {
-            "text-color" : "#7a7a7a",
-            "selected-text-color" : "#aaaaaa"
+            "text-color" : "#3A3A3A",
+            "selected-text-color" : "#555555"
         },
         "RegionMarker" : {
-            "text-color" : "#7a7a7a",
-            "selected-text-color" : "#aaaaaa",
+            "text-color" : "#3A3A3A",
+            "selected-text-color" : "#555555",
             "background-color" : "#080808"
         },
         "Information" : {
