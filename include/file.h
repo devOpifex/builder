@@ -23,8 +23,8 @@ struct Arguments_t {
   int sourcemap;
   int dry_run;
   int strip;
-  char *src;
-  char *dst;
+  char *input;
+  char *output;
   char *append;
   char *prepend;
   RFile *files;

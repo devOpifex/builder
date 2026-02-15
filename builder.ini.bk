@@ -1,5 +1,0 @@
-input: srcr
-output: R
-sourcemap: true
-
-reader: custom \(x) readLines(x)

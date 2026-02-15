@@ -145,7 +145,7 @@ char *plugins_call(Plugins *head, char *fn, char *str, char *file)
     free(caller);
 
     if(isNull(called)) {
-      UNPROTECT(2);
+      UNPROTECT(1);
       current = current->next;
       continue;
     }

@@ -61,7 +61,9 @@ static int build(BuildContext *ctx)
     .deadcode = ctx->deadcode,
     .registry = &ctx->registry,
     .dry_run = ctx->dry_run,
-    .strip = ctx->strip
+    .strip = ctx->strip,
+    .input = ctx->input,
+    .output = ctx->output
   };
 
   int result = two_pass(&args);

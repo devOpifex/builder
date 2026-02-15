@@ -286,6 +286,7 @@ int walk(char *src_dir, Callback func)
       walk(path, func);
     } else {
       char *ext = strrchr(path, '.');
+      if(ext == NULL) continue;
       if(strcmp(ext, ".R") != 0 && strcmp(ext, ".r") != 0) continue;
       func(path);
     }
@@ -565,6 +566,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
       collect_files(files, path, dst_dir);
     } else {
       char *ext = strrchr(path, '.');
+      if(ext == NULL) continue;
       if(strcmp(ext, ".R") != 0 && strcmp(ext, ".r") != 0) continue;
       char buffer[20000];
       FILE *file = fopen(path, "r");
@@ -722,6 +724,19 @@ static int second_pass(Arguments *args)
     int in_for = 0;
     int err = 0;
 
+    if(args->prepend != NULL) {
+      FILE *prepend_file = fopen(args->prepend, "r");
+      if(prepend_file == NULL) {
+        printf("%s Failed to open %s\n", LOG_ERROR, args->prepend);
+        return 1;
+      }
+      char prepend_buffer[1024];
+      while(fgets(prepend_buffer, sizeof(prepend_buffer), prepend_file) != NULL) {
+        buffer = append_buffer(buffer, prepend_buffer);
+      }
+      fclose(prepend_file);
+    }
+
     // test collector
     TestCollector tc = {NULL, NULL, NULL, 0};
 
@@ -857,26 +872,6 @@ static int second_pass(Arguments *args)
       printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
       return 1;
     }
-    char *output = plugins_call(args->plugins, "postprocess", buffer, current->src);
-    if(args->prepend != NULL) {
-      FILE *prepend_file = fopen(args->prepend, "r");
-      if(prepend_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, args->prepend);
-        return 1;
-      }
-      char prepend_buffer[1024];
-      while(fgets(prepend_buffer, sizeof(prepend_buffer), prepend_file) != NULL) {
-        fputs(prepend_buffer, dst_file);
-      }
-      fclose(prepend_file);
-    }
-
-    if(output != NULL) {
-      fputs(output, dst_file);
-      free(output);
-    } else if(buffer != NULL) {
-      fputs(buffer, dst_file);
-    }
 
     if(args->append != NULL) {
       FILE *append_file = fopen(args->append, "r");
@@ -884,15 +879,23 @@ static int second_pass(Arguments *args)
         printf("%s Failed to open %s\n", LOG_ERROR, args->append);
         return 1;
       }
-      char append_buffer[1024];
-      while(fgets(buffer, sizeof(append_buffer), append_file) != NULL) {
-        fputs(buffer, dst_file);
+      char app_buffer[1024];
+      while(fgets(app_buffer, sizeof(app_buffer), append_file) != NULL) {
+        buffer = append_buffer(buffer, app_buffer);
       }
       fclose(append_file);
     }
 
+    char *output = plugins_call(args->plugins, "postprocess", buffer, current->src);
+    if(output != NULL) {
+      fputs(output, dst_file);
+    } else if(buffer != NULL) {
+      fputs(buffer, dst_file);
+    }
+    
     fclose(dst_file);
     free(buffer);
+    free(output);
 
     if(!args->dry_run) {
       write_tests(tc.tests, current->src);

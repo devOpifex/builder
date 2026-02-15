@@ -43,6 +43,7 @@ CMD = ./bin/$(NAME) \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
 	-strip \
+	-prepend test \
 	-sourcemap
 
 CMD_DEBUG = ./bin/$(NAME)-debug \
@@ -52,6 +53,7 @@ CMD_DEBUG = ./bin/$(NAME)-debug \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
 	-strip \
+	-prepend test \
 	-sourcemap
 
 .PHONY: all build build-debug clean install uninstall dev debug site
