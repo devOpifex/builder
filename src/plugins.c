@@ -131,8 +131,21 @@ char *plugins_call(Plugins *head, char *fn, char *str, char *file)
       current = current->next;
       continue;
     }
+
     // that setup failed
     if(current->setup == 0) {
+      current = current->next;
+      continue;
+    }
+
+    // check that method exists
+    char *caller = malloc(strlen(fn) + strlen(current->name) + 4);
+    sprintf(caller, "`%s`$%s", current->name, fn);
+    SEXP called = PROTECT(evaluate(caller));
+    free(caller);
+
+    if(isNull(called)) {
+      UNPROTECT(2);
       current = current->next;
       continue;
     }
@@ -190,6 +203,18 @@ char *plugins_call_include(Plugins *head, char *type, char *path, char *object, 
   Plugins *current = head;
   while(current != NULL) {
     if(current->setup == 0) {
+      current = current->next;
+      continue;
+    }
+
+    // check that method exists
+    char *caller = malloc(strlen("include") + strlen(current->name) + 4);
+    sprintf(caller, "`%s`$include", current->name);
+    SEXP called = PROTECT(evaluate(caller));
+    free(caller);
+
+    if(isNull(called)) {
+      UNPROTECT(1);
       current = current->next;
       continue;
     }
