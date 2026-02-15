@@ -9,6 +9,7 @@ typedef struct {
   char **argv;
   char *input;
   char *output;
+  char *output_original;
   Value *imports;
   Value *plugins_str;
   Value *depends;

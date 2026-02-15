@@ -22,7 +22,7 @@ static int build(BuildContext *ctx)
   Define *defines = create_define();
   get_definitions(defines, ctx->argc, ctx->argv);
 
-  if (ctx->must_clean) {
+  if (!ctx->dry_run && ctx->must_clean) {
     printf("%s Cleaning: %s and testthat/\n", LOG_INFO, ctx->output);
     walk(ctx->output, clean);
   }
@@ -75,10 +75,17 @@ static int build(BuildContext *ctx)
         current = current->next;
         continue;
       }
-      char *cmd = malloc(strlen(current->src) + strlen(current->dst) + strlen("diff --color --side-by-side") + 3);
-      sprintf(cmd, "diff --color --side-by-side %s %s", current->src, current->dst);
+      // Get relative path by skipping ctx->output prefix
+      char *relative = current->dst + strlen(ctx->output);
+      // Construct original file path
+      char *original_file = malloc(strlen(ctx->output_original) + strlen(relative) + 2);
+      sprintf(original_file, "%s/%s", ctx->output_original, relative);
+      // Run diff between original and dry-run output
+      char *cmd = malloc(strlen(original_file) + strlen(current->dst) + strlen("diff --color --side-by-side") + 3);
+      sprintf(cmd, "diff --color --side-by-side %s %s", original_file, current->dst);
       system(cmd);
       free(cmd);
+      free(original_file);
       current = current->next;
     }
   }
@@ -206,8 +213,10 @@ int main(int argc, char *argv[])
     output = strdup(cfg->output);
   }
 
+  char *output_copy = NULL;
   int dry_run = has_arg(argc, argv, "-dry-run");
   if(dry_run) {
+    output_copy = strdup(output);
     char *template = strdup("/tmp/dryrun-XXXXXX");
     free(output);
     output = mkdtemp(template);
@@ -350,6 +359,7 @@ int main(int argc, char *argv[])
     .argv = argv,
     .input = input,
     .output = output,
+    .output_original = output_copy,
     .imports = imports,
     .plugins_str = NULL,
     .prepend = prepend,
