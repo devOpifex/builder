@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
     printf("  -deadcode               Enable dead variable/function detection\n");
     printf("  -sourcemap              Enable source map generation\n");
     printf("  -dry-run                Build to temporary directory without modifying output\n");
-    printf("  -diff                   Show differences between input and output (requires -dry-run)\n");
+    printf("  -diff                   Show differences between -dry-run output and existing output\n");
     printf("  -strip                  Strip comments, preserves special comments: #'\n");
     printf("\n");
 

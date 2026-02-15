@@ -20,12 +20,12 @@ When `-dry-run` is enabled:
 1. Builder creates a temporary directory (`/tmp/dryrun-XXXXXX`)
 2. Performs the full build process, writing output to the temporary directory
 3. Tests are not written in dry-run mode
-4. If `-diff` is specified, shows differences between source and processed files
+4. If `-diff` is specified, shows differences between current output and newly processed files
 5. Cleans up the temporary directory automatically when finished
 
 ## The -diff Flag
 
-The `-diff` flag is a companion to `-dry-run` that shows line-by-line differences between your source files and the processed output. This lets you see exactly what transformations builder will apply.
+The `-diff` flag is a companion to `-dry-run` that shows line-by-line differences between your current output files and the newly processed output. This lets you see exactly what would change in your output directory.
 
 ```bash
 builder -dry-run -diff
@@ -44,21 +44,23 @@ $ builder -dry-run -diff
 [INFO] Cleaning: /tmp/dryrun-abc123/ and testthat/
 [INFO] Copying srcr/main.R to /tmp/dryrun-abc123/main.R
 [INFO] Running diff
+--- R/main.R
++++ /tmp/dryrun-abc123/main.R
 3c3
-< cat("Version:", VERSION)
+< cat("Version:", 2)
 ---
-> cat("Version:", 2)
+> cat("Version:", 3)
 [SUCCESS] All built!
 ```
 
-In this example, the diff shows that `VERSION` was replaced with its defined value `2`.
+In this example, the diff shows that the `VERSION` value would change from `2` to `3` in your output.
 
 ## Options
 
 | Flag | Description |
 |------|-------------|
 | `-dry-run` | Build to temporary directory without modifying output |
-| `-diff` | Show differences between source and processed output (requires `-dry-run`) |
+| `-diff` | Show differences between current output and newly processed output (requires `-dry-run`) |
 
 ## Use Cases
 
