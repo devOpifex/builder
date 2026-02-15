@@ -231,12 +231,12 @@ char *plugins_call_include(Plugins *head, char *type, char *path, char *object, 
 
     if(result == NULL || errorOccurred) {
       printf("%s Failed to call plugin: %s => include()\n", LOG_ERROR, current->name);
-      UNPROTECT(2);
+      UNPROTECT(3);
       current = current->next;
       continue;
     }
 
-    UNPROTECT(2);
+    UNPROTECT(3);
 
     if(result == R_NilValue) {
       current = current->next;
