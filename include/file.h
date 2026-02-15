@@ -27,6 +27,7 @@ struct Arguments_t {
   char *output;
   char *append;
   char *prepend;
+  char *bundle;
   RFile *files;
   Define **defs;
   Plugins *plugins;

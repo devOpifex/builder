@@ -704,6 +704,9 @@ static int first_pass(Arguments *args)
 
 static int second_pass(Arguments *args)
 {
+  char *bundle_buffer = NULL;
+  int bundling = args->bundle != NULL;
+
   RFile *current = args->files;
   while(current != NULL) {
     if(current->dst == NULL) {
@@ -867,12 +870,6 @@ static int second_pass(Arguments *args)
       free(cnst);
     }
 
-    FILE *dst_file = fopen(current->dst, "w");
-    if(dst_file == NULL) {
-      printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
-      return 1;
-    }
-
     if(args->append != NULL) {
       FILE *append_file = fopen(args->append, "r");
       if(append_file == NULL) {
@@ -887,13 +884,27 @@ static int second_pass(Arguments *args)
     }
 
     char *output = plugins_call(args->plugins, "postprocess", buffer, current->src);
-    if(output != NULL) {
-      fputs(output, dst_file);
-    } else if(buffer != NULL) {
-      fputs(buffer, dst_file);
+
+    if(bundling) {
+      if(output != NULL) {
+        bundle_buffer = append_buffer(bundle_buffer, output);
+      } else if(buffer != NULL) {
+        bundle_buffer = append_buffer(bundle_buffer, buffer);
+      }
+    } else {
+      FILE *dst_file = fopen(current->dst, "w");
+      if(dst_file == NULL) {
+        printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
+        return 1;
+      }
+      if(output != NULL) {
+        fputs(output, dst_file);
+      } else if(buffer != NULL) {
+        fputs(buffer, dst_file);
+      }
+      fclose(dst_file);
     }
-    
-    fclose(dst_file);
+
     free(buffer);
     free(output);
 
@@ -904,6 +915,19 @@ static int second_pass(Arguments *args)
     free(line_number_str);
 
     current = current->next;
+  }
+
+  if(bundling && bundle_buffer != NULL) {
+    FILE *bundle_file = fopen(args->bundle, "w");
+    if(bundle_file == NULL) {
+      printf("%s Failed to open bundle file %s\n", LOG_ERROR, args->bundle);
+      free(bundle_buffer);
+      return 1;
+    }
+    fputs(bundle_buffer, bundle_file);
+    fclose(bundle_file);
+    free(bundle_buffer);
+    printf("%s Bundled to %s\n", LOG_INFO, args->bundle);
   }
 
   return 0;

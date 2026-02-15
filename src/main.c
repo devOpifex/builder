@@ -57,6 +57,7 @@ static int build(BuildContext *ctx)
     .plugins = ctx->plugins,
     .prepend = ctx->prepend,
     .append = ctx->append,
+    .bundle = ctx->bundle,
     .sourcemap = ctx->sourcemap,
     .deadcode = ctx->deadcode,
     .registry = &ctx->registry,
@@ -152,6 +153,7 @@ int main(int argc, char *argv[])
     printf("File Injection:\n");
     printf("  -prepend <path>         Prepend file contents to every output file\n");
     printf("  -append <path>          Append file contents to every output file\n");
+    printf("  -bundle <path>          Bundle all output into a single file\n");
     printf("\n");
 
     printf("Plugins & Dependencies:\n");
@@ -319,6 +321,14 @@ int main(int argc, char *argv[])
     printf("%s Appending: %s\n", LOG_INFO, append);
   }
 
+  char *bundle = get_arg_value(argc, argv, "-bundle");
+  if (bundle == NULL && cfg != NULL && cfg->bundle != NULL) {
+    bundle = strdup(cfg->bundle);
+  }
+  if (bundle != NULL) {
+    printf("%s Bundling to: %s\n", LOG_INFO, bundle);
+  }
+
   int deadcode = has_arg(argc, argv, "-deadcode");
   if (!deadcode && cfg != NULL) {
     deadcode = cfg->deadcode;
@@ -366,6 +376,7 @@ int main(int argc, char *argv[])
     .plugins_str = NULL,
     .prepend = prepend,
     .append = append,
+    .bundle = bundle,
     .deadcode = deadcode,
     .sourcemap = sourcemap,
     .must_clean = must_clean,
@@ -408,6 +419,7 @@ int main(int argc, char *argv[])
   free_registry(registry);
   free(prepend);
   free(append);
+  free(bundle);
   free_value(imports);
   free_value(depends);
   free(input);

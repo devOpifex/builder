@@ -187,55 +187,61 @@
       <td>File to append to outputs</td>
       </tr>
       <tr class="odd">
+      <td><code>bundle</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Bundle all outputs into a single file</td>
+      </tr>
+      <tr class="even">
       <td><code>deadcode</code></td>
       <td>bool</td>
       <td><code>false</code></td>
       <td>Enable dead code detection</td>
       </tr>
-      <tr class="even">
+      <tr class="odd">
       <td><code>sourcemap</code></td>
       <td>bool</td>
       <td><code>false</code></td>
       <td>Enable source maps</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
       <td><code>clean</code></td>
       <td>bool</td>
       <td><code>true</code></td>
       <td>Clean output before build</td>
       </tr>
-      <tr class="even">
+      <tr class="odd">
       <td><code>watch</code></td>
       <td>bool</td>
       <td><code>false</code></td>
       <td>Enable watch mode</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
       <td><code>plugin</code></td>
       <td>list</td>
       <td>-</td>
       <td>Space-separated plugins</td>
       </tr>
-      <tr class="even">
+      <tr class="odd">
       <td><code>import</code></td>
       <td>list</td>
       <td>-</td>
       <td>Space-separated imports</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
       <td><code>depends</code></td>
       <td>list</td>
       <td>-</td>
       <td>Space-separated dev dependencies to check</td>
       </tr>
-      <tr class="even">
+      <tr class="odd">
       <td><code>reader</code></td>
       <td>string</td>
       <td>-</td>
       <td>Define custom file type reader (format:
       <code>type function</code>)</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
       <td><code>strip</code></td>
       <td>bool</td>
       <td><code>false</code></td>
@@ -253,24 +259,25 @@
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># File manipulation</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">prepend: inst/license.txt</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">append: inst/footer.txt</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Features</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dt">deadcode: true</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dt">sourcemap: false</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">clean: true</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="dt">watch: false</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="dt">strip: false</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plugins and imports (space-separated)</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: mypkg::minify mypkg::lint</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="dt">import: inst/types.rh inst/utils.rh</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Dev dependencies (space-separated R packages)</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dt">bundle: R/bundled.R</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Features</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dt">deadcode: true</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">sourcemap: false</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="dt">clean: true</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="dt">watch: false</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="dt">strip: false</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plugins and imports (space-separated)</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: mypkg::minify mypkg::lint</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="dt">import: inst/types.rh inst/utils.rh</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Dev dependencies (space-separated R packages)</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
       <h2 id="overriding-with-cli">Overriding with CLI</h2>
       <p>Config values are defaults. CLI arguments take precedence:</p>
       <div class="sourceCode" id="cb4"><pre

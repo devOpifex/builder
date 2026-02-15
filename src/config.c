@@ -105,6 +105,7 @@ BuildContext *get_config(Registry **registry)
   ctx->imports = NULL;
   ctx->prepend = NULL;
   ctx->append = NULL;
+  ctx->bundle = NULL;
   ctx->plugins_str = NULL;
   ctx->plugins = NULL;
   ctx->registry = NULL;
@@ -164,6 +165,11 @@ BuildContext *get_config(Registry **registry)
       continue;
     }
 
+    if (strstr(line, "bundle:") != NULL) {
+      ctx->bundle = get_value(line);
+      continue;
+    }
+
     if (strstr(line, "depends:") != NULL) {
       Value *depends = parse_values(line);
       if (ctx->depends == NULL) {
@@ -217,6 +223,7 @@ void free_config(BuildContext *ctx)
   free(ctx->output);
   free(ctx->prepend);
   free(ctx->append);
+  free(ctx->bundle);
   free_value(ctx->depends);
   free_value(ctx->imports);
   free_value(ctx->plugins_str);

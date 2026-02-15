@@ -29,6 +29,7 @@ builder
 | `output` | string | `R/` | Output directory |
 | `prepend` | string | - | File to prepend to outputs |
 | `append` | string | - | File to append to outputs |
+| `bundle` | string | - | Bundle all outputs into a single file |
 | `deadcode` | bool | `false` | Enable dead code detection |
 | `sourcemap` | bool | `false` | Enable source maps |
 | `clean` | bool | `true` | Clean output before build |
@@ -49,6 +50,7 @@ output: R/
 # File manipulation
 prepend: inst/license.txt
 append: inst/footer.txt
+bundle: R/bundled.R
 
 # Features
 deadcode: true

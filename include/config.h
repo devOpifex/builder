@@ -15,6 +15,7 @@ typedef struct {
   Value *depends;
   char *prepend;
   char *append;
+  char *bundle;
   Plugins *plugins;
   Registry *registry;
   int argc;
