@@ -12,10 +12,22 @@ Check that dev dependencies are installed before building. This is useful for en
 builder -depends testthat devtools roxygen2
 ```
 
+With version requirements:
+
+```bash
+builder -depends testthat(3.0.0) devtools(2.4.0) roxygen2
+```
+
 ## Config Usage
 
 ```ini
 depends: testthat devtools roxygen2
+```
+
+With version requirements:
+
+```ini
+depends: testthat(3.0.0) devtools(2.4.0) roxygen2
 ```
 
 ## Behavior
@@ -23,6 +35,8 @@ depends: testthat devtools roxygen2
 - Checks each package with `requireNamespace()`
 - If any package is missing, build fails with an error
 - All missing packages are reported before exiting
+- Optionally specify minimum version with `package(major.minor.patch)` format
+- If installed version is lower than required, build fails with an error
 
 ## Example
 
@@ -30,8 +44,11 @@ depends: testthat devtools roxygen2
 # Check dev dependencies before building
 builder -depends testthat covr lintr
 
+# With version requirements
+builder -depends testthat(3.0.0) covr(3.5.0) lintr
+
 # Combined with other options
-builder -input srcr/ -depends testthat devtools
+builder -input srcr/ -depends testthat(3.0.0) devtools
 ```
 
 This is intended for **development dependencies** - packages needed during the build process but not necessarily at runtime.

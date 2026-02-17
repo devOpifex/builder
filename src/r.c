@@ -3,6 +3,7 @@
 #include <string.h>
 #include <Rinternals.h>
 #include <R_ext/Parse.h>
+
 #include "log.h"
 
 void set_R_home()
