@@ -141,22 +141,24 @@
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat devtools roxygen2</span></code></pre></div>
       <p>With version requirements:</p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="ex">3.0.0</span><span class="kw">)</span> <span class="ex">devtools</span><span class="er">(</span><span class="ex">2.4.0</span><span class="kw">)</span> <span class="ex">roxygen2</span></span></code></pre></div>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">devtools</span><span class="er">(</span><span class="op">&gt;</span>=2.4.0<span class="kw">)</span> <span class="ex">roxygen2</span></span></code></pre></div>
       <h2 id="config-usage">Config Usage</h2>
       <div class="sourceCode" id="cb3"><pre
       class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span></code></pre></div>
       <p>With version requirements:</p>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat(3.0.0) devtools(2.4.0) roxygen2</span></span></code></pre></div>
+      class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat(&gt;</span><span class="ot">=</span><span class="st">3.0.0) devtools(&gt;=2.4.0) roxygen2</span></span></code></pre></div>
       <h2 id="behavior">Behavior</h2>
       <ul>
       <li>Checks each package with <code>requireNamespace()</code></li>
       <li>If any package is missing, build fails with an error</li>
       <li>All missing packages are reported before exiting</li>
-      <li>Optionally specify minimum version with
-      <code>package(major.minor.patch)</code> format</li>
-      <li>If installed version is lower than required, build fails with
-      an error</li>
+      <li>Optionally specify version constraint with
+      <code>package(&lt;op&gt;major.minor.patch)</code> format</li>
+      <li>Supported operators: <code>&gt;=</code>, <code>&lt;=</code>,
+      <code>==</code>, <code>&gt;</code>, <code>&lt;</code></li>
+      <li>If installed version doesn’t satisfy the constraint, build
+      fails with an error</li>
       </ul>
       <h2 id="example">Example</h2>
       <div class="sourceCode" id="cb5"><pre
@@ -164,10 +166,10 @@
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat covr lintr</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># With version requirements</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="ex">3.0.0</span><span class="kw">)</span> <span class="ex">covr</span><span class="er">(</span><span class="ex">3.5.0</span><span class="kw">)</span> <span class="ex">lintr</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">covr</span><span class="er">(</span><span class="op">&gt;</span>=3.5.0<span class="kw">)</span> <span class="ex">lintr</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Combined with other options</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr/ <span class="at">-depends</span> testthat<span class="er">(</span><span class="ex">3.0.0</span><span class="kw">)</span> <span class="ex">devtools</span></span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr/ <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">devtools</span></span></code></pre></div>
       <p>This is intended for <strong>development dependencies</strong>
       - packages needed during the build process but not necessarily at
       runtime.</p>
