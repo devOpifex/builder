@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,105 +132,160 @@
           </div>
         </details>
       </nav>
-      <h1 id="get-started">Get Started</h1>
-      <p>This guide covers the basics of builder: packages, directives,
-      and macros.</p>
-      <h2 id="package">Package</h2>
-      <p>Builder reads R files from the <code>srcr</code> directory
-      (default) and writes to the <code>R</code> directory
-      (default).</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <p>This allows organising your R package source in <strong>nested
-      directories</strong>:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srcr</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#get-started" id="toc-get-started">Get
+          Started</a>
+          <ul>
+          <li><a href="#package" id="toc-package">Package</a></li>
+          <li><a href="#directives" id="toc-directives">Directives</a>
+          <ul>
+          <li><a href="#define-constants"
+          id="toc-define-constants">Define Constants</a></li>
+          <li><a href="#conditional-compilation"
+          id="toc-conditional-compilation">Conditional
+          Compilation</a></li>
+          <li><a href="#command-line-definitions"
+          id="toc-command-line-definitions">Command Line
+          Definitions</a></li>
+          </ul></li>
+          <li><a href="#macros" id="toc-macros">Macros</a>
+          <ul>
+          <li><a href="#syntax" id="toc-syntax">Syntax</a></li>
+          </ul></li>
+          <li><a href="#usage" id="toc-usage">Usage</a>
+          <ul>
+          <li><a href="#config-file" id="toc-config-file">Config
+          File</a></li>
+          <li><a href="#build-scripts" id="toc-build-scripts">Build
+          Scripts</a></li>
+          </ul></li>
+          <li><a href="#previewing-changes"
+          id="toc-previewing-changes">Previewing Changes</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="get-started">Get Started</h1>
+          <p>This guide covers the basics of builder: packages,
+          directives, and macros.</p>
+          <h2 id="package">Package</h2>
+          <p>Builder reads R files from the <code>srcr</code> directory
+          (default) and writes to the <code>R</code> directory
+          (default).</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+          <p>This allows organising your R package source in
+          <strong>nested directories</strong>:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srcr</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> utils</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> helpers.R</span></code></pre></div>
-      <p>Produces:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
+          <p>Produces:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> utils-helpers.R</span></code></pre></div>
-      <p>Subdirectory paths are flattened with hyphens.</p>
-      <h2 id="directives">Directives</h2>
-      <p>Builder supports C-like preprocessor directives.</p>
-      <blockquote>
-      <p><strong>Note:</strong> Lines starting with <code>#&gt;</code>
-      are treated as directives and removed from output. R comments
-      (<code># comment</code>) are preserved.</p>
-      </blockquote>
-      <h3 id="define-constants">Define Constants</h3>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2</span></span>
+          <p>Subdirectory paths are flattened with hyphens.</p>
+          <h2 id="directives">Directives</h2>
+          <p>Builder supports C-like preprocessor directives.</p>
+          <blockquote>
+          <p><strong>Note:</strong> Lines starting with
+          <code>#&gt;</code> are treated as directives and removed from
+          output. R comments (<code># comment</code>) are preserved.</p>
+          </blockquote>
+          <h3 id="define-constants">Define Constants</h3>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Version:&quot;</span>, VERSION)</span></code></pre></div>
-      <h3 id="conditional-compilation">Conditional Compilation</h3>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
+          <h3 id="conditional-compilation">Conditional Compilation</h3>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Debug mode</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
-      <p>Which you can build with <code>builder -DDEBUG</code></p>
-      <h3 id="command-line-definitions">Command Line Definitions</h3>
-      <p>Pass definitions at build time:</p>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DVERSION</span> 3</span></code></pre></div>
-      <p>Command-line definitions override file-based
-      <code>#&gt; define</code> directives.</p>
-      <h2 id="macros">Macros</h2>
-      <p>Macros are function-like directives with parameters.</p>
-      <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <p>Which you can build with <code>builder -DDEBUG</code></p>
+          <h3 id="command-line-definitions">Command Line
+          Definitions</h3>
+          <p>Pass definitions at build time:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DVERSION</span> 3</span></code></pre></div>
+          <p>Command-line definitions override file-based
+          <code>#&gt; define</code> directives.</p>
+          <h2 id="macros">Macros</h2>
+          <p>Macros are function-like directives with parameters.</p>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>LOG <span class="ot">&lt;-</span> <span class="cf">function</span>(level, msg) {</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, .level, <span class="st">&quot;] &quot;</span>, .msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Started&quot;</span>)</span></code></pre></div>
-      <p>Expands to:</p>
-      <div class="sourceCode" id="cb8"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
-      <h3 id="syntax">Syntax</h3>
-      <ul>
-      <li>Start with <code>#&gt; macro</code> alone on a line (or
-      <code>#&gt; macro local</code> for local scope)</li>
-      <li>Use standard R function syntax:
-      <code>NAME &lt;- function(arg1, arg2, ...) { ... }</code></li>
-      <li>Use <code>.arg</code> to substitute argument values</li>
-      <li>End with <code>#&gt; endmacro</code></li>
-      </ul>
-      <h2 id="usage">Usage</h2>
-      <p>You can configure builder in two ways:</p>
-      <h3 id="config-file">Config File</h3>
-      <p>Create a <code>builder.ini</code> file in your project
-      root:</p>
-      <div class="sourceCode" id="cb9"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
+          <p>Expands to:</p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+          <h3 id="syntax">Syntax</h3>
+          <ul>
+          <li>Start with <code>#&gt; macro</code> alone on a line (or
+          <code>#&gt; macro local</code> for local scope)</li>
+          <li>Use standard R function syntax:
+          <code>NAME &lt;- function(arg1, arg2, ...) { ... }</code></li>
+          <li>Use <code>.arg</code> to substitute argument values</li>
+          <li>End with <code>#&gt; endmacro</code></li>
+          </ul>
+          <h2 id="usage">Usage</h2>
+          <p>You can configure builder in two ways:</p>
+          <h3 id="config-file">Config File</h3>
+          <p>Create a <code>builder.ini</code> file in your project
+          root:</p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">output: R/</span></span></code></pre></div>
-      <p>Then simply run:</p>
-      <div class="sourceCode" id="cb10"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span></span></code></pre></div>
-      <p>See <a href="/config">Configuration File</a> for all
-      options.</p>
-      <h3 id="build-scripts">Build Scripts</h3>
-      <p>Alternatively, place your builder call in a
-      <code>Makefile</code>, <code>build.R</code> or
-      <code>build.sh</code> script:</p>
-      <div class="sourceCode" id="cb11"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
+          <p>Then simply run:</p>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span></span></code></pre></div>
+          <p>See <a href="/config">Configuration File</a> for all
+          options.</p>
+          <h3 id="build-scripts">Build Scripts</h3>
+          <p>Alternatively, place your builder call in a
+          <code>Makefile</code>, <code>build.R</code> or
+          <code>build.sh</code> script:</p>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">&quot;builder&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;-input&quot;</span>, <span class="st">&quot;srcr&quot;</span>, <span class="st">&quot;-output&quot;</span>, <span class="st">&quot;R&quot;</span>))</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">document</span>()</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check</span>()</span></code></pre></div>
-      <h2 id="previewing-changes">Previewing Changes</h2>
-      <p>Use <code>-dry-run</code> to build to a temporary directory
-      without modifying your output. Add <code>-diff</code> to see what
-      changes builder will make:</p>
-      <div class="sourceCode" id="cb12"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
-      <p>See <a href="/dry-run">Dry Run Mode</a> for details.</p>
-      <p>See the full documentation for more features.</p>
+          <h2 id="previewing-changes">Previewing Changes</h2>
+          <p>Use <code>-dry-run</code> to build to a temporary directory
+          without modifying your output. Add <code>-diff</code> to see
+          what changes builder will make:</p>
+          <div class="sourceCode" id="cb12"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
+          <p>See <a href="/dry-run">Dry Run Mode</a> for details.</p>
+          <p>See the full documentation for more features.</p>
+          <footer class="page-nav">
+                        <a href="installation.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="config.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

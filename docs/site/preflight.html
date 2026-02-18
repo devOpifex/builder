@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,39 +132,65 @@
           </div>
         </details>
       </nav>
-      <h1 id="preflight">Preflight</h1>
-      <p>Preflight blocks allow you to run R code
-      <strong>before</strong> the main preprocessing phase. This is
-      useful for validation checks, environment verification, or
-      early-exit conditions that should halt the build if requirements
-      aren’t met.</p>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>When Builder encounters a <code>#&gt; preflight</code> block
-      during processing, it:</p>
-      <ul>
-      <li>Extracts all R code between <code>#&gt; preflight</code> and
-      the end marker</li>
-      <li>Immediately evaluates the R code</li>
-      <li>If the code fails (throws an error), the build stops</li>
-      <li>If successful, preprocessing continues normally</li>
-      </ul>
-      <p>The preflight code is executed as-is and is
-      <strong>not</strong> subject to preprocessor directives or macro
-      expansion.</p>
-      <h2 id="syntax">Syntax</h2>
-      <p>Preflight blocks are defined using <code>#&gt; preflight</code>
-      and closed with either <code>#&gt; endpreflight</code> or the
-      shorthand <code>#&gt; endflight</code>:</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#preflight" id="toc-preflight">Preflight</a>
+          <ul>
+          <li><a href="#how-it-works" id="toc-how-it-works">How It
+          Works</a></li>
+          <li><a href="#syntax" id="toc-syntax">Syntax</a></li>
+          <li><a href="#example-version-check"
+          id="toc-example-version-check">Example: Version Check</a></li>
+          <li><a href="#example-environment-check"
+          id="toc-example-environment-check">Example: Environment
+          Check</a></li>
+          <li><a href="#end-markers" id="toc-end-markers">End
+          Markers</a></li>
+          <li><a href="#behavior-on-failure"
+          id="toc-behavior-on-failure">Behavior on Failure</a></li>
+          <li><a href="#placement" id="toc-placement">Placement</a></li>
+          <li><a href="#limitations"
+          id="toc-limitations">Limitations</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="preflight">Preflight</h1>
+          <p>Preflight blocks allow you to run R code
+          <strong>before</strong> the main preprocessing phase. This is
+          useful for validation checks, environment verification, or
+          early-exit conditions that should halt the build if
+          requirements aren’t met.</p>
+          <h2 id="how-it-works">How It Works</h2>
+          <p>When Builder encounters a <code>#&gt; preflight</code>
+          block during processing, it:</p>
+          <ul>
+          <li>Extracts all R code between <code>#&gt; preflight</code>
+          and the end marker</li>
+          <li>Immediately evaluates the R code</li>
+          <li>If the code fails (throws an error), the build stops</li>
+          <li>If successful, preprocessing continues normally</li>
+          </ul>
+          <p>The preflight code is executed as-is and is
+          <strong>not</strong> subject to preprocessor directives or
+          macro expansion.</p>
+          <h2 id="syntax">Syntax</h2>
+          <p>Preflight blocks are defined using
+          <code>#&gt; preflight</code> and closed with either
+          <code>#&gt; endpreflight</code> or the shorthand
+          <code>#&gt; endflight</code>:</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Your R validation code here</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span>condition) <span class="fu">stop</span>(<span class="st">&quot;Requirement not met&quot;</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
-      <h2 id="example-version-check">Example: Version Check</h2>
-      <p>A common use case is verifying the R version meets minimum
-      requirements:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
+          <h2 id="example-version-check">Example: Version Check</h2>
+          <p>A common use case is verifying the R version meets minimum
+          requirements:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rver <span class="ot">&lt;-</span> version<span class="sc">$</span>major <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.integer</span>()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -176,13 +202,14 @@
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="dv">1</span>)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <p>If the R version is less than 4, the build will halt
-      immediately with the error message. Otherwise, preprocessing
-      continues normally.</p>
-      <h2 id="example-environment-check">Example: Environment Check</h2>
-      <p>Validate environment variables or system requirements:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
+          <p>If the R version is less than 4, the build will halt
+          immediately with the error message. Otherwise, preprocessing
+          continues normally.</p>
+          <h2 id="example-environment-check">Example: Environment
+          Check</h2>
+          <p>Validate environment variables or system requirements:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;API_KEY&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nchar</span>(api_key) <span class="sc">==</span> <span class="dv">0</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;API_KEY environment variable must be set&quot;</span>)</span>
@@ -190,35 +217,54 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(.Platform<span class="sc">$</span>OS.type <span class="sc">!=</span> <span class="st">&quot;unix&quot;</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">&quot;This package is optimized for Unix systems&quot;</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
-      <h2 id="end-markers">End Markers</h2>
-      <p>Two end markers are supported:</p>
-      <ul>
-      <li><code>#&gt; endpreflight</code> - The formal closing tag</li>
-      <li><code>#&gt; endflight</code> - A convenient shorthand</li>
-      </ul>
-      <p>Both are functionally equivalent.</p>
-      <h2 id="behavior-on-failure">Behavior on Failure</h2>
-      <p>When preflight code fails:</p>
-      <ul>
-      <li>The error message is displayed</li>
-      <li>Builder exits with a non-zero status code</li>
-      <li>No output files are generated</li>
-      </ul>
-      <p>This makes preflight checks ideal for CI/CD pipelines where you
-      want builds to fail fast if requirements aren’t met.</p>
-      <h2 id="placement">Placement</h2>
-      <p>Preflight blocks can appear anywhere in your source file, but
-      are typically placed at the top before any other code. The block
-      is processed when encountered during the sequential file
-      reading.</p>
-      <h2 id="limitations">Limitations</h2>
-      <ul>
-      <li>Preflight code is not preprocessed (no macros, no
-      <code>#&gt; define</code> substitution)</li>
-      <li>The code block must be valid R syntax on its own</li>
-      <li>Output from preflight code is not captured in any output
-      files</li>
-      </ul>
+          <h2 id="end-markers">End Markers</h2>
+          <p>Two end markers are supported:</p>
+          <ul>
+          <li><code>#&gt; endpreflight</code> - The formal closing
+          tag</li>
+          <li><code>#&gt; endflight</code> - A convenient shorthand</li>
+          </ul>
+          <p>Both are functionally equivalent.</p>
+          <h2 id="behavior-on-failure">Behavior on Failure</h2>
+          <p>When preflight code fails:</p>
+          <ul>
+          <li>The error message is displayed</li>
+          <li>Builder exits with a non-zero status code</li>
+          <li>No output files are generated</li>
+          </ul>
+          <p>This makes preflight checks ideal for CI/CD pipelines where
+          you want builds to fail fast if requirements aren’t met.</p>
+          <h2 id="placement">Placement</h2>
+          <p>Preflight blocks can appear anywhere in your source file,
+          but are typically placed at the top before any other code. The
+          block is processed when encountered during the sequential file
+          reading.</p>
+          <h2 id="limitations">Limitations</h2>
+          <ul>
+          <li>Preflight code is not preprocessed (no macros, no
+          <code>#&gt; define</code> substitution)</li>
+          <li>The code block must be valid R syntax on its own</li>
+          <li>Output from preflight code is not captured in any output
+          files</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="deconstruct.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="depends.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

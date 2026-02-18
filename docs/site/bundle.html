@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,31 +132,66 @@
           </div>
         </details>
       </nav>
-      <h1 id="bundle">Bundle</h1>
-      <p>Bundle all output files into a single file instead of writing
-      individual files.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-bundle</span> output.R</span></code></pre></div>
-      <ul>
-      <li><code>-bundle &lt;file&gt;</code> - All processed content is
-      concatenated into a single file</li>
-      </ul>
-      <h2 id="configuration">Configuration</h2>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bundle: output.R</span></span></code></pre></div>
-      <h2 id="example-single-file-package">Example: Single-file
-      Package</h2>
-      <p>Bundle all R files for distribution as a single script:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-bundle</span> R/package.R</span></code></pre></div>
-      <p>All processed files from <code>srcr/</code> are combined into
-      <code>R/package.R</code>. Individual files are not written to the
-      output directory.</p>
-      <h2 id="with-prependappend">With Prepend/Append</h2>
-      <p>When using <code>-bundle</code> with <code>-prepend</code> or
-      <code>-append</code>, the prepend/append content is applied to
-      each file before bundling.</p>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#bundle" id="toc-bundle">Bundle</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#configuration"
+          id="toc-configuration">Configuration</a></li>
+          <li><a href="#example-single-file-package"
+          id="toc-example-single-file-package">Example: Single-file
+          Package</a></li>
+          <li><a href="#with-prependappend"
+          id="toc-with-prependappend">With Prepend/Append</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="bundle">Bundle</h1>
+          <p>Bundle all output files into a single file instead of
+          writing individual files.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-bundle</span> output.R</span></code></pre></div>
+          <ul>
+          <li><code>-bundle &lt;file&gt;</code> - All processed content
+          is concatenated into a single file</li>
+          </ul>
+          <h2 id="configuration">Configuration</h2>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bundle: output.R</span></span></code></pre></div>
+          <h2 id="example-single-file-package">Example: Single-file
+          Package</h2>
+          <p>Bundle all R files for distribution as a single script:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-bundle</span> R/package.R</span></code></pre></div>
+          <p>All processed files from <code>srcr/</code> are combined
+          into <code>R/package.R</code>. Individual files are not
+          written to the output directory.</p>
+          <h2 id="with-prependappend">With Prepend/Append</h2>
+          <p>When using <code>-bundle</code> with <code>-prepend</code>
+          or <code>-append</code>, the prepend/append content is applied
+          to each file before bundling.</p>
+          <footer class="page-nav">
+                        <a href="syntax-highlighting.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

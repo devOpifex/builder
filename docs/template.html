@@ -24,7 +24,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -55,7 +55,37 @@
           </div>
         </details>
       </nav>
-      $body$
+      <div class="content-wrapper">
+        $if(toc)$
+        <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          $toc$
+        </aside>
+        $endif$
+        <article>
+          $body$
+          <footer class="page-nav">
+            $if(prev)$
+            <a href="$prev$.html" class="nav-prev">← Previous</a>
+            $endif$
+            <span class="nav-spacer"></span>
+            $if(next)$
+            <a href="$next$.html" class="nav-next">Next →</a>
+            $endif$
+          </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

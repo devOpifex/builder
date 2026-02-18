@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,85 +132,123 @@
           </div>
         </details>
       </nav>
-      <h1 id="import">Import</h1>
-      <p>Import <code>.rh</code> header files to share definitions,
-      macros, and preflight checks across your project.</p>
-      <h2 id="two-ways-to-import">Two Ways to Import</h2>
-      <p>Use <code>#&gt; import</code> in your <code>.R</code> or
-      <code>.rh</code> file:</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import macros.rh</span></span></code></pre></div>
-      <p>Or use the <code>-import</code> CLI flag:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <h2 id="what-can-.rh-files-contain">What Can <code>.rh</code>
-      Files Contain?</h2>
-      <p>Header files support all builder directives:</p>
-      <ul>
-      <li><code>#&gt; define</code> - Constants</li>
-      <li><code>#&gt; macro</code> / <code>#&gt; endmacro</code> - Macro
-      definitions</li>
-      <li><code>#&gt; preflight</code> / <code>#&gt; endflight</code> -
-      Validation checks (executed during build)</li>
-      <li><code>#&gt; ifdef</code> / <code>#&gt; ifndef</code> /
-      <code>#&gt; endif</code> - Conditional compilation</li>
-      <li><code>#&gt; import</code> - Nested imports</li>
-      </ul>
-      <h2 id="local-import">Local Import</h2>
-      <p>Import a local <code>.rh</code> file:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import utils.rh</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#import" id="toc-import">Import</a>
+          <ul>
+          <li><a href="#two-ways-to-import"
+          id="toc-two-ways-to-import">Two Ways to Import</a></li>
+          <li><a href="#what-can-.rh-files-contain"
+          id="toc-what-can-.rh-files-contain">What Can <code>.rh</code>
+          Files Contain?</a></li>
+          <li><a href="#local-import" id="toc-local-import">Local
+          Import</a></li>
+          <li><a href="#sharing-headers-via-packages"
+          id="toc-sharing-headers-via-packages">Sharing Headers via
+          Packages</a>
+          <ul>
+          <li><a href="#package-structure"
+          id="toc-package-structure">Package Structure</a></li>
+          <li><a href="#importing-from-packages"
+          id="toc-importing-from-packages">Importing from
+          Packages</a></li>
+          <li><a href="#subdirectories"
+          id="toc-subdirectories">Subdirectories</a></li>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          </ul></li>
+          <li><a href="#nested-imports" id="toc-nested-imports">Nested
+          Imports</a></li>
+          <li><a href="#preflight-in-headers"
+          id="toc-preflight-in-headers">Preflight in Headers</a></li>
+          <li><a href="#processing-order"
+          id="toc-processing-order">Processing Order</a></li>
+          <li><a href="#summary" id="toc-summary">Summary</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="import">Import</h1>
+          <p>Import <code>.rh</code> header files to share definitions,
+          macros, and preflight checks across your project.</p>
+          <h2 id="two-ways-to-import">Two Ways to Import</h2>
+          <p>Use <code>#&gt; import</code> in your <code>.R</code> or
+          <code>.rh</code> file:</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import macros.rh</span></span></code></pre></div>
+          <p>Or use the <code>-import</code> CLI flag:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+          <h2 id="what-can-.rh-files-contain">What Can <code>.rh</code>
+          Files Contain?</h2>
+          <p>Header files support all builder directives:</p>
+          <ul>
+          <li><code>#&gt; define</code> - Constants</li>
+          <li><code>#&gt; macro</code> / <code>#&gt; endmacro</code> -
+          Macro definitions</li>
+          <li><code>#&gt; preflight</code> /
+          <code>#&gt; endflight</code> - Validation checks (executed
+          during build)</li>
+          <li><code>#&gt; ifdef</code> / <code>#&gt; ifndef</code> /
+          <code>#&gt; endif</code> - Conditional compilation</li>
+          <li><code>#&gt; import</code> - Nested imports</li>
+          </ul>
+          <h2 id="local-import">Local Import</h2>
+          <p>Import a local <code>.rh</code> file:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import utils.rh</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h2 id="sharing-headers-via-packages">Sharing Headers via
-      Packages</h2>
-      <p>You can distribute header files in R packages for reuse across
-      projects.</p>
-      <h3 id="package-structure">Package Structure</h3>
-      <p>Place <code>.rh</code> files in your package’s
-      <code>inst/</code> directory:</p>
-      <pre><code>mypkg/
+          <h2 id="sharing-headers-via-packages">Sharing Headers via
+          Packages</h2>
+          <p>You can distribute header files in R packages for reuse
+          across projects.</p>
+          <h3 id="package-structure">Package Structure</h3>
+          <p>Place <code>.rh</code> files in your package’s
+          <code>inst/</code> directory:</p>
+          <pre><code>mypkg/
 ├── DESCRIPTION
 ├── inst/
 │   └── macros.rh
 └── R/
     └── ...</code></pre>
-      <h3 id="importing-from-packages">Importing from Packages</h3>
-      <p>Use the <code>pkg::path</code> syntax to import from an
-      installed package:</p>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros.rh</span></span></code></pre></div>
-      <p>Builder resolves this to the installed package’s
-      <code>inst/</code> directory (e.g.,
-      <code>/path/to/library/mypkg/macros.rh</code>).</p>
-      <h3 id="subdirectories">Subdirectories</h3>
-      <p>You can organize headers in subdirectories:</p>
-      <pre><code>inst/
+          <h3 id="importing-from-packages">Importing from Packages</h3>
+          <p>Use the <code>pkg::path</code> syntax to import from an
+          installed package:</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros.rh</span></span></code></pre></div>
+          <p>Builder resolves this to the installed package’s
+          <code>inst/</code> directory (e.g.,
+          <code>/path/to/library/mypkg/macros.rh</code>).</p>
+          <h3 id="subdirectories">Subdirectories</h3>
+          <p>You can organize headers in subdirectories:</p>
+          <pre><code>inst/
 ├── macros/
 │   ├── logging.rh
 │   └── validation.rh
 └── config.rh</code></pre>
-      <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros/logging.rh</span></span>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros/logging.rh</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::config.rh</span></span></code></pre></div>
-      <h3 id="usage">Usage</h3>
-      <p>Definitions from package imports work the same as local
-      imports:</p>
-      <div class="sourceCode" id="cb8"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros.rh</span></span>
+          <h3 id="usage">Usage</h3>
+          <p>Definitions from package imports work the same as local
+          imports:</p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros.rh</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h2 id="nested-imports">Nested Imports</h2>
-      <p>Header files can import other headers:</p>
-      <div class="sourceCode" id="cb9"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base.rh</span></span>
+          <h2 id="nested-imports">Nested Imports</h2>
+          <p>Header files can import other headers:</p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base.rh</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 1.0.0</span></span></code></pre></div>
-      <div class="sourceCode" id="cb10"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># utils.rh</span></span>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># utils.rh</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import base.rh</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
@@ -218,32 +256,50 @@
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[v&quot;</span>, VERSION, <span class="st">&quot;] &quot;</span>, .x))</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span></code></pre></div>
-      <h2 id="preflight-in-headers">Preflight in Headers</h2>
-      <p>Shared validation checks:</p>
-      <div class="sourceCode" id="cb11"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># checks.rh</span></span>
+          <h2 id="preflight-in-headers">Preflight in Headers</h2>
+          <p>Shared validation checks:</p>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># checks.rh</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;rlang&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;rlang is required&quot;</span>)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
-      <h2 id="processing-order">Processing Order</h2>
-      <ol type="1">
-      <li>CLI imports are processed first (in order specified)</li>
-      <li>Inline <code>#&gt; import</code> directives are processed as
-      encountered</li>
-      <li>Duplicate imports are automatically skipped</li>
-      <li>All imports are processed before source files</li>
-      </ol>
-      <h2 id="summary">Summary</h2>
-      <ul>
-      <li><code>.rh</code> files support all directives (not just
-      macros)</li>
-      <li>Local imports: <code>#&gt; import file.rh</code></li>
-      <li>Package imports: <code>#&gt; import pkg::file.rh</code> (file
-      at <code>inst/file.rh</code>)</li>
-      <li>Nested imports are supported and deduplicated</li>
-      </ul>
+          <h2 id="processing-order">Processing Order</h2>
+          <ol type="1">
+          <li>CLI imports are processed first (in order specified)</li>
+          <li>Inline <code>#&gt; import</code> directives are processed
+          as encountered</li>
+          <li>Duplicate imports are automatically skipped</li>
+          <li>All imports are processed before source files</li>
+          </ol>
+          <h2 id="summary">Summary</h2>
+          <ul>
+          <li><code>.rh</code> files support all directives (not just
+          macros)</li>
+          <li>Local imports: <code>#&gt; import file.rh</code></li>
+          <li>Package imports: <code>#&gt; import pkg::file.rh</code>
+          (file at <code>inst/file.rh</code>)</li>
+          <li>Nested imports are supported and deduplicated</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="headers.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="fstrings.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

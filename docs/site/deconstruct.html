@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,32 +132,60 @@
           </div>
         </details>
       </nav>
-      <h1 id="deconstruct">Deconstruct</h1>
-      <p>Builder supports destructuring assignment syntax for R, similar
-      to JavaScript and Python.</p>
-      <p>Use the <code>.[var1, var2, ...]</code> syntax to extract
-      multiple values from a list:</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>.[x, my_var] <span class="ot">&lt;-</span> <span class="fu">call</span>()</span></code></pre></div>
-      <p>That will produce:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>.destructure_tmp_ <span class="ot">&lt;-</span> <span class="fu">call</span>()</span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#deconstruct"
+          id="toc-deconstruct">Deconstruct</a></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="deconstruct">Deconstruct</h1>
+          <p>Builder supports destructuring assignment syntax for R,
+          similar to JavaScript and Python.</p>
+          <p>Use the <code>.[var1, var2, ...]</code> syntax to extract
+          multiple values from a list:</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>.[x, my_var] <span class="ot">&lt;-</span> <span class="fu">call</span>()</span></code></pre></div>
+          <p>That will produce:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>.destructure_tmp_ <span class="ot">&lt;-</span> <span class="fu">call</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> .destructure_tmp_[[<span class="dv">1</span>]]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>my_var <span class="ot">&lt;-</span> .destructure_tmp_[[<span class="dv">2</span>]]</span></code></pre></div>
-      <p>The expression on the right-hand side is evaluated once and
-      stored in a hidden temporary variable
-      (<code>.destructure_tmp_</code>). Each variable is then assigned
-      from the corresponding index of that temporary. This ensures:</p>
-      <ul>
-      <li>Side effects only occur once</li>
-      <li>Expensive computations aren’t repeated</li>
-      <li>Consistent behavior with functions that return different
-      values on each call</li>
-      </ul>
-      <p>Variables are assigned in order using list accessor
-      <code>[[1]]</code>, <code>[[2]]</code>, etc. This makes it
-      convenient to work with functions that return multiple values in a
-      list.</p>
+          <p>The expression on the right-hand side is evaluated once and
+          stored in a hidden temporary variable
+          (<code>.destructure_tmp_</code>). Each variable is then
+          assigned from the corresponding index of that temporary. This
+          ensures:</p>
+          <ul>
+          <li>Side effects only occur once</li>
+          <li>Expensive computations aren’t repeated</li>
+          <li>Consistent behavior with functions that return different
+          values on each call</li>
+          </ul>
+          <p>Variables are assigned in order using list accessor
+          <code>[[1]]</code>, <code>[[2]]</code>, etc. This makes it
+          convenient to work with functions that return multiple values
+          in a list.</p>
+          <footer class="page-nav">
+                        <a href="const.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="preflight.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

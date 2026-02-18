@@ -177,6 +177,152 @@ main {
   z-index: 1;
 }
 
-nav > a {
+nav.top-nav > a {
   padding-right: 0.75rem;
+}
+
+/* Content wrapper with sidebar layout */
+.content-wrapper {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* TOC Sidebar */
+.toc-sidebar {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border: 1px solid #444444;
+  padding: 1rem;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.toc-title {
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #789978;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toc-sidebar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.toc-sidebar ul ul {
+  padding-left: 1rem;
+}
+
+.toc-sidebar li {
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+}
+
+.toc-sidebar a {
+  color: #aabbcc;
+  text-decoration: none;
+}
+
+.toc-sidebar a:hover {
+  color: #789978;
+}
+
+/* Main article content */
+article {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Heading anchor links */
+h1, h2, h3, h4, h5, h6 {
+  position: relative;
+}
+
+.heading-anchor {
+  margin-left: 0.5rem;
+  color: #555555;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-weight: normal;
+}
+
+h1:hover .heading-anchor,
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor,
+h5:hover .heading-anchor,
+h6:hover .heading-anchor {
+  opacity: 1;
+}
+
+.heading-anchor:hover {
+  color: #789978;
+}
+
+/* Page navigation footer */
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #444444;
+}
+
+.nav-prev,
+.nav-next {
+  padding: 0.5rem 1rem;
+  border: 1px solid #444444;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-prev:hover,
+.nav-next:hover {
+  border-color: #789978;
+  background-color: rgba(120, 153, 120, 0.1);
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .toc-sidebar {
+    position: static;
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+  }
+
+  .page-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nav-prev,
+  .nav-next {
+    flex: 1;
+    text-align: center;
+  }
+
+  .nav-spacer {
+    display: none;
+  }
 }

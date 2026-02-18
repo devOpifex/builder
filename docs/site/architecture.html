@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,25 +132,70 @@
           </div>
         </details>
       </nav>
-      <h1 id="architecture">Architecture</h1>
-      <p>Builder assumes you’re building a package and simulates R’s
-      lazy loading behavior by performing a two-pass build.
-      Understanding this architecture helps you write more predictable
-      preprocessing directives.</p>
-      <h2 id="two-pass-system">Two-Pass System</h2>
-      <div class="desktop-only">
-      <pre><code>┌─────────────────────────────────────────────────────────────┐
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#architecture"
+          id="toc-architecture">Architecture</a>
+          <ul>
+          <li><a href="#two-pass-system"
+          id="toc-two-pass-system">Two-Pass System</a></li>
+          <li><a href="#first-pass" id="toc-first-pass">First Pass</a>
+          <ul>
+          <li><a href="#what-happens" id="toc-what-happens">What
+          happens:</a></li>
+          </ul></li>
+          <li><a href="#second-pass" id="toc-second-pass">Second
+          Pass</a>
+          <ul>
+          <li><a href="#loop-expansion" id="toc-loop-expansion">Loop
+          Expansion</a></li>
+          <li><a href="#replacement-order"
+          id="toc-replacement-order">Replacement Order</a></li>
+          </ul></li>
+          <li><a href="#why-order-matters"
+          id="toc-why-order-matters">Why Order Matters</a>
+          <ul>
+          <li><a href="#f-strings-first"
+          id="toc-f-strings-first">F-strings First</a></li>
+          <li><a href="#constants-last"
+          id="toc-constants-last">Constants Last</a></li>
+          </ul></li>
+          <li><a href="#built-in-definitions"
+          id="toc-built-in-definitions">Built-in Definitions</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="architecture">Architecture</h1>
+          <p>Builder assumes you’re building a package and simulates R’s
+          lazy loading behavior by performing a two-pass build.
+          Understanding this architecture helps you write more
+          predictable preprocessing directives.</p>
+          <h2 id="two-pass-system">Two-Pass System</h2>
+          <div class="desktop-only">
+          <pre><code>┌─────────────────────────────────────────────────────────────┐
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #&gt; define &amp;│──│ #&gt; preflight│──│  preprocess hook    │  │
+│  │  Collect    │  │    Run      │  │     Validate        │  │
+│  │  #&gt; define &amp;│─▶│ #&gt; preflight│─▶│    #&gt; assert        │  │
 │  │  #&gt; macro   │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                                              │              │
+│                                              ▼              │
+│                              Plugin preprocess hook         │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      SECOND PASS                            │
+│                                                             │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  #&gt; for / #&gt; endfor expansion (before line processing) │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                             │                               │
+│                             ▼                               │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
 │  │ F-string │─▶│#&gt; include│─▶│  Macro   │─▶│Deconstruct │   │
@@ -167,138 +212,167 @@
 │                                                   ▼         │
 │                              Plugin postprocess hook        │
 └─────────────────────────────────────────────────────────────┘</code></pre>
-      </div>
-      <h2 id="first-pass">First Pass</h2>
-      <p>The first pass scans all source files to collect definitions
-      and run preflight checks. No output is written during this
-      pass.</p>
-      <h3 id="what-happens">What happens:</h3>
-      <ol type="1">
-      <li><strong>Macro Collection</strong> - All
-      <code>#&gt; define</code> and <code>#&gt; macro</code> directives
-      are parsed and stored</li>
-      <li><strong>Preflight Execution</strong> -
-      <code>#&gt; preflight</code> / <code>#&gt; endflight</code> blocks
-      are evaluated</li>
-      <li><strong>Import Processing</strong> - <code>#&gt; import</code>
-      directives are noted (for namespace prefixing)</li>
-      <li><strong>Plugin Hook</strong> - The <code>preprocess</code>
-      plugin hook is called on each file’s content</li>
-      </ol>
-      <h2 id="second-pass">Second Pass</h2>
-      <p>The second pass processes each line through a series of
-      replacements and writes the final output.</p>
-      <h3 id="replacement-order">Replacement Order</h3>
-      <p>Each line is processed through these transformations in
-      order:</p>
-      <table>
-      <thead>
-      <tr class="header">
-      <th>Order</th>
-      <th>Transformation</th>
-      <th>Example</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td>1</td>
-      <td>F-strings</td>
-      <td><code>f'{x}'</code> → <code>sprintf('%s', x)</code></td>
-      </tr>
-      <tr class="even">
-      <td>2</td>
-      <td>#&gt; include:</td>
-      <td><code>#&gt; include:READ file.sql q</code> →
-      <code>q &lt;- c(...)</code></td>
-      </tr>
-      <tr class="odd">
-      <td>3</td>
-      <td>Macro expansion</td>
-      <td><code>MY_MACRO(x)</code> → expanded code</td>
-      </tr>
-      <tr class="even">
-      <td>4</td>
-      <td>Deconstruction</td>
-      <td><code>.[a, b] &lt;- fn()</code> → indexed assignments</td>
-      </tr>
-      <tr class="odd">
-      <td>5</td>
-      <td>Constants</td>
-      <td><code>x -&lt; 1</code> →
-      <code>x &lt;- 1;lockBinding(...)</code></td>
-      </tr>
-      </tbody>
-      </table>
-      <p>After replacements, the line goes through:</p>
-      <ul>
-      <li><strong>Conditional compilation</strong> -
-      <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>,
-      <code>#&gt; if</code>, <code>#&gt; elif</code>,
-      <code>#&gt; else</code>, <code>#&gt; endif</code></li>
-      <li><strong>Test collection</strong> - <code>#&gt; test</code>
-      blocks are extracted</li>
-      <li><strong>Error checking</strong> - <code>#&gt; error</code>
-      directives halt compilation</li>
-      </ul>
-      <h2 id="why-order-matters">Why Order Matters</h2>
-      <p>The replacement order has important implications:</p>
-      <h3 id="f-strings-first">F-strings First</h3>
-      <p>F-strings are processed before macros, so you can use
-      macro-defined values inside f-strings:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2.0.0</span></span>
+          </div>
+          <h2 id="first-pass">First Pass</h2>
+          <p>The first pass scans all source files to collect
+          definitions and run preflight checks. No output is written
+          during this pass.</p>
+          <h3 id="what-happens">What happens:</h3>
+          <ol type="1">
+          <li><strong>Macro Collection</strong> - All
+          <code>#&gt; define</code> and <code>#&gt; macro</code>
+          directives are parsed and stored</li>
+          <li><strong>Preflight Execution</strong> -
+          <code>#&gt; preflight</code> / <code>#&gt; endflight</code>
+          blocks are evaluated</li>
+          <li><strong>Assert Validation</strong> -
+          <code>#&gt; assert</code> directives are checked; build fails
+          if any assertion is false</li>
+          <li><strong>Import Processing</strong> -
+          <code>#&gt; import</code> directives are noted (for namespace
+          prefixing)</li>
+          <li><strong>Plugin Hook</strong> - The <code>preprocess</code>
+          plugin hook is called on each file’s content</li>
+          </ol>
+          <h2 id="second-pass">Second Pass</h2>
+          <p>The second pass processes each line through a series of
+          replacements and writes the final output.</p>
+          <h3 id="loop-expansion">Loop Expansion</h3>
+          <p>Before line-by-line processing, <code>#&gt; for</code> /
+          <code>#&gt; endfor</code> blocks are collected and expanded
+          into repeated code. The loop variable uses
+          <code>..variable..</code> syntax for substitution.</p>
+          <h3 id="replacement-order">Replacement Order</h3>
+          <p>Each line is processed through these transformations in
+          order:</p>
+          <table>
+          <thead>
+          <tr class="header">
+          <th>Order</th>
+          <th>Transformation</th>
+          <th>Example</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td>1</td>
+          <td>F-strings</td>
+          <td><code>..FMT("{x}")</code> →
+          <code>sprintf('%s', x)</code></td>
+          </tr>
+          <tr class="even">
+          <td>2</td>
+          <td>#&gt; include:</td>
+          <td><code>#&gt; include:READ file.sql q</code> →
+          <code>q &lt;- c(...)</code></td>
+          </tr>
+          <tr class="odd">
+          <td>3</td>
+          <td>Macro expansion</td>
+          <td><code>MY_MACRO(x)</code> → expanded code</td>
+          </tr>
+          <tr class="even">
+          <td>4</td>
+          <td>Deconstruction</td>
+          <td><code>.[a, b] &lt;- fn()</code> → indexed assignments</td>
+          </tr>
+          <tr class="odd">
+          <td>5</td>
+          <td>Constants</td>
+          <td><code>x -&lt; 1</code> →
+          <code>x &lt;- 1;lockBinding(...)</code></td>
+          </tr>
+          </tbody>
+          </table>
+          <p>After replacements, the line goes through:</p>
+          <ul>
+          <li><strong>Conditional compilation</strong> -
+          <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>,
+          <code>#&gt; if</code>, <code>#&gt; elif</code>,
+          <code>#&gt; else</code>, <code>#&gt; endif</code></li>
+          <li><strong>Test collection</strong> - <code>#&gt; test</code>
+          blocks are extracted</li>
+          <li><strong>Error checking</strong> - <code>#&gt; error</code>
+          directives halt compilation</li>
+          </ul>
+          <h2 id="why-order-matters">Why Order Matters</h2>
+          <p>The replacement order has important implications:</p>
+          <h3 id="f-strings-first">F-strings First</h3>
+          <p>F-strings are processed before macros, so you can use
+          macro-defined values inside f-strings:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2.0.0</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;Version: {VERSION}&#39;</span>)  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
-      <h3 id="constants-last">Constants Last</h3>
-      <p>The constant operator <code>-&lt;</code> is processed after all
-      other transformations, ensuring the final value is locked:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEFAULT 42</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;Version: {VERSION}&quot;</span>))  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
+          <h3 id="constants-last">Constants Last</h3>
+          <p>The constant operator <code>-&lt;</code> is processed after
+          all other transformations, ensuring the final value is
+          locked:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEFAULT 42</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span><span class="er">&lt;</span> DEFAULT  <span class="co"># First: DEFAULT → 42, Then: x &lt;- 42;lockBinding(&quot;x&quot;, environment())</span></span></code></pre></div>
-      <h2 id="built-in-definitions">Built-in Definitions</h2>
-      <p>These definitions are automatically available and updated
-      during processing:</p>
-      <table>
-      <thead>
-      <tr class="header">
-      <th>Definition</th>
-      <th>Description</th>
-      <th>Updated</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>..FILE..</code></td>
-      <td>Current source file path</td>
-      <td>Per file</td>
-      </tr>
-      <tr class="even">
-      <td><code>..LINE..</code></td>
-      <td>Current line number</td>
-      <td>Per line</td>
-      </tr>
-      <tr class="odd">
-      <td><code>..OS..</code></td>
-      <td>Operating system name</td>
-      <td>Once at start</td>
-      </tr>
-      <tr class="even">
-      <td><code>..DATE..</code></td>
-      <td>Build date (YYYY-MM-DD)</td>
-      <td>Once at start</td>
-      </tr>
-      <tr class="odd">
-      <td><code>..TIME..</code></td>
-      <td>Build time (HH:MM:SS)</td>
-      <td>Once at start</td>
-      </tr>
-      <tr class="even">
-      <td><code>..COUNTER..</code></td>
-      <td>Auto-incrementing integer</td>
-      <td>Per occurrence</td>
-      </tr>
-      </tbody>
-      </table>
+          <h2 id="built-in-definitions">Built-in Definitions</h2>
+          <p>These definitions are automatically available and updated
+          during processing:</p>
+          <table>
+          <thead>
+          <tr class="header">
+          <th>Definition</th>
+          <th>Description</th>
+          <th>Updated</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>..FILE..</code></td>
+          <td>Current source file path</td>
+          <td>Per file</td>
+          </tr>
+          <tr class="even">
+          <td><code>..LINE..</code></td>
+          <td>Current line number</td>
+          <td>Per line</td>
+          </tr>
+          <tr class="odd">
+          <td><code>..OS..</code></td>
+          <td>Operating system name</td>
+          <td>Once at start</td>
+          </tr>
+          <tr class="even">
+          <td><code>..DATE..</code></td>
+          <td>Build date (YYYY-MM-DD)</td>
+          <td>Once at start</td>
+          </tr>
+          <tr class="odd">
+          <td><code>..TIME..</code></td>
+          <td>Build time (HH:MM:SS)</td>
+          <td>Once at start</td>
+          </tr>
+          <tr class="even">
+          <td><code>..COUNTER..</code></td>
+          <td>Auto-incrementing integer</td>
+          <td>Per occurrence</td>
+          </tr>
+          </tbody>
+          </table>
+          <footer class="page-nav">
+                        <a href="config.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="packages.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

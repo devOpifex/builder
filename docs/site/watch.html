@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,29 +132,49 @@
           </div>
         </details>
       </nav>
-      <h1 id="watch-mode">Watch Mode</h1>
-      <p>Builder can automatically rebuild your package when source
-      files change using the <code>-watch</code> flag. This is useful
-      during active development to see changes immediately without
-      manually running the build command.</p>
-      <p>⚠️ Warning: this feature is vibe-coded, sorry.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-watch</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#watch-mode" id="toc-watch-mode">Watch Mode</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#how-it-works" id="toc-how-it-works">How It
+          Works</a></li>
+          <li><a href="#example" id="toc-example">Example</a></li>
+          <li><a href="#options" id="toc-options">Options</a></li>
+          <li><a href="#behavior" id="toc-behavior">Behavior</a></li>
+          <li><a href="#technical-details"
+          id="toc-technical-details">Technical Details</a></li>
+          <li><a href="#limitations"
+          id="toc-limitations">Limitations</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="watch-mode">Watch Mode</h1>
+          <p>Builder can automatically rebuild your package when source
+          files change using the <code>-watch</code> flag. This is
+          useful during active development to see changes immediately
+          without manually running the build command.</p>
+          <p>⚠️ Warning: this feature is vibe-coded, sorry.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-watch</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-watch</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>When watch mode is enabled:</p>
-      <ol type="1">
-      <li>Builder performs an initial build (with cleaning unless
-      <code>-noclean</code> is specified)</li>
-      <li>Sets up file system monitoring on the input directory</li>
-      <li>Waits for file changes (create, modify, delete)</li>
-      <li>Automatically rebuilds when changes are detected</li>
-      <li>Repeats until interrupted with Ctrl+C</li>
-      </ol>
-      <h2 id="example">Example</h2>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> builder <span class="at">-watch</span></span>
+          <h2 id="how-it-works">How It Works</h2>
+          <p>When watch mode is enabled:</p>
+          <ol type="1">
+          <li>Builder performs an initial build (with cleaning unless
+          <code>-noclean</code> is specified)</li>
+          <li>Sets up file system monitoring on the input directory</li>
+          <li>Waits for file changes (create, modify, delete)</li>
+          <li>Automatically rebuilds when changes are detected</li>
+          <li>Repeats until interrupted with Ctrl+C</li>
+          </ol>
+          <h2 id="example">Example</h2>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> builder <span class="at">-watch</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Watch mode enabled, monitoring srcr</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Cleaning: R/ and testthat/</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Copying srcr/main.R to R/main.R</span>
@@ -167,54 +187,72 @@
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Waiting for changes...</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Press Ctrl+C to exit</span></span></code></pre></div>
-      <h2 id="options">Options</h2>
-      <table>
-      <thead>
-      <tr class="header">
-      <th>Flag</th>
-      <th>Description</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>-watch</code></td>
-      <td>Enable watch mode</td>
-      </tr>
-      <tr class="even">
-      <td><code>-noclean</code></td>
-      <td>Skip cleaning on initial build</td>
-      </tr>
-      </tbody>
-      </table>
-      <h2 id="behavior">Behavior</h2>
-      <ul>
-      <li><strong>Initial build</strong>: Cleans output directory
-      (unless <code>-noclean</code>)</li>
-      <li><strong>Subsequent rebuilds</strong>: Skip cleaning to
-      preserve any manual changes</li>
-      <li><strong>Error handling</strong>: Build errors are reported but
-      don’t stop watching</li>
-      <li><strong>Exit</strong>: Press Ctrl+C to stop watching</li>
-      </ul>
-      <h2 id="technical-details">Technical Details</h2>
-      <p>Watch mode uses Linux’s <code>inotify</code> API to efficiently
-      monitor file changes. It watches for:</p>
-      <ul>
-      <li>File saves (close after write)</li>
-      <li>File renames/moves (vim-style atomic saves)</li>
-      <li>File deletions</li>
-      </ul>
-      <p>A 100ms debounce prevents multiple rebuilds from rapid
-      successive saves.</p>
-      <h2 id="limitations">Limitations</h2>
-      <ul>
-      <li>Only the input directory (<code>-input</code>) is
-      monitored</li>
-      <li>Imported header files (<code>-import</code>) are not watched;
-      restart watch mode if headers change</li>
-      <li>Linux only (uses <code>inotify</code>); macOS support would
-      require <code>kqueue</code></li>
-      </ul>
+          <h2 id="options">Options</h2>
+          <table>
+          <thead>
+          <tr class="header">
+          <th>Flag</th>
+          <th>Description</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>-watch</code></td>
+          <td>Enable watch mode</td>
+          </tr>
+          <tr class="even">
+          <td><code>-noclean</code></td>
+          <td>Skip cleaning on initial build</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="behavior">Behavior</h2>
+          <ul>
+          <li><strong>Initial build</strong>: Cleans output directory
+          (unless <code>-noclean</code>)</li>
+          <li><strong>Subsequent rebuilds</strong>: Skip cleaning to
+          preserve any manual changes</li>
+          <li><strong>Error handling</strong>: Build errors are reported
+          but don’t stop watching</li>
+          <li><strong>Exit</strong>: Press Ctrl+C to stop watching</li>
+          </ul>
+          <h2 id="technical-details">Technical Details</h2>
+          <p>Watch mode uses Linux’s <code>inotify</code> API to
+          efficiently monitor file changes. It watches for:</p>
+          <ul>
+          <li>File saves (close after write)</li>
+          <li>File renames/moves (vim-style atomic saves)</li>
+          <li>File deletions</li>
+          </ul>
+          <p>A 100ms debounce prevents multiple rebuilds from rapid
+          successive saves.</p>
+          <h2 id="limitations">Limitations</h2>
+          <ul>
+          <li>Only the input directory (<code>-input</code>) is
+          monitored</li>
+          <li>Imported header files (<code>-import</code>) are not
+          watched; restart watch mode if headers change</li>
+          <li>Linux only (uses <code>inotify</code>); macOS support
+          would require <code>kqueue</code></li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="sourcemap.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="syntax-highlighting.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

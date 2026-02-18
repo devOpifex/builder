@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,88 +132,113 @@
           </div>
         </details>
       </nav>
-      <h1 id="header-files-.rh">Header Files (.rh)</h1>
-      <p>Header files (<code>.rh</code>) are preprocessor-only files
-      used to share macros, constants, and build-time checks across your
-      project. Unlike <code>.R</code> files, headers should not contain
-      R code intended for runtime execution.</p>
-      <h2 id="purpose">Purpose</h2>
-      <ul>
-      <li>Share macro definitions across multiple source files</li>
-      <li>Define constants used throughout your project</li>
-      <li>Centralize preflight checks that validate your build
-      environment</li>
-      <li>Keep preprocessor logic separate from application code</li>
-      </ul>
-      <h2 id="what-headers-should-contain">What Headers Should
-      Contain</h2>
-      <p>Headers are meant for <strong>preprocessor directives
-      only</strong>:</p>
-      <table>
-      <colgroup>
-      <col style="width: 55%" />
-      <col style="width: 45%" />
-      </colgroup>
-      <thead>
-      <tr class="header">
-      <th>Directive</th>
-      <th>Purpose</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>#&gt; define NAME value</code></td>
-      <td>Constants</td>
-      </tr>
-      <tr class="even">
-      <td><code>#&gt; macro</code> / <code>#&gt; endmacro</code></td>
-      <td>Macro definitions</td>
-      </tr>
-      <tr class="odd">
-      <td><code>#&gt; preflight</code> /
-      <code>#&gt; endflight</code></td>
-      <td>Build-time validation</td>
-      </tr>
-      <tr class="even">
-      <td><code>#&gt; ifdef</code> / <code>#&gt; ifndef</code> /
-      <code>#&gt; if</code> / <code>#&gt; endif</code> /
-      <code>#&gt; elif</code></td>
-      <td>Conditional compilation</td>
-      </tr>
-      <tr class="odd">
-      <td><code>#&gt; import</code></td>
-      <td>Nested header imports</td>
-      </tr>
-      </tbody>
-      </table>
-      <h2 id="what-headers-should-not-contain">What Headers Should NOT
-      Contain</h2>
-      <p>Headers should <strong>not</strong> contain regular R code:</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BAD: This belongs in a .R file, not a header</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#header-files-.rh"
+          id="toc-header-files-.rh">Header Files (.rh)</a>
+          <ul>
+          <li><a href="#purpose" id="toc-purpose">Purpose</a></li>
+          <li><a href="#what-headers-should-contain"
+          id="toc-what-headers-should-contain">What Headers Should
+          Contain</a></li>
+          <li><a href="#what-headers-should-not-contain"
+          id="toc-what-headers-should-not-contain">What Headers Should
+          NOT Contain</a></li>
+          <li><a href="#example-header" id="toc-example-header">Example
+          Header</a></li>
+          <li><a href="#importing-headers"
+          id="toc-importing-headers">Importing Headers</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="header-files-.rh">Header Files (.rh)</h1>
+          <p>Header files (<code>.rh</code>) are preprocessor-only files
+          used to share macros, constants, and build-time checks across
+          your project. Unlike <code>.R</code> files, headers should not
+          contain R code intended for runtime execution.</p>
+          <h2 id="purpose">Purpose</h2>
+          <ul>
+          <li>Share macro definitions across multiple source files</li>
+          <li>Define constants used throughout your project</li>
+          <li>Centralize preflight checks that validate your build
+          environment</li>
+          <li>Keep preprocessor logic separate from application
+          code</li>
+          </ul>
+          <h2 id="what-headers-should-contain">What Headers Should
+          Contain</h2>
+          <p>Headers are meant for <strong>preprocessor directives
+          only</strong>:</p>
+          <table>
+          <colgroup>
+          <col style="width: 55%" />
+          <col style="width: 45%" />
+          </colgroup>
+          <thead>
+          <tr class="header">
+          <th>Directive</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>#&gt; define NAME value</code></td>
+          <td>Constants</td>
+          </tr>
+          <tr class="even">
+          <td><code>#&gt; macro</code> /
+          <code>#&gt; endmacro</code></td>
+          <td>Macro definitions</td>
+          </tr>
+          <tr class="odd">
+          <td><code>#&gt; preflight</code> /
+          <code>#&gt; endflight</code></td>
+          <td>Build-time validation</td>
+          </tr>
+          <tr class="even">
+          <td><code>#&gt; ifdef</code> / <code>#&gt; ifndef</code> /
+          <code>#&gt; if</code> / <code>#&gt; endif</code> /
+          <code>#&gt; elif</code></td>
+          <td>Conditional compilation</td>
+          </tr>
+          <tr class="odd">
+          <td><code>#&gt; import</code></td>
+          <td>Nested header imports</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-headers-should-not-contain">What Headers Should
+          NOT Contain</h2>
+          <p>Headers should <strong>not</strong> contain regular R
+          code:</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BAD: This belongs in a .R file, not a header</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>my_function <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">1</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>)</span></code></pre></div>
-      <p>The rationale: <code>.rh</code> files are processed by the
-      preprocessor to extract definitions. Any R code outside of
-      <code>#&gt; preflight</code> blocks would be silently ignored or
-      cause unexpected behavior. Keep runtime code in <code>.R</code>
-      files.</p>
-      <p>The one exception is <code>#&gt; preflight</code> blocks, which
-      contain R code that runs <strong>at build time</strong> to
-      validate your environment:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
+          <p>The rationale: <code>.rh</code> files are processed by the
+          preprocessor to extract definitions. Any R code outside of
+          <code>#&gt; preflight</code> blocks would be silently ignored
+          or cause unexpected behavior. Keep runtime code in
+          <code>.R</code> files.</p>
+          <p>The one exception is <code>#&gt; preflight</code> blocks,
+          which contain R code that runs <strong>at build time</strong>
+          to validate your environment:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;rlang&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;rlang is required to build this project&quot;</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
-      <h2 id="example-header">Example Header</h2>
-      <p>A typical header file might look like:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># config.rh - Project-wide configuration</span></span>
+          <h2 id="example-header">Example Header</h2>
+          <p>A typical header file might look like:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># config.rh - Project-wide configuration</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Version info</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION &quot;1.2.0&quot;</span></span>
@@ -243,15 +268,33 @@
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>.cond) <span class="fu">stop</span>(.msg)</span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span></code></pre></div>
-      <h2 id="importing-headers">Importing Headers</h2>
-      <p>Use <code>#&gt; import</code> in your <code>.R</code> files or
-      pass headers via the <code>-import</code> CLI flag. See <a
-      href="import.html">Import</a> for details on local imports,
-      package imports, and nested imports.</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import config.rh</span></span>
+          <h2 id="importing-headers">Importing Headers</h2>
+          <p>Use <code>#&gt; import</code> in your <code>.R</code> files
+          or pass headers via the <code>-import</code> CLI flag. See <a
+          href="import.html">Import</a> for details on local imports,
+          package imports, and nested imports.</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import config.rh</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;Application starting, version &quot;</span> <span class="sc">%+%</span> VERSION)</span></code></pre></div>
+          <footer class="page-nav">
+                        <a href="include.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="import.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

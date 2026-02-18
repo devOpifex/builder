@@ -16,15 +16,24 @@ Understanding this architecture helps you write more predictable preprocessing d
 ┌─────────────────────────────────────────────────────────────┐
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #> define &│──│ #> preflight│──│  preprocess hook    │  │
+│  │  Collect    │  │    Run      │  │     Validate        │  │
+│  │  #> define &│─▶│ #> preflight│─▶│    #> assert        │  │
 │  │  #> macro   │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                                              │              │
+│                                              ▼              │
+│                              Plugin preprocess hook         │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      SECOND PASS                            │
+│                                                             │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  #> for / #> endfor expansion (before line processing) │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                             │                               │
+│                             ▼                               │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
 │  │ F-string │─▶│#> include│─▶│  Macro   │─▶│Deconstruct │   │
@@ -53,12 +62,17 @@ The first pass scans all source files to collect definitions and run preflight c
 
 1. **Macro Collection** - All `#> define` and `#> macro` directives are parsed and stored
 2. **Preflight Execution** - `#> preflight` / `#> endflight` blocks are evaluated
-3. **Import Processing** - `#> import` directives are noted (for namespace prefixing)
-4. **Plugin Hook** - The `preprocess` plugin hook is called on each file's content
+3. **Assert Validation** - `#> assert` directives are checked; build fails if any assertion is false
+4. **Import Processing** - `#> import` directives are noted (for namespace prefixing)
+5. **Plugin Hook** - The `preprocess` plugin hook is called on each file's content
 
 ## Second Pass
 
 The second pass processes each line through a series of replacements and writes the final output.
+
+### Loop Expansion
+
+Before line-by-line processing, `#> for` / `#> endfor` blocks are collected and expanded into repeated code. The loop variable uses `..variable..` syntax for substitution.
 
 ### Replacement Order
 
@@ -66,7 +80,7 @@ Each line is processed through these transformations in order:
 
 | Order | Transformation | Example |
 |-------|---------------|---------|
-| 1 | F-strings | `f'{x}'` → `sprintf('%s', x)` |
+| 1 | F-strings | `..FMT("{x}")` → `sprintf('%s', x)` |
 | 2 | #> include: | `#> include:READ file.sql q` → `q <- c(...)` |
 | 3 | Macro expansion | `MY_MACRO(x)` → expanded code |
 | 4 | Deconstruction | `.[a, b] <- fn()` → indexed assignments |
@@ -89,7 +103,7 @@ F-strings are processed before macros, so you can use macro-defined values insid
 ```r
 #> define VERSION 2.0.0
 
-print(f'Version: {VERSION}')  # VERSION expanded after f-string processing
+print(..FMT("Version: {VERSION}"))  # VERSION expanded after f-string processing
 ```
 
 ### Constants Last

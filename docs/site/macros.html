@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,43 +132,95 @@
           </div>
         </details>
       </nav>
-      <h1 id="macros">Macros</h1>
-      <p>Macros are function-like preprocessor directives that allow you
-      to define reusable code templates with parameters. Unlike simple
-      <code>#&gt; define</code> replacements, macros can accept
-      arguments and expand into multiple lines of code.</p>
-      <h2 id="advantages">Advantages</h2>
-      <ul>
-      <li><strong>Easy metaprogramming:</strong> Write code that
-      generates code, enabling powerful abstractions and code generation
-      patterns.</li>
-      <li><strong>Zero overhead:</strong> Macros have no runtime
-      performance cost since they’re expanded at compile time.</li>
-      <li><strong>Compile time expansion:</strong> All macro processing
-      happens during preprocessing, before your code executes.</li>
-      </ul>
-      <h2 id="basic-syntax">Basic Syntax</h2>
-      <p>Macros are defined using <code>#&gt; macro</code> on its own
-      line, followed by a function definition. The macro ends with
-      <code>#&gt; endmacro</code>.</p>
-      <p><strong>Syntax:</strong></p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#macros" id="toc-macros">Macros</a>
+          <ul>
+          <li><a href="#advantages"
+          id="toc-advantages">Advantages</a></li>
+          <li><a href="#basic-syntax" id="toc-basic-syntax">Basic
+          Syntax</a></li>
+          <li><a href="#global-vs-local-macros"
+          id="toc-global-vs-local-macros">Global vs Local Macros</a>
+          <ul>
+          <li><a href="#global-macro-default"
+          id="toc-global-macro-default">Global Macro (Default)</a></li>
+          <li><a href="#local-macro" id="toc-local-macro">Local
+          Macro</a></li>
+          <li><a href="#when-to-use-each" id="toc-when-to-use-each">When
+          to Use Each</a></li>
+          </ul></li>
+          <li><a href="#argument-syntax"
+          id="toc-argument-syntax">Argument Syntax</a>
+          <ul>
+          <li><a href="#basic-example" id="toc-basic-example">Basic
+          Example</a></li>
+          <li><a href="#stringification"
+          id="toc-stringification">Stringification</a></li>
+          <li><a href="#building-identifiers-token-pasting"
+          id="toc-building-identifiers-token-pasting">Building
+          Identifiers (Token Pasting)</a></li>
+          </ul></li>
+          <li><a href="#examples" id="toc-examples">Examples</a>
+          <ul>
+          <li><a href="#cleanup" id="toc-cleanup">Cleanup</a></li>
+          <li><a href="#repeat" id="toc-repeat">Repeat</a></li>
+          <li><a href="#macros-with-multiple-arguments"
+          id="toc-macros-with-multiple-arguments">Macros with Multiple
+          Arguments</a></li>
+          <li><a href="#logging-macro" id="toc-logging-macro">Logging
+          Macro</a></li>
+          <li><a href="#try-catch-wrapper"
+          id="toc-try-catch-wrapper">Try-Catch Wrapper</a></li>
+          <li><a href="#timing-macro" id="toc-timing-macro">Timing
+          Macro</a></li>
+          </ul></li>
+          <li><a href="#important-notes"
+          id="toc-important-notes">Important Notes</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="macros">Macros</h1>
+          <p>Macros are function-like preprocessor directives that allow
+          you to define reusable code templates with parameters. Unlike
+          simple <code>#&gt; define</code> replacements, macros can
+          accept arguments and expand into multiple lines of code.</p>
+          <h2 id="advantages">Advantages</h2>
+          <ul>
+          <li><strong>Easy metaprogramming:</strong> Write code that
+          generates code, enabling powerful abstractions and code
+          generation patterns.</li>
+          <li><strong>Zero overhead:</strong> Macros have no runtime
+          performance cost since they’re expanded at compile time.</li>
+          <li><strong>Compile time expansion:</strong> All macro
+          processing happens during preprocessing, before your code
+          executes.</li>
+          </ul>
+          <h2 id="basic-syntax">Basic Syntax</h2>
+          <p>Macros are defined using <code>#&gt; macro</code> on its
+          own line, followed by a function definition. The macro ends
+          with <code>#&gt; endmacro</code>.</p>
+          <p><strong>Syntax:</strong></p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>MACRO_NAME <span class="ot">&lt;-</span> <span class="cf">function</span>(arg1, arg2, ...) {</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  body using .arg1, .arg2, etc.</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span></code></pre></div>
-      <h2 id="global-vs-local-macros">Global vs Local Macros</h2>
-      <p>By default, macros are <strong>global</strong> - their expanded
-      code is inserted directly without wrapping.</p>
-      <p>Use <code>#&gt; macro local</code> to create a
-      <strong>local</strong> macro that is wrapped in
-      <code>local({...})</code>. This prevents the macro from polluting
-      the calling environment, avoiding issues like accidentally
-      overwriting variables.</p>
-      <h3 id="global-macro-default">Global Macro (Default)</h3>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h2 id="global-vs-local-macros">Global vs Local Macros</h2>
+          <p>By default, macros are <strong>global</strong> - their
+          expanded code is inserted directly without wrapping.</p>
+          <p>Use <code>#&gt; macro local</code> to create a
+          <strong>local</strong> macro that is wrapped in
+          <code>local({...})</code>. This prevents the macro from
+          polluting the calling environment, avoiding issues like
+          accidentally overwriting variables.</p>
+          <h3 id="global-macro-default">Global Macro (Default)</h3>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SETUP_ENV <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  .name_env <span class="ot">&lt;-</span> <span class="fu">new.env</span>()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  .name_data <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
@@ -176,82 +228,82 @@
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SETUP_ENV</span>(app)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>app_env <span class="ot">&lt;-</span> <span class="fu">new.env</span>()</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>app_env <span class="ot">&lt;-</span> <span class="fu">new.env</span>()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>app_data <span class="ot">&lt;-</span> <span class="fu">list</span>()</span></code></pre></div>
-      <h3 id="local-macro">Local Macro</h3>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro local</span></span>
+          <h3 id="local-macro">Local Macro</h3>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro local</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>._LOG_INFO <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) {</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[INFO] &quot;</span>, msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">._LOG_INFO</span>(<span class="st">&quot;Application started&quot;</span>)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[INFO] &quot;</span>, <span class="st">&quot;Application started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
-      <h3 id="when-to-use-each">When to Use Each</h3>
-      <table>
-      <colgroup>
-      <col style="width: 37%" />
-      <col style="width: 62%" />
-      </colgroup>
-      <thead>
-      <tr class="header">
-      <th>Type</th>
-      <th>Use When</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>#&gt; macro</code> (global)</td>
-      <td>Default choice. Use when you need to create/modify variables
-      in calling scope, or define functions.</td>
-      </tr>
-      <tr class="even">
-      <td><code>#&gt; macro local</code></td>
-      <td>Safer, no side effects on calling scope. Use for
-      self-contained operations.</td>
-      </tr>
-      </tbody>
-      </table>
-      <h2 id="argument-syntax">Argument Syntax</h2>
-      <p>Macro arguments use explicit markers for replacement:</p>
-      <table>
-      <thead>
-      <tr class="header">
-      <th>Syntax</th>
-      <th>Description</th>
-      <th>Example (<code>name</code> = <code>count</code>)</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>name</code></td>
-      <td>Not replaced (literal)</td>
-      <td><code>name</code> stays <code>name</code></td>
-      </tr>
-      <tr class="even">
-      <td><code>.name</code></td>
-      <td>Value replacement</td>
-      <td><code>.name</code> becomes <code>count</code></td>
-      </tr>
-      <tr class="odd">
-      <td><code>..name</code></td>
-      <td>Stringification</td>
-      <td><code>..name</code> becomes <code>"count"</code></td>
-      </tr>
-      </tbody>
-      </table>
-      <p><strong>Note:</strong> Macro argument names cannot start with
-      <code>.</code>.</p>
-      <h3 id="basic-example">Basic Example</h3>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="when-to-use-each">When to Use Each</h3>
+          <table>
+          <colgroup>
+          <col style="width: 37%" />
+          <col style="width: 62%" />
+          </colgroup>
+          <thead>
+          <tr class="header">
+          <th>Type</th>
+          <th>Use When</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>#&gt; macro</code> (global)</td>
+          <td>Default choice. Use when you need to create/modify
+          variables in calling scope, or define functions.</td>
+          </tr>
+          <tr class="even">
+          <td><code>#&gt; macro local</code></td>
+          <td>Safer, no side effects on calling scope. Use for
+          self-contained operations.</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="argument-syntax">Argument Syntax</h2>
+          <p>Macro arguments use explicit markers for replacement:</p>
+          <table>
+          <thead>
+          <tr class="header">
+          <th>Syntax</th>
+          <th>Description</th>
+          <th>Example (<code>name</code> = <code>count</code>)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>name</code></td>
+          <td>Not replaced (literal)</td>
+          <td><code>name</code> stays <code>name</code></td>
+          </tr>
+          <tr class="even">
+          <td><code>.name</code></td>
+          <td>Value replacement</td>
+          <td><code>.name</code> becomes <code>count</code></td>
+          </tr>
+          <tr class="odd">
+          <td><code>..name</code></td>
+          <td>Stringification</td>
+          <td><code>..name</code> becomes <code>"count"</code></td>
+          </tr>
+          </tbody>
+          </table>
+          <p><strong>Note:</strong> Macro argument names cannot start
+          with <code>.</code>.</p>
+          <h3 id="basic-example">Basic Example</h3>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>LOG_EVAL <span class="ot">&lt;-</span> <span class="cf">function</span>(expr) {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  .expr</span>
@@ -259,15 +311,15 @@
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG_EVAL</span>(<span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
-      <h3 id="stringification">Stringification</h3>
-      <p>Use <code>..arg</code> to get the argument as a string
-      literal:</p>
-      <div class="sourceCode" id="cb8"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="stringification">Stringification</h3>
+          <p>Use <code>..arg</code> to get the argument as a string
+          literal:</p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>DEBUG <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(..var, <span class="st">&quot;=&quot;</span>, .var, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -275,31 +327,31 @@
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>my_value <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">DEBUG</span>(my_value)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb9"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>my_value <span class="ot">&lt;-</span> <span class="dv">42</span></span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>my_value <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;my_value&quot;</span>, <span class="st">&quot;=&quot;</span>, my_value, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-      <h3 id="building-identifiers-token-pasting">Building Identifiers
-      (Token Pasting)</h3>
-      <p>Use <code>.arg</code> within identifier names to build new
-      identifiers:</p>
-      <div class="sourceCode" id="cb10"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="building-identifiers-token-pasting">Building
+          Identifiers (Token Pasting)</h3>
+          <p>Use <code>.arg</code> within identifier names to build new
+          identifiers:</p>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>GETTER <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  get_.name <span class="ot">&lt;-</span> <span class="cf">function</span>() private<span class="sc">$</span>.name</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">GETTER</span>(count)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb11"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>get_count <span class="ot">&lt;-</span> <span class="cf">function</span>() private<span class="sc">$</span>count</span></code></pre></div>
-      <h2 id="examples">Examples</h2>
-      <h3 id="cleanup">Cleanup</h3>
-      <p>Ensure you close your database connections when you’re
-      done.</p>
-      <div class="sourceCode" id="cb12"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>get_count <span class="ot">&lt;-</span> <span class="cf">function</span>() private<span class="sc">$</span>count</span></code></pre></div>
+          <h2 id="examples">Examples</h2>
+          <h3 id="cleanup">Cleanup</h3>
+          <p>Ensure you close your database connections when you’re
+          done.</p>
+          <div class="sourceCode" id="cb12"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>CONNECT <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">on.exit</span>(DBI<span class="sc">::</span><span class="fu">dbDisconnect</span>(con))</span>
@@ -307,14 +359,14 @@
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">CONNECT</span>()</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb13"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb13"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on.exit</span>(DBI<span class="sc">::</span><span class="fu">dbDisconnect</span>(con))</span></code></pre></div>
-      <h3 id="repeat">Repeat</h3>
-      <p>Macro to easily repeat a block of code.</p>
-      <div class="sourceCode" id="cb14"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="repeat">Repeat</h3>
+          <p>Macro to easily repeat a block of code.</p>
+          <div class="sourceCode" id="cb14"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>REPEAT <span class="ot">&lt;-</span> <span class="cf">function</span>(n, action) {</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>.n) {</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    .action</span>
@@ -323,17 +375,17 @@
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">REPEAT</span>(<span class="dv">3</span>, <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>))</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb15"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb15"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h3 id="macros-with-multiple-arguments">Macros with Multiple
-      Arguments</h3>
-      <p>Macros can accept multiple arguments, which are separated by
-      commas in both the definition and invocation.</p>
-      <div class="sourceCode" id="cb16"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="macros-with-multiple-arguments">Macros with Multiple
+          Arguments</h3>
+          <p>Macros can accept multiple arguments, which are separated
+          by commas in both the definition and invocation.</p>
+          <div class="sourceCode" id="cb16"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>VALIDATE <span class="ot">&lt;-</span> <span class="cf">function</span>(value, min, max) {</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (.value <span class="sc">&lt;</span> .min <span class="sc">||</span> .value <span class="sc">&gt;</span> .max) {</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, .value)</span>
@@ -343,15 +395,15 @@
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">VALIDATE</span>(x, <span class="dv">0</span>, <span class="dv">100</span>)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb17"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb17"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">||</span> x <span class="sc">&gt;</span> <span class="dv">100</span>) {</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, x)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h3 id="logging-macro">Logging Macro</h3>
-      <div class="sourceCode" id="cb18"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="logging-macro">Logging Macro</h3>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>LOG <span class="ot">&lt;-</span> <span class="cf">function</span>(level, msg) {</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, .level, <span class="st">&quot;] &quot;</span>, .msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -359,13 +411,13 @@
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Application started&quot;</span>)</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;ERROR&quot;</span>, <span class="st">&quot;Something went wrong&quot;</span>)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb19"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Application started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb19"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Application started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;ERROR&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Something went wrong&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
-      <h3 id="try-catch-wrapper">Try-Catch Wrapper</h3>
-      <div class="sourceCode" id="cb20"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="try-catch-wrapper">Try-Catch Wrapper</h3>
+          <div class="sourceCode" id="cb20"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>TRY_CATCH <span class="ot">&lt;-</span> <span class="cf">function</span>(code, error_msg) {</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    .code</span>
@@ -376,16 +428,16 @@
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TRY_CATCH</span>(<span class="fu">risky_operation</span>(), <span class="st">&quot;Operation failed&quot;</span>)</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb21"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>({</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb21"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>({</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">risky_operation</span>()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Operation failed&quot;</span>, <span class="st">&quot;:&quot;</span>, e<span class="sc">$</span>message, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
-      <h3 id="timing-macro">Timing Macro</h3>
-      <div class="sourceCode" id="cb22"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
+          <h3 id="timing-macro">Timing Macro</h3>
+          <div class="sourceCode" id="cb22"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>TIME_IT <span class="ot">&lt;-</span> <span class="cf">function</span>(expr) {</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> .expr</span>
@@ -396,34 +448,52 @@
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(<span class="fu">slow_computation</span>())</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb23"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb23"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">slow_computation</span>()</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Execution time:&quot;</span>, end <span class="sc">-</span> start, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
-      <h2 id="important-notes">Important Notes</h2>
-      <ul>
-      <li>Macros start with <code>#&gt; macro</code> (or
-      <code>#&gt; macro local</code>) alone on a line</li>
-      <li>Macro definition uses standard R function syntax:
-      <code>NAME &lt;- function(...) { ... }</code></li>
-      <li>Macros end with <code>#&gt; endmacro</code></li>
-      <li>Global macros (default) expand without wrapping</li>
-      <li>Local macros (<code>#&gt; macro local</code>) are wrapped in
-      <code>local({...})</code> to avoid namespace pollution</li>
-      <li>Macros support multiline definitions and can span many lines
-      (up to 1024 lines)</li>
-      <li>Macro argument names <strong>cannot</strong> start with
-      <code>.</code></li>
-      <li>Use <code>.arg</code> to substitute the argument value,
-      <code>..arg</code> for stringification</li>
-      <li>Bare argument names (without <code>.</code> prefix) are
-      <strong>not</strong> replaced</li>
-      <li>Use <code>#&gt; define NAME value</code> for simple constants
-      (not function-like macros)</li>
-      </ul>
+          <h2 id="important-notes">Important Notes</h2>
+          <ul>
+          <li>Macros start with <code>#&gt; macro</code> (or
+          <code>#&gt; macro local</code>) alone on a line</li>
+          <li>Macro definition uses standard R function syntax:
+          <code>NAME &lt;- function(...) { ... }</code></li>
+          <li>Macros end with <code>#&gt; endmacro</code></li>
+          <li>Global macros (default) expand without wrapping</li>
+          <li>Local macros (<code>#&gt; macro local</code>) are wrapped
+          in <code>local({...})</code> to avoid namespace pollution</li>
+          <li>Macros support multiline definitions and can span many
+          lines (up to 1024 lines)</li>
+          <li>Macro argument names <strong>cannot</strong> start with
+          <code>.</code></li>
+          <li>Use <code>.arg</code> to substitute the argument value,
+          <code>..arg</code> for stringification</li>
+          <li>Bare argument names (without <code>.</code> prefix) are
+          <strong>not</strong> replaced</li>
+          <li>Use <code>#&gt; define NAME value</code> for simple
+          constants (not function-like macros)</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="directives.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="include.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

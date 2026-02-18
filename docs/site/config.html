@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,127 +132,145 @@
           </div>
         </details>
       </nav>
-      <h1 id="configuration-file">Configuration File</h1>
-      <p>Instead of passing command-line arguments, you can use a
-      <code>builder.ini</code> file in your project root. Command-line
-      arguments override config file values.</p>
-      <h2 id="usage">Usage</h2>
-      <p>Create a <code>builder.ini</code> file, you can also call
-      <code>builder -init</code> to create one.</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#configuration-file"
+          id="toc-configuration-file">Configuration File</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#options" id="toc-options">Options</a></li>
+          <li><a href="#full-example" id="toc-full-example">Full
+          Example</a></li>
+          <li><a href="#overriding-with-cli"
+          id="toc-overriding-with-cli">Overriding with CLI</a></li>
+          <li><a href="#comments" id="toc-comments">Comments</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="configuration-file">Configuration File</h1>
+          <p>Instead of passing command-line arguments, you can use a
+          <code>builder.ini</code> file in your project root.
+          Command-line arguments override config file values.</p>
+          <h2 id="usage">Usage</h2>
+          <p>Create a <code>builder.ini</code> file, you can also call
+          <code>builder -init</code> to create one.</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">output: R/</span></span></code></pre></div>
-      <p>Then run builder without arguments:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span></span></code></pre></div>
-      <h2 id="options">Options</h2>
-      <table>
-      <colgroup>
-      <col style="width: 22%" />
-      <col style="width: 16%" />
-      <col style="width: 25%" />
-      <col style="width: 36%" />
-      </colgroup>
-      <thead>
-      <tr class="header">
-      <th>Option</th>
-      <th>Type</th>
-      <th>Default</th>
-      <th>Description</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>input</code></td>
-      <td>string</td>
-      <td><code>srcr/</code></td>
-      <td>Input directory</td>
-      </tr>
-      <tr class="even">
-      <td><code>output</code></td>
-      <td>string</td>
-      <td><code>R/</code></td>
-      <td>Output directory</td>
-      </tr>
-      <tr class="odd">
-      <td><code>prepend</code></td>
-      <td>string</td>
-      <td>-</td>
-      <td>File to prepend to outputs</td>
-      </tr>
-      <tr class="even">
-      <td><code>append</code></td>
-      <td>string</td>
-      <td>-</td>
-      <td>File to append to outputs</td>
-      </tr>
-      <tr class="odd">
-      <td><code>bundle</code></td>
-      <td>string</td>
-      <td>-</td>
-      <td>Bundle all outputs into a single file</td>
-      </tr>
-      <tr class="even">
-      <td><code>deadcode</code></td>
-      <td>bool</td>
-      <td><code>false</code></td>
-      <td>Enable dead code detection</td>
-      </tr>
-      <tr class="odd">
-      <td><code>sourcemap</code></td>
-      <td>bool</td>
-      <td><code>false</code></td>
-      <td>Enable source maps</td>
-      </tr>
-      <tr class="even">
-      <td><code>clean</code></td>
-      <td>bool</td>
-      <td><code>true</code></td>
-      <td>Clean output before build</td>
-      </tr>
-      <tr class="odd">
-      <td><code>watch</code></td>
-      <td>bool</td>
-      <td><code>false</code></td>
-      <td>Enable watch mode</td>
-      </tr>
-      <tr class="even">
-      <td><code>plugin</code></td>
-      <td>list</td>
-      <td>-</td>
-      <td>Space-separated plugins</td>
-      </tr>
-      <tr class="odd">
-      <td><code>import</code></td>
-      <td>list</td>
-      <td>-</td>
-      <td>Space-separated imports</td>
-      </tr>
-      <tr class="even">
-      <td><code>depends</code></td>
-      <td>list</td>
-      <td>-</td>
-      <td>Space-separated dev dependencies to check</td>
-      </tr>
-      <tr class="odd">
-      <td><code>reader</code></td>
-      <td>string</td>
-      <td>-</td>
-      <td>Define custom file type reader (format:
-      <code>type function</code>)</td>
-      </tr>
-      <tr class="even">
-      <td><code>strip</code></td>
-      <td>bool</td>
-      <td><code>false</code></td>
-      <td>Strip comments from output (preserves <code>#'</code> special
-      comments)</td>
-      </tr>
-      </tbody>
-      </table>
-      <h2 id="full-example">Full Example</h2>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Builder configuration</span></span>
+          <p>Then run builder without arguments:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span></span></code></pre></div>
+          <h2 id="options">Options</h2>
+          <table>
+          <colgroup>
+          <col style="width: 22%" />
+          <col style="width: 16%" />
+          <col style="width: 25%" />
+          <col style="width: 36%" />
+          </colgroup>
+          <thead>
+          <tr class="header">
+          <th>Option</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>input</code></td>
+          <td>string</td>
+          <td><code>srcr/</code></td>
+          <td>Input directory</td>
+          </tr>
+          <tr class="even">
+          <td><code>output</code></td>
+          <td>string</td>
+          <td><code>R/</code></td>
+          <td>Output directory</td>
+          </tr>
+          <tr class="odd">
+          <td><code>prepend</code></td>
+          <td>string</td>
+          <td>-</td>
+          <td>File to prepend to outputs</td>
+          </tr>
+          <tr class="even">
+          <td><code>append</code></td>
+          <td>string</td>
+          <td>-</td>
+          <td>File to append to outputs</td>
+          </tr>
+          <tr class="odd">
+          <td><code>bundle</code></td>
+          <td>string</td>
+          <td>-</td>
+          <td>Bundle all outputs into a single file</td>
+          </tr>
+          <tr class="even">
+          <td><code>deadcode</code></td>
+          <td>bool</td>
+          <td><code>false</code></td>
+          <td>Enable dead code detection</td>
+          </tr>
+          <tr class="odd">
+          <td><code>sourcemap</code></td>
+          <td>bool</td>
+          <td><code>false</code></td>
+          <td>Enable source maps</td>
+          </tr>
+          <tr class="even">
+          <td><code>clean</code></td>
+          <td>bool</td>
+          <td><code>true</code></td>
+          <td>Clean output before build</td>
+          </tr>
+          <tr class="odd">
+          <td><code>watch</code></td>
+          <td>bool</td>
+          <td><code>false</code></td>
+          <td>Enable watch mode</td>
+          </tr>
+          <tr class="even">
+          <td><code>plugin</code></td>
+          <td>list</td>
+          <td>-</td>
+          <td>Space-separated plugins</td>
+          </tr>
+          <tr class="odd">
+          <td><code>import</code></td>
+          <td>list</td>
+          <td>-</td>
+          <td>Space-separated imports</td>
+          </tr>
+          <tr class="even">
+          <td><code>depends</code></td>
+          <td>list</td>
+          <td>-</td>
+          <td>Space-separated dev dependencies to check</td>
+          </tr>
+          <tr class="odd">
+          <td><code>reader</code></td>
+          <td>string</td>
+          <td>-</td>
+          <td>Define custom file type reader (format:
+          <code>type function</code>)</td>
+          </tr>
+          <tr class="even">
+          <td><code>strip</code></td>
+          <td>bool</td>
+          <td><code>false</code></td>
+          <td>Strip comments from output (preserves <code>#'</code>
+          special comments)</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="full-example">Full Example</h2>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Builder configuration</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">output: R/</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -278,16 +296,35 @@
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
-      <h2 id="overriding-with-cli">Overriding with CLI</h2>
-      <p>Config values are defaults. CLI arguments take precedence:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but overrides input</span></span>
+          <h2 id="overriding-with-cli">Overriding with CLI</h2>
+          <p>Config values are defaults. CLI arguments take
+          precedence:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but overrides input</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> other/</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but disables cleaning</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-noclean</span></span></code></pre></div>
-      <h2 id="comments">Comments</h2>
-      <p>Lines starting with <code>#</code> are ignored.</p>
+          <h2 id="comments">Comments</h2>
+          <p>Lines starting with <code>#</code> are ignored.</p>
+          <footer class="page-nav">
+                        <a href="get-started.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="architecture.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

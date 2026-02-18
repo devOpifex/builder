@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,31 +132,56 @@
           </div>
         </details>
       </nav>
-      <h1 id="dead-code-analysis">Dead Code Analysis</h1>
-      <p>Builder can detect unused variables and functions in your R
-      package with the <code>-deadcode</code> flag. This helps identify
-      code that may be safe to remove or indicates potential bugs.</p>
-      <p>⚠️ Warning: this feature is vibe-coded to some extent and
-      static analysis of R code is notoriously difficult given the
-      capabilities of the language, these are the reasons this feature
-      is not enabled by default. False positive may be reported.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-deadcode</span></span></code></pre></div>
-      <p>When enabled, Builder performs a two-pass analysis after
-      preprocessing:</p>
-      <ol type="1">
-      <li><strong>Pass 1</strong>: Collects all variable and function
-      declarations across all files</li>
-      <li><strong>Pass 2</strong>: Marks variables and functions as used
-      when they are referenced</li>
-      </ol>
-      <p>After both passes, any declarations that were never referenced
-      are reported as warnings.</p>
-      <h2 id="example">Example</h2>
-      <p><strong>Input files:</strong></p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># srcr/utils.R</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#dead-code-analysis"
+          id="toc-dead-code-analysis">Dead Code Analysis</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#example" id="toc-example">Example</a></li>
+          <li><a href="#cross-file-detection"
+          id="toc-cross-file-detection">Cross-File Detection</a></li>
+          <li><a href="#nested-scopes" id="toc-nested-scopes">Nested
+          Scopes</a></li>
+          <li><a href="#exclusions"
+          id="toc-exclusions">Exclusions</a></li>
+          <li><a href="#limitations"
+          id="toc-limitations">Limitations</a></li>
+          <li><a href="#best-practices" id="toc-best-practices">Best
+          Practices</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="dead-code-analysis">Dead Code Analysis</h1>
+          <p>Builder can detect unused variables and functions in your R
+          package with the <code>-deadcode</code> flag. This helps
+          identify code that may be safe to remove or indicates
+          potential bugs.</p>
+          <p>⚠️ Warning: this feature is vibe-coded to some extent and
+          static analysis of R code is notoriously difficult given the
+          capabilities of the language, these are the reasons this
+          feature is not enabled by default. False positive may be
+          reported.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-deadcode</span></span></code></pre></div>
+          <p>When enabled, Builder performs a two-pass analysis after
+          preprocessing:</p>
+          <ol type="1">
+          <li><strong>Pass 1</strong>: Collects all variable and
+          function declarations across all files</li>
+          <li><strong>Pass 2</strong>: Marks variables and functions as
+          used when they are referenced</li>
+          </ol>
+          <p>After both passes, any declarations that were never
+          referenced are reported as warnings.</p>
+          <h2 id="example">Example</h2>
+          <p><strong>Input files:</strong></p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># srcr/utils.R</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>helper_used <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">1</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -164,73 +189,93 @@
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>helper_unused <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">*</span> <span class="dv">2</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># srcr/main.R</span></span>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># srcr/main.R</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">helper_used</span>(<span class="dv">5</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code></pre></div>
-      <p><strong>Command:</strong></p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-deadcode</span></span></code></pre></div>
-      <p><strong>Output:</strong></p>
-      <pre><code>[INFO] Running dead code analysis...
+          <p><strong>Command:</strong></p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-deadcode</span></span></code></pre></div>
+          <p><strong>Output:</strong></p>
+          <pre><code>[INFO] Running dead code analysis...
 [WARNING] Unused function &#39;helper_unused&#39; at line 2 in R/utils.R
 [WARNING] Found 1 unused variable(s)/function(s)</code></pre>
-      <h2 id="cross-file-detection">Cross-File Detection</h2>
-      <p>The analysis works across all files in your package. A function
-      defined in one file and used in another will be correctly
-      identified as used:</p>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># File A: defines foo()</span></span>
+          <h2 id="cross-file-detection">Cross-File Detection</h2>
+          <p>The analysis works across all files in your package. A
+          function defined in one file and used in another will be
+          correctly identified as used:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># File A: defines foo()</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() { <span class="dv">42</span> }</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># File B: uses foo()</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">foo</span>()</span></code></pre></div>
-      <p>In this case, <code>foo</code> is not flagged because it’s used
-      in File B.</p>
-      <h2 id="nested-scopes">Nested Scopes</h2>
-      <p>Builder respects R’s lexical scoping rules. Variables in nested
-      functions can reference outer scopes:</p>
-      <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>outer <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+          <p>In this case, <code>foo</code> is not flagged because it’s
+          used in File B.</p>
+          <h2 id="nested-scopes">Nested Scopes</h2>
+          <p>Builder respects R’s lexical scoping rules. Variables in
+          nested functions can reference outer scopes:</p>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>outer <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  helper <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { x <span class="sc">+</span> <span class="dv">1</span> }  <span class="co"># Used below</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  unused <span class="ot">&lt;-</span> <span class="dv">42</span>                      <span class="co"># Flagged as unused</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">helper</span>(<span class="dv">10</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h2 id="exclusions">Exclusions</h2>
-      <p>Certain names are automatically excluded from dead code
-      detection:</p>
-      <ul>
-      <li>Names starting with <code>.</code> (e.g.,
-      <code>.onLoad</code>, <code>.data</code>)</li>
-      <li>R special functions: <code>.onLoad</code>,
-      <code>.onUnload</code>, <code>.onAttach</code>,
-      <code>.onDetach</code>, <code>.Last.lib</code>,
-      <code>.First.lib</code></li>
-      </ul>
-      <p>These are typically package lifecycle functions or internal
-      variables that may not have explicit callers in user code.</p>
-      <h2 id="limitations">Limitations</h2>
-      <ul>
-      <li><strong>Exported functions</strong>: Currently does not check
-      NAMESPACE exports. Exported functions that are only called
-      externally will be flagged. Consider these warnings as
-      informational.</li>
-      <li><strong>Dynamic calls</strong>: Uses of
-      <code>do.call()</code>, <code>get()</code>, or other dynamic
-      dispatch mechanisms cannot be tracked statically.</li>
-      <li><strong>S3/S4 methods</strong>: Method dispatch may cause
-      false positives for methods that are called indirectly.</li>
-      </ul>
-      <h2 id="best-practices">Best Practices</h2>
-      <ul>
-      <li>Run dead code analysis periodically during development</li>
-      <li>Review warnings carefully before removing code</li>
-      <li>Use exclusion patterns (names starting with <code>.</code>)
-      for intentionally unused internal variables</li>
-      <li>Exported public API functions may appear unused - verify
-      against NAMESPACE before removing</li>
-      </ul>
+          <h2 id="exclusions">Exclusions</h2>
+          <p>Certain names are automatically excluded from dead code
+          detection:</p>
+          <ul>
+          <li>Names starting with <code>.</code> (e.g.,
+          <code>.onLoad</code>, <code>.data</code>)</li>
+          <li>R special functions: <code>.onLoad</code>,
+          <code>.onUnload</code>, <code>.onAttach</code>,
+          <code>.onDetach</code>, <code>.Last.lib</code>,
+          <code>.First.lib</code></li>
+          </ul>
+          <p>These are typically package lifecycle functions or internal
+          variables that may not have explicit callers in user code.</p>
+          <h2 id="limitations">Limitations</h2>
+          <ul>
+          <li><strong>Exported functions</strong>: Currently does not
+          check NAMESPACE exports. Exported functions that are only
+          called externally will be flagged. Consider these warnings as
+          informational.</li>
+          <li><strong>Dynamic calls</strong>: Uses of
+          <code>do.call()</code>, <code>get()</code>, or other dynamic
+          dispatch mechanisms cannot be tracked statically.</li>
+          <li><strong>S3/S4 methods</strong>: Method dispatch may cause
+          false positives for methods that are called indirectly.</li>
+          </ul>
+          <h2 id="best-practices">Best Practices</h2>
+          <ul>
+          <li>Run dead code analysis periodically during
+          development</li>
+          <li>Review warnings carefully before removing code</li>
+          <li>Use exclusion patterns (names starting with
+          <code>.</code>) for intentionally unused internal
+          variables</li>
+          <li>Exported public API functions may appear unused - verify
+          against NAMESPACE before removing</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="prepend-append.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="sourcemap.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

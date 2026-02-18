@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,21 +132,38 @@
           </div>
         </details>
       </nav>
-      <h1 id="source-map">Source Map</h1>
-      <p>Builder can add line number comments to your output files with
-      the <code>-sourcemap</code> flag. This helps trace errors in
-      processed R files back to their original source line numbers.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-sourcemap</span></span></code></pre></div>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>When enabled, Builder appends a <code># filename:N</code>
-      comment to the end of each line, indicating the source file and
-      original line number.</p>
-      <h2 id="example">Example</h2>
-      <p><strong>Input (srcr/utils.R):</strong></p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define API_URL &quot;https://api.example.com&quot;</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#source-map" id="toc-source-map">Source Map</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#how-it-works" id="toc-how-it-works">How It
+          Works</a></li>
+          <li><a href="#example" id="toc-example">Example</a></li>
+          <li><a href="#skipped-lines" id="toc-skipped-lines">Skipped
+          Lines</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="source-map">Source Map</h1>
+          <p>Builder can add line number comments to your output files
+          with the <code>-sourcemap</code> flag. This helps trace errors
+          in processed R files back to their original source line
+          numbers.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-sourcemap</span></span></code></pre></div>
+          <h2 id="how-it-works">How It Works</h2>
+          <p>When enabled, Builder appends a <code># filename:N</code>
+          comment to the end of each line, indicating the source file
+          and original line number.</p>
+          <h2 id="example">Example</h2>
+          <p><strong>Input (srcr/utils.R):</strong></p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define API_URL &quot;https://api.example.com&quot;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) {</span>
@@ -158,9 +175,9 @@
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> API_URL</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  httr<span class="sc">::</span><span class="fu">GET</span>(url)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <p><strong>Output (R/utils.R):</strong></p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) { <span class="co"># srcr/utils.R:4</span></span>
+          <p><strong>Output (R/utils.R):</strong></p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) { <span class="co"># srcr/utils.R:4</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>) <span class="co"># srcr/utils.R:5</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>} <span class="co"># srcr/utils.R:6</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -168,22 +185,40 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">&quot;https://api.example.com&quot;</span> <span class="co"># srcr/utils.R:10</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  httr<span class="sc">::</span><span class="fu">GET</span>(url) <span class="co"># srcr/utils.R:11</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>} <span class="co"># srcr/utils.R:12</span></span></code></pre></div>
-      <p>Notice how:</p>
-      <ul>
-      <li>The <code>#&gt; define</code> and
-      <code>#&gt; ifdef</code>/<code>#&gt; endif</code> directives are
-      removed from output</li>
-      <li>Output has only 8 lines, but annotations reference the
-      original source lines (4-6, 9-12)</li>
-      <li>Each comment shows the source file and line number (e.g.,
-      <code># srcr/utils.R:5</code>)</li>
-      </ul>
-      <h2 id="skipped-lines">Skipped Lines</h2>
-      <p>The following lines do not receive sourcemap comments:</p>
-      <ul>
-      <li>Empty or whitespace-only lines</li>
-      <li>Lines containing <code>#</code> (comments)</li>
-      </ul>
+          <p>Notice how:</p>
+          <ul>
+          <li>The <code>#&gt; define</code> and
+          <code>#&gt; ifdef</code>/<code>#&gt; endif</code> directives
+          are removed from output</li>
+          <li>Output has only 8 lines, but annotations reference the
+          original source lines (4-6, 9-12)</li>
+          <li>Each comment shows the source file and line number (e.g.,
+          <code># srcr/utils.R:5</code>)</li>
+          </ul>
+          <h2 id="skipped-lines">Skipped Lines</h2>
+          <p>The following lines do not receive sourcemap comments:</p>
+          <ul>
+          <li>Empty or whitespace-only lines</li>
+          <li>Lines containing <code>#</code> (comments)</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="deadcode.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="watch.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,37 +132,55 @@
           </div>
         </details>
       </nav>
-      <h1 id="depends">Depends</h1>
-      <p>Check that dev dependencies are installed before building. This
-      is useful for ensuring development tools like testing frameworks,
-      documentation generators, or linting packages are available.</p>
-      <h2 id="cli-usage">CLI Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat devtools roxygen2</span></code></pre></div>
-      <p>With version requirements:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">devtools</span><span class="er">(</span><span class="op">&gt;</span>=2.4.0<span class="kw">)</span> <span class="ex">roxygen2</span></span></code></pre></div>
-      <h2 id="config-usage">Config Usage</h2>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span></code></pre></div>
-      <p>With version requirements:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat(&gt;</span><span class="ot">=</span><span class="st">3.0.0) devtools(&gt;=2.4.0) roxygen2</span></span></code></pre></div>
-      <h2 id="behavior">Behavior</h2>
-      <ul>
-      <li>Checks each package with <code>requireNamespace()</code></li>
-      <li>If any package is missing, build fails with an error</li>
-      <li>All missing packages are reported before exiting</li>
-      <li>Optionally specify version constraint with
-      <code>package(&lt;op&gt;major.minor.patch)</code> format</li>
-      <li>Supported operators: <code>&gt;=</code>, <code>&lt;=</code>,
-      <code>==</code>, <code>&gt;</code>, <code>&lt;</code></li>
-      <li>If installed version doesn’t satisfy the constraint, build
-      fails with an error</li>
-      </ul>
-      <h2 id="example">Example</h2>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check dev dependencies before building</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#depends" id="toc-depends">Depends</a>
+          <ul>
+          <li><a href="#cli-usage" id="toc-cli-usage">CLI Usage</a></li>
+          <li><a href="#config-usage" id="toc-config-usage">Config
+          Usage</a></li>
+          <li><a href="#behavior" id="toc-behavior">Behavior</a></li>
+          <li><a href="#example" id="toc-example">Example</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="depends">Depends</h1>
+          <p>Check that dev dependencies are installed before building.
+          This is useful for ensuring development tools like testing
+          frameworks, documentation generators, or linting packages are
+          available.</p>
+          <h2 id="cli-usage">CLI Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat devtools roxygen2</span></code></pre></div>
+          <p>With version requirements:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">devtools</span><span class="er">(</span><span class="op">&gt;</span>=2.4.0<span class="kw">)</span> <span class="ex">roxygen2</span></span></code></pre></div>
+          <h2 id="config-usage">Config Usage</h2>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span></code></pre></div>
+          <p>With version requirements:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat(&gt;</span><span class="ot">=</span><span class="st">3.0.0) devtools(&gt;=2.4.0) roxygen2</span></span></code></pre></div>
+          <h2 id="behavior">Behavior</h2>
+          <ul>
+          <li>Checks each package with
+          <code>requireNamespace()</code></li>
+          <li>If any package is missing, build fails with an error</li>
+          <li>All missing packages are reported before exiting</li>
+          <li>Optionally specify version constraint with
+          <code>package(&lt;op&gt;major.minor.patch)</code> format</li>
+          <li>Supported operators: <code>&gt;=</code>,
+          <code>&lt;=</code>, <code>==</code>, <code>&gt;</code>,
+          <code>&lt;</code></li>
+          <li>If installed version doesn’t satisfy the constraint, build
+          fails with an error</li>
+          </ul>
+          <h2 id="example">Example</h2>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check dev dependencies before building</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-depends</span> testthat covr lintr</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># With version requirements</span></span>
@@ -170,9 +188,27 @@
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Combined with other options</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr/ <span class="at">-depends</span> testthat<span class="er">(</span><span class="op">&gt;</span>=3.0.0<span class="kw">)</span> <span class="ex">devtools</span></span></code></pre></div>
-      <p>This is intended for <strong>development dependencies</strong>
-      - packages needed during the build process but not necessarily at
-      runtime.</p>
+          <p>This is intended for <strong>development
+          dependencies</strong> - packages needed during the build
+          process but not necessarily at runtime.</p>
+          <footer class="page-nav">
+                        <a href="preflight.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="dry-run.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

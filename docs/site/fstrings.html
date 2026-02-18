@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,45 +132,91 @@
           </div>
         </details>
       </nav>
-      <h1 id="format-strings">Format Strings</h1>
-      <p>Builder supports format strings for string interpolation using
-      the <code>..FMT()</code> syntax.</p>
-      <h2 id="basic-syntax">Basic Syntax</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#format-strings" id="toc-format-strings">Format
+          Strings</a>
+          <ul>
+          <li><a href="#basic-syntax" id="toc-basic-syntax">Basic
+          Syntax</a></li>
+          <li><a href="#examples" id="toc-examples">Examples</a>
+          <ul>
+          <li><a href="#variable-interpolation"
+          id="toc-variable-interpolation">Variable
+          Interpolation</a></li>
+          <li><a href="#expression-evaluation"
+          id="toc-expression-evaluation">Expression Evaluation</a></li>
+          <li><a href="#function-calls" id="toc-function-calls">Function
+          Calls</a></li>
+          <li><a href="#quote-styles" id="toc-quote-styles">Quote
+          Styles</a></li>
+          </ul></li>
+          <li><a href="#limitations"
+          id="toc-limitations">Limitations</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="format-strings">Format Strings</h1>
+          <p>Builder supports format strings for string interpolation
+          using the <code>..FMT()</code> syntax.</p>
+          <h2 id="basic-syntax">Basic Syntax</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;{x} + {y} = {x + y}&quot;</span>))</span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sprintf</span>(<span class="st">&#39;%s + %s = %s&#39;</span>, x, y, x <span class="sc">+</span> y))</span></code></pre></div>
-      <h2 id="examples">Examples</h2>
-      <h3 id="variable-interpolation">Variable Interpolation</h3>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">&quot;Alice&quot;</span></span>
+          <h2 id="examples">Examples</h2>
+          <h3 id="variable-interpolation">Variable Interpolation</h3>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">&quot;Alice&quot;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="dv">30</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;Hello {name}, you are {age} years old&quot;</span>))</span></code></pre></div>
-      <h3 id="expression-evaluation">Expression Evaluation</h3>
-      <p>Expressions inside <code>{}</code> are evaluated:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+          <h3 id="expression-evaluation">Expression Evaluation</h3>
+          <p>Expressions inside <code>{}</code> are evaluated:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;Double: {x * 2}, Square: {x ^ 2}&quot;</span>))</span></code></pre></div>
-      <h3 id="function-calls">Function Calls</h3>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+          <h3 id="function-calls">Function Calls</h3>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;Sum is {sum(values)}&quot;</span>))</span></code></pre></div>
-      <h3 id="quote-styles">Quote Styles</h3>
-      <p>Both single and double quotes are supported:</p>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">..FMT</span>(<span class="st">&quot;hello {name}&quot;</span>)</span>
+          <h3 id="quote-styles">Quote Styles</h3>
+          <p>Both single and double quotes are supported:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">..FMT</span>(<span class="st">&quot;hello {name}&quot;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">..FMT</span>(<span class="st">&#39;hello {name}&#39;</span>)</span></code></pre></div>
-      <h2 id="limitations">Limitations</h2>
-      <ul>
-      <li>All values are formatted using <code>%s</code> (string
-      conversion)</li>
-      <li>No format specifiers (like Python’s <code>{x:.2f}</code>)</li>
-      </ul>
+          <h2 id="limitations">Limitations</h2>
+          <ul>
+          <li>All values are formatted using <code>%s</code> (string
+          conversion)</li>
+          <li>No format specifiers (like Python’s
+          <code>{x:.2f}</code>)</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="import.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="const.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

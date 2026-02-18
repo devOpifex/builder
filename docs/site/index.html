@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,19 +132,48 @@
           </div>
         </details>
       </nav>
-      <h1 id="builder">Builder</h1>
-      <p>Pre-processor for R (only works on POSIX systems). Visit the <a
-      href="get-started.html">guide</a> to get started.</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
-      <p>See <a href="installation.html">installation</a> for a custom
-      installation.</p>
-      <h2 id="usage">Usage</h2>
-      <p>See <code>-help</code> for the complete list of options.</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <p><a href="https://github.com/devOpifex/builder">Source
-      code</a></p>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#builder" id="toc-builder">Builder</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="builder">Builder</h1>
+          <p>Pre-processor for R (only works on POSIX systems). Visit
+          the <a href="get-started.html">guide</a> to get started.</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
+          <p>See <a href="installation.html">installation</a> for a
+          custom installation.</p>
+          <h2 id="usage">Usage</h2>
+          <p>See <code>-help</code> for the complete list of
+          options.</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+          <p><a href="https://github.com/devOpifex/builder">Source
+          code</a></p>
+          <footer class="page-nav">
+                        <span class="nav-spacer"></span>
+                        <a href="installation.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,28 +132,62 @@
           </div>
         </details>
       </nav>
-      <h1 id="installation">Installation</h1>
-      <h2 id="quick-install">Quick Install</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
-      <p>To install to a custom location:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>~/.local <span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
-      <h2 id="install-from-source">Install from source</h2>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/devOpifex/builder.git <span class="at">--depth</span> 1</span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#installation"
+          id="toc-installation">Installation</a>
+          <ul>
+          <li><a href="#quick-install" id="toc-quick-install">Quick
+          Install</a></li>
+          <li><a href="#install-from-source"
+          id="toc-install-from-source">Install from source</a></li>
+          <li><a href="#uninstall" id="toc-uninstall">Uninstall</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="installation">Installation</h1>
+          <h2 id="quick-install">Quick Install</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
+          <p>To install to a custom location:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>~/.local <span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
+          <h2 id="install-from-source">Install from source</h2>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/devOpifex/builder.git <span class="at">--depth</span> 1</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> builder</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> make install</span></code></pre></div>
-      <p>To install to a custom location:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> install PREFIX=~/.local</span></code></pre></div>
-      <h2 id="uninstall">Uninstall</h2>
-      <p>Remove the binary:</p>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm /usr/local/bin/builder</span></code></pre></div>
-      <p>Or if installed to a custom location:</p>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> ~/.local/bin/builder</span></code></pre></div>
+          <p>To install to a custom location:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> install PREFIX=~/.local</span></code></pre></div>
+          <h2 id="uninstall">Uninstall</h2>
+          <p>Remove the binary:</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm /usr/local/bin/builder</span></code></pre></div>
+          <p>Or if installed to a custom location:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> ~/.local/bin/builder</span></code></pre></div>
+          <footer class="page-nav">
+                        <a href="index.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="get-started.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

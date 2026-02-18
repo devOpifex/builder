@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,42 +132,62 @@
           </div>
         </details>
       </nav>
-      <h1 id="dry-run-mode">Dry Run Mode</h1>
-      <p>Builder can perform a dry run to preview what changes will be
-      made without modifying your actual output directory. This is
-      useful for validating builds, previewing macro expansions, or
-      integrating into CI pipelines.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#dry-run-mode" id="toc-dry-run-mode">Dry Run
+          Mode</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#how-it-works" id="toc-how-it-works">How It
+          Works</a></li>
+          <li><a href="#the--diff-flag" id="toc-the--diff-flag">The
+          -diff Flag</a></li>
+          <li><a href="#example" id="toc-example">Example</a></li>
+          <li><a href="#options" id="toc-options">Options</a></li>
+          <li><a href="#use-cases" id="toc-use-cases">Use Cases</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="dry-run-mode">Dry Run Mode</h1>
+          <p>Builder can perform a dry run to preview what changes will
+          be made without modifying your actual output directory. This
+          is useful for validating builds, previewing macro expansions,
+          or integrating into CI pipelines.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>When <code>-dry-run</code> is enabled:</p>
-      <ol type="1">
-      <li>Builder creates a temporary directory
-      (<code>/tmp/dryrun-XXXXXX</code>)</li>
-      <li>Performs the full build process, writing output to the
-      temporary directory</li>
-      <li>Tests are not written in dry-run mode</li>
-      <li>If <code>-diff</code> is specified, shows differences between
-      current output and newly processed files</li>
-      <li>Cleans up the temporary directory automatically when
-      finished</li>
-      </ol>
-      <h2 id="the--diff-flag">The -diff Flag</h2>
-      <p>The <code>-diff</code> flag is a companion to
-      <code>-dry-run</code> that shows line-by-line differences between
-      your current output files and the newly processed output. This
-      lets you see exactly what would change in your output
-      directory.</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
-      <p>The <code>-diff</code> flag requires <code>-dry-run</code> to
-      be set. Using <code>-diff</code> alone will produce an error:</p>
-      <pre><code>[ERROR] -diff requires -dry-run</code></pre>
-      <h2 id="example">Example</h2>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> builder <span class="at">-dry-run</span> <span class="at">-diff</span></span>
+          <h2 id="how-it-works">How It Works</h2>
+          <p>When <code>-dry-run</code> is enabled:</p>
+          <ol type="1">
+          <li>Builder creates a temporary directory
+          (<code>/tmp/dryrun-XXXXXX</code>)</li>
+          <li>Performs the full build process, writing output to the
+          temporary directory</li>
+          <li>Tests are not written in dry-run mode</li>
+          <li>If <code>-diff</code> is specified, shows differences
+          between current output and newly processed files</li>
+          <li>Cleans up the temporary directory automatically when
+          finished</li>
+          </ol>
+          <h2 id="the--diff-flag">The -diff Flag</h2>
+          <p>The <code>-diff</code> flag is a companion to
+          <code>-dry-run</code> that shows line-by-line differences
+          between your current output files and the newly processed
+          output. This lets you see exactly what would change in your
+          output directory.</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-dry-run</span> <span class="at">-diff</span></span></code></pre></div>
+          <p>The <code>-diff</code> flag requires <code>-dry-run</code>
+          to be set. Using <code>-diff</code> alone will produce an
+          error:</p>
+          <pre><code>[ERROR] -diff requires -dry-run</code></pre>
+          <h2 id="example">Example</h2>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> builder <span class="at">-dry-run</span> <span class="at">-diff</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Cleaning: /tmp/dryrun-abc123/ and testthat/</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Copying srcr/main.R to /tmp/dryrun-abc123/main.R</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">[INFO]</span> Running diff</span>
@@ -178,44 +198,62 @@
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> cat<span class="kw">(</span><span class="st">&quot;Version:&quot;</span><span class="ex">,</span> 3<span class="kw">)</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[SUCCESS]</span> All built!</span></code></pre></div>
-      <p>In this example, the diff shows that the <code>VERSION</code>
-      value would change from <code>2</code> to <code>3</code> in your
-      output.</p>
-      <h2 id="options">Options</h2>
-      <table>
-      <colgroup>
-      <col style="width: 31%" />
-      <col style="width: 68%" />
-      </colgroup>
-      <thead>
-      <tr class="header">
-      <th>Flag</th>
-      <th>Description</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="odd">
-      <td><code>-dry-run</code></td>
-      <td>Build to temporary directory without modifying output</td>
-      </tr>
-      <tr class="even">
-      <td><code>-diff</code></td>
-      <td>Show differences between current output and newly processed
-      output (requires <code>-dry-run</code>)</td>
-      </tr>
-      </tbody>
-      </table>
-      <h2 id="use-cases">Use Cases</h2>
-      <ul>
-      <li><strong>CI validation</strong>: Verify builds complete
-      successfully without side effects</li>
-      <li><strong>Preview macro expansions</strong>: See how macros will
-      expand before committing</li>
-      <li><strong>Review directive processing</strong>: Check
-      conditional compilation results</li>
-      <li><strong>Safe experimentation</strong>: Test build
-      configurations without risk</li>
-      </ul>
+          <p>In this example, the diff shows that the
+          <code>VERSION</code> value would change from <code>2</code> to
+          <code>3</code> in your output.</p>
+          <h2 id="options">Options</h2>
+          <table>
+          <colgroup>
+          <col style="width: 31%" />
+          <col style="width: 68%" />
+          </colgroup>
+          <thead>
+          <tr class="header">
+          <th>Flag</th>
+          <th>Description</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="odd">
+          <td><code>-dry-run</code></td>
+          <td>Build to temporary directory without modifying output</td>
+          </tr>
+          <tr class="even">
+          <td><code>-diff</code></td>
+          <td>Show differences between current output and newly
+          processed output (requires <code>-dry-run</code>)</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="use-cases">Use Cases</h2>
+          <ul>
+          <li><strong>CI validation</strong>: Verify builds complete
+          successfully without side effects</li>
+          <li><strong>Preview macro expansions</strong>: See how macros
+          will expand before committing</li>
+          <li><strong>Review directive processing</strong>: Check
+          conditional compilation results</li>
+          <li><strong>Safe experimentation</strong>: Test build
+          configurations without risk</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="depends.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="plugins.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

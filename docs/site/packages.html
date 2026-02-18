@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,41 +132,73 @@
           </div>
         </details>
       </nav>
-      <h1 id="packages">Packages</h1>
-      <p>Builder reads your R files from the srcr (default) directory
-      and writes the output to the R (default) directory.</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <p>This allows building R packages from <strong>multiple</strong>,
-      <strong>nested</strong> directories such as:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srcr</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#packages" id="toc-packages">Packages</a>
+          <ul>
+          <li><a href="#creating-a-package"
+          id="toc-creating-a-package">Creating a Package</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="packages">Packages</h1>
+          <p>Builder reads your R files from the srcr (default)
+          directory and writes the output to the R (default)
+          directory.</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+          <p>This allows building R packages from
+          <strong>multiple</strong>, <strong>nested</strong> directories
+          such as:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srcr</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> sub</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> main.R</span></code></pre></div>
-      <p>That will produce:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
+          <p>That will produce:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> sub-main.R</span></code></pre></div>
-      <p>Note that the file order is preserved, though it’s unlikely to
-      matter in an R package.</p>
-      <h2 id="creating-a-package">Creating a Package</h2>
-      <p>Use <code>-create</code> to scaffold a new R package with
-      builder support:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-create</span> mypackage</span></code></pre></div>
-      <p>This creates:</p>
-      <div class="sourceCode" id="cb5"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mypackage</span></span>
+          <p>Note that the file order is preserved, though it’s unlikely
+          to matter in an R package.</p>
+          <h2 id="creating-a-package">Creating a Package</h2>
+          <p>Use <code>-create</code> to scaffold a new R package with
+          builder support:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-create</span> mypackage</span></code></pre></div>
+          <p>This creates:</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mypackage</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> DESCRIPTION</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .Rbuildignore</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> builder.ini</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> R/</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> srcr/</span></code></pre></div>
-      <p>Then navigate to the package and start building:</p>
-      <div class="sourceCode" id="cb6"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mypackage <span class="kw">&amp;&amp;</span> <span class="ex">builder</span></span></code></pre></div>
+          <p>Then navigate to the package and start building:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mypackage <span class="kw">&amp;&amp;</span> <span class="ex">builder</span></span></code></pre></div>
+          <footer class="page-nav">
+                        <a href="architecture.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="directives.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

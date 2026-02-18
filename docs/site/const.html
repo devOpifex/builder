@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,58 +132,101 @@
           </div>
         </details>
       </nav>
-      <h1 id="constants">Constants</h1>
-      <p>Builder provides a special syntax for creating constant
-      (immutable) bindings using the <code>-&lt;</code> operator. Once
-      assigned, constant values cannot be changed, providing safety
-      against accidental modification.</p>
-      <h2 id="basic-syntax">Basic Syntax</h2>
-      <p>Use <code>-&lt;</code> instead of <code>&lt;-</code> to create
-      a constant binding.</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>PI <span class="sc">-</span><span class="er">&lt;</span> <span class="fl">3.14159</span></span>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#constants" id="toc-constants">Constants</a>
+          <ul>
+          <li><a href="#basic-syntax" id="toc-basic-syntax">Basic
+          Syntax</a></li>
+          <li><a href="#how-it-works" id="toc-how-it-works">How It
+          Works</a></li>
+          <li><a href="#usage-examples" id="toc-usage-examples">Usage
+          Examples</a>
+          <ul>
+          <li><a href="#defining-configuration-constants"
+          id="toc-defining-configuration-constants">Defining
+          Configuration Constants</a></li>
+          </ul></li>
+          <li><a href="#benefits" id="toc-benefits">Benefits</a></li>
+          <li><a href="#important-notes"
+          id="toc-important-notes">Important Notes</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="constants">Constants</h1>
+          <p>Builder provides a special syntax for creating constant
+          (immutable) bindings using the <code>-&lt;</code> operator.
+          Once assigned, constant values cannot be changed, providing
+          safety against accidental modification.</p>
+          <h2 id="basic-syntax">Basic Syntax</h2>
+          <p>Use <code>-&lt;</code> instead of <code>&lt;-</code> to
+          create a constant binding.</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>PI <span class="sc">-</span><span class="er">&lt;</span> <span class="fl">3.14159</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>MAX_SIZE <span class="sc">-</span><span class="er">&lt;</span> <span class="dv">100</span></span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>PI <span class="ot">&lt;-</span> <span class="fl">3.14159</span>;<span class="fu">lockBinding</span>(<span class="st">&quot;PI&quot;</span>, <span class="fu">environment</span>());</span>
+          <p><strong>Expands to:</strong></p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>PI <span class="ot">&lt;-</span> <span class="fl">3.14159</span>;<span class="fu">lockBinding</span>(<span class="st">&quot;PI&quot;</span>, <span class="fu">environment</span>());</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>MAX_SIZE <span class="ot">&lt;-</span> <span class="dv">100</span>;<span class="fu">lockBinding</span>(<span class="st">&quot;MAX_SIZE&quot;</span>, <span class="fu">environment</span>());</span></code></pre></div>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>The <code>-&lt;</code> operator is transformed during
-      preprocessing into a regular assignment followed by a
-      <code>lockBinding()</code> call. This prevents the variable from
-      being reassigned later in the code.</p>
-      <h2 id="usage-examples">Usage Examples</h2>
-      <h3 id="defining-configuration-constants">Defining Configuration
-      Constants</h3>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>API_URL <span class="sc">-</span><span class="er">&lt;</span> <span class="st">&quot;https://api.example.com&quot;</span></span>
+          <h2 id="how-it-works">How It Works</h2>
+          <p>The <code>-&lt;</code> operator is transformed during
+          preprocessing into a regular assignment followed by a
+          <code>lockBinding()</code> call. This prevents the variable
+          from being reassigned later in the code.</p>
+          <h2 id="usage-examples">Usage Examples</h2>
+          <h3 id="defining-configuration-constants">Defining
+          Configuration Constants</h3>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>API_URL <span class="sc">-</span><span class="er">&lt;</span> <span class="st">&quot;https://api.example.com&quot;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>TIMEOUT <span class="sc">-</span><span class="er">&lt;</span> <span class="dv">30</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>DEBUG <span class="sc">-</span><span class="er">&lt;</span> <span class="cn">TRUE</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Later attempts to modify will fail</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># API_URL &lt;- &quot;different-url&quot;  # Error: cannot change value of locked binding</span></span></code></pre></div>
-      <h2 id="benefits">Benefits</h2>
-      <ul>
-      <li><strong>Safety:</strong> Prevents accidental modification of
-      critical values</li>
-      <li><strong>Clarity:</strong> Makes it clear which values are
-      meant to be immutable</li>
-      <li><strong>Protection:</strong> Using <code>lockBinding()</code>
-      provides R-level protection against reassignment</li>
-      <li><strong>Convention:</strong> Provides a clean syntax for
-      constant declarations</li>
-      </ul>
-      <h2 id="important-notes">Important Notes</h2>
-      <ul>
-      <li>Once a binding is locked, attempting to reassign it will
-      result in an error</li>
-      <li>The <code>-&lt;</code> syntax can be used with any R value:
-      numbers, strings, vectors, lists, functions, etc.</li>
-      <li>Whitespace around the <code>-&lt;</code> operator is
-      automatically handled during preprocessing</li>
-      <li>This is a compile-time transformation, so the locking happens
-      when your code runs</li>
-      </ul>
+          <h2 id="benefits">Benefits</h2>
+          <ul>
+          <li><strong>Safety:</strong> Prevents accidental modification
+          of critical values</li>
+          <li><strong>Clarity:</strong> Makes it clear which values are
+          meant to be immutable</li>
+          <li><strong>Protection:</strong> Using
+          <code>lockBinding()</code> provides R-level protection against
+          reassignment</li>
+          <li><strong>Convention:</strong> Provides a clean syntax for
+          constant declarations</li>
+          </ul>
+          <h2 id="important-notes">Important Notes</h2>
+          <ul>
+          <li>Once a binding is locked, attempting to reassign it will
+          result in an error</li>
+          <li>The <code>-&lt;</code> syntax can be used with any R
+          value: numbers, strings, vectors, lists, functions, etc.</li>
+          <li>Whitespace around the <code>-&lt;</code> operator is
+          automatically handled during preprocessing</li>
+          <li>This is a compile-time transformation, so the locking
+          happens when your code runs</li>
+          </ul>
+          <footer class="page-nav">
+                        <a href="fstrings.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="deconstruct.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>

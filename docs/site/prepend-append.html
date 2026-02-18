@@ -101,7 +101,7 @@
   </head>
   <body>
     <main>
-      <nav>
+      <nav class="top-nav">
         <a href="index.html">Home</a>
         <a href="installation.html">Install</a>
         <a href="get-started.html">Get started</a>
@@ -132,25 +132,58 @@
           </div>
         </details>
       </nav>
-      <h1 id="prepend-and-append">Prepend and Append</h1>
-      <p>With the <code>-prepend</code> and <code>-append</code> flags,
-      you can specify files to prepend or append to every output
-      file.</p>
-      <h2 id="usage">Usage</h2>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> header.txt <span class="at">-append</span> footer.txt</span></code></pre></div>
-      <ul>
-      <li><code>-prepend &lt;file&gt;</code> - Content added to the
-      start of every output file</li>
-      <li><code>-append &lt;file&gt;</code> - Content added to the end
-      of every output file</li>
-      </ul>
-      <h2 id="example-license-header">Example: License Header</h2>
-      <p>Add a license header to all generated R files:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> LICENSE</span></code></pre></div>
-      <p>The contents of <code>LICENSE</code> will be prepended to every
-      output file in <code>R/</code>.</p>
+      <div class="content-wrapper">
+                <aside class="toc-sidebar">
+          <div class="toc-title">Contents</div>
+          <ul>
+          <li><a href="#prepend-and-append"
+          id="toc-prepend-and-append">Prepend and Append</a>
+          <ul>
+          <li><a href="#usage" id="toc-usage">Usage</a></li>
+          <li><a href="#example-license-header"
+          id="toc-example-license-header">Example: License
+          Header</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+                <article>
+          <h1 id="prepend-and-append">Prepend and Append</h1>
+          <p>With the <code>-prepend</code> and <code>-append</code>
+          flags, you can specify files to prepend or append to every
+          output file.</p>
+          <h2 id="usage">Usage</h2>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> header.txt <span class="at">-append</span> footer.txt</span></code></pre></div>
+          <ul>
+          <li><code>-prepend &lt;file&gt;</code> - Content added to the
+          start of every output file</li>
+          <li><code>-append &lt;file&gt;</code> - Content added to the
+          end of every output file</li>
+          </ul>
+          <h2 id="example-license-header">Example: License Header</h2>
+          <p>Add a license header to all generated R files:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> LICENSE</span></code></pre></div>
+          <p>The contents of <code>LICENSE</code> will be prepended to
+          every output file in <code>R/</code>.</p>
+          <footer class="page-nav">
+                        <a href="tests.html" class="nav-prev">← Previous</a>
+                        <span class="nav-spacer"></span>
+                        <a href="deadcode.html" class="nav-next">Next →</a>
+                      </footer>
+        </article>
+      </div>
     </main>
+    <script>
+      // Add anchor links to headings
+      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.textContent = '#';
+        anchor.setAttribute('aria-label', 'Link to this section');
+        heading.appendChild(anchor);
+      });
+    </script>
   </body>
 </html>
