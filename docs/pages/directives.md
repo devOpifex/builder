@@ -119,6 +119,22 @@ You can use `#> error` to stop compilation and print an error message.
 #> endif
 ```
 
+## #> assert
+
+Validate conditions at build time. If the assertion fails, compilation stops with an error message.
+
+**Syntax:** `#> assert (expression)`
+
+```r
+#> define VERSION 2
+
+#> assert (VERSION > 1)
+# Build continues - assertion passes
+
+#> assert (VERSION > 5)
+# Build fails: Assertion failed: (VERSION > 5)
+```
+
 ## #> for
 
 Generate repetitive code by iterating over a numeric range. The loop variable is replaced using the `..variable..` syntax within the loop body.
