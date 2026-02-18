@@ -33,6 +33,7 @@ FILES = src/main.c \
 	src/watch.c \
 	src/depends.c \
 	src/create.c \
+	src/assert.c \
 	src/config.c
 
 # Development commands

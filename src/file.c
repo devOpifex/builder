@@ -12,6 +12,7 @@
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
+#include "assert.h"
 #include "const.h"
 #include "error.h"
 #include "file.h"
@@ -681,6 +682,12 @@ static int first_pass(Arguments *args)
         buffer = append_buffer(buffer, line);
         free(line);
         continue;
+      }
+
+      int valid = valid_assert(line);
+      if(!valid) {
+        free(line);
+        return 1;
       }
 
       free(line);
