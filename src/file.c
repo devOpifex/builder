@@ -847,6 +847,16 @@ static int second_pass(Arguments *args)
         continue;
       }
 
+      err = catch_error(cnst);
+
+      if(err) {
+        free(cnst);
+        return 1;
+      }
+
+      catch_warning(cnst);
+      catch_deprecated(cnst);
+
       // skip directives
       char *directive_check = remove_leading_spaces(cnst);
       if(strncmp(directive_check, "#> ", 3) == 0) {
@@ -864,13 +874,6 @@ static int second_pass(Arguments *args)
       if(args->strip && strncmp(directive_check, "#", 1) == 0 && strncmp(directive_check, "#'", 2) != 0){
         free(cnst);
         continue;
-      }
-
-      err = catch_error(cnst);
-
-      if(err) {
-        free(cnst);
-        return 1;
       }
 
       buffer = append_buffer(buffer, cnst);

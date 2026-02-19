@@ -18,3 +18,33 @@ int catch_error(char* line)
 
   return 1;
 }
+
+void catch_warning(char* line)
+{
+  if(strstr(line, "#> warning") == NULL) return;
+
+  while(line[0] == ' ' || line[0] == '\t') line++;
+
+  char *match = strstr(line, "#> warning ");
+
+  char *msg = match + strlen("#> warning ");
+
+  printf("%s Warning: %s\n", LOG_WARNING, msg);
+
+  return;
+}
+
+void catch_deprecated(char* line)
+{
+  if(strstr(line, "#> deprecated") == NULL) return;
+
+  while(line[0] == ' ' || line[0] == '\t') line++;
+
+  char *match = strstr(line, "#> deprecated ");
+
+  char *msg = match + strlen("#> deprecated ");
+
+  printf("%s Deprecated: %s\n", LOG_WARNING, msg);
+
+  return;
+}
