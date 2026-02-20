@@ -28,56 +28,32 @@ MACRO_NAME <- function(arg1, arg2, ...) {
 
 ## Global vs Local Macros
 
-By default, macros are **global** - their expanded code is inserted directly without wrapping.
-
-Use `#> macro local` to create a **local** macro that is wrapped in `local({...})`. This prevents the macro from polluting the calling environment, avoiding issues like accidentally overwriting variables.
-
-### Global Macro (Default)
+By default, macros are **global** - expanded code is inserted directly. Use `#> macro local` to wrap expansion in `local({...})`, preventing side effects on the calling environment.
 
 ```r
 #> macro
 SETUP_ENV <- function(name) {
   .name_env <- new.env()
-  .name_data <- list()
 }
 #> endmacro
 
-SETUP_ENV(app)
+SETUP_ENV(app)  # Expands to: app_env <- new.env()
 ```
-
-**Expands to:**
-
-```r
-app_env <- new.env()
-app_data <- list()
-```
-
-### Local Macro
 
 ```r
 #> macro local
-._LOG_INFO <- function(msg) {
-  cat("[INFO] ", msg, "\n", sep = "")
+LOG_INFO <- function(msg) {
+  cat("[INFO] ", .msg, "\n", sep = "")
 }
 #> endmacro
 
-._LOG_INFO("Application started")
+LOG_INFO("Started")  # Expands to: local({ cat("[INFO] ", "Started", "\n", sep = "") })
 ```
-
-**Expands to:**
-
-```r
-local({
-  cat("[INFO] ", "Application started", "\n", sep = "")
-})
-```
-
-### When to Use Each
 
 | Type | Use When |
 |------|----------|
-| `#> macro` (global) | Default choice. Use when you need to create/modify variables in calling scope, or define functions. |
-| `#> macro local` | Safer, no side effects on calling scope. Use for self-contained operations. |
+| `#> macro` (global) | Need to create/modify variables in calling scope |
+| `#> macro local` | Self-contained operations, no side effects |
 
 ## Argument Syntax
 
@@ -91,223 +67,57 @@ Macro arguments use explicit markers for replacement:
 
 **Note:** Macro argument names cannot start with `.`.
 
-### Basic Example
+### Example
+
+This macro demonstrates value replacement (`.var`), stringification (`..var`), and token pasting (`.name` within identifiers):
 
 ```r
 #> macro
-LOG_EVAL <- function(expr) {
-  cat("Evaluating stuff\n")
-  .expr
-}
-#> endmacro
-
-LOG_EVAL(sum(1, 1, 1))
-```
-
-**Expands to:**
-
-```r
-cat("Evaluating stuff\n")
-sum(1, 1, 1)
-```
-
-### Stringification
-
-Use `..arg` to get the argument as a string literal:
-
-```r
-#> macro
-DEBUG <- function(var) {
-  cat(..var, "=", .var, "\n")
-}
-#> endmacro
-
-my_value <- 42
-DEBUG(my_value)
-```
-
-**Expands to:**
-
-```r
-my_value <- 42
-cat("my_value", "=", my_value, "\n")
-```
-
-### Building Identifiers (Token Pasting)
-
-Use `.arg` within identifier names to build new identifiers:
-
-```r
-#> macro
-GETTER <- function(name) {
-  get_.name <- function() private$.name
-}
-#> endmacro
-
-GETTER(count)
-```
-
-**Expands to:**
-
-```r
-get_count <- function() private$count
-```
-
-## Examples
-
-### Cleanup
-
-Ensure you close your database connections when you're done.
-
-```r
-#> macro
-CONNECT <- function() {
-  con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-  on.exit(DBI::dbDisconnect(con))
-}
-#> endmacro
-
-CONNECT()
-```
-
-**Expands to:**
-
-```r
-con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-on.exit(DBI::dbDisconnect(con))
-```
-
-### Repeat
-
-Macro to easily repeat a block of code.
-
-```r
-#> macro
-REPEAT <- function(n, action) {
-  for (i in 1:.n) {
-    .action
+ACCESSOR <- function(name) {
+  get_.name <- function() {
+    cat("Accessing:", ..name, "\n")
+    private$.name
   }
 }
 #> endmacro
 
-REPEAT(3, print("Hello"))
+ACCESSOR(count)
 ```
 
 **Expands to:**
 
 ```r
-for (i in 1:3) {
-  print("Hello")
+get_count <- function() {
+  cat("Accessing:", "count", "\n")
+  private$count
 }
 ```
 
-### Macros with Multiple Arguments
+## Namespaced Macros
 
-Macros can accept multiple arguments, which are separated by commas in both the definition and invocation.
+When importing macros from a package using `#> import pkg::file.rh`, macros are prefixed with the package namespace to avoid naming conflicts.
+
+```r
+#> import logger::macros.rh
+```
+
+If `macros.rh` (in the `logger` package's `inst/` directory) defines:
 
 ```r
 #> macro
-VALIDATE <- function(value, min, max) {
-  if (.value < .min || .value > .max) {
-    stop("Value out of range: ", .value)
-  }
+LOG <- function(msg) {
+  cat("[LOG] ", .msg, "\n", sep = "")
 }
 #> endmacro
-
-x <- 15
-VALIDATE(x, 0, 100)
 ```
 
-**Expands to:**
+You call it with the namespace prefix:
 
 ```r
-x <- 15
-if (x < 0 || x > 100) {
-  stop("Value out of range: ", x)
-}
+logger::LOG("Application started")
 ```
 
-### Logging Macro
+## Notes
 
-```r
-#> macro
-LOG <- function(level, msg) {
-  cat("[", .level, "] ", .msg, "\n", sep = "")
-}
-#> endmacro
-
-LOG("INFO", "Application started")
-LOG("ERROR", "Something went wrong")
-```
-
-**Expands to:**
-
-```r
-cat("[", "INFO", "] ", "Application started", "\n", sep = "")
-cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")
-```
-
-### Try-Catch Wrapper
-
-```r
-#> macro
-TRY_CATCH <- function(code, error_msg) {
-  tryCatch({
-    .code
-  }, error = function(e) {
-    cat(.error_msg, ":", e$message, "\n")
-  })
-}
-#> endmacro
-
-TRY_CATCH(risky_operation(), "Operation failed")
-```
-
-**Expands to:**
-
-```r
-tryCatch({
-  risky_operation()
-}, error = function(e) {
-  cat("Operation failed", ":", e$message, "\n")
-})
-```
-
-### Timing Macro
-
-```r
-#> macro
-TIME_IT <- function(expr) {
-  start <- Sys.time()
-  result <- .expr
-  end <- Sys.time()
-  cat("Execution time:", end - start, "\n")
-  result
-}
-#> endmacro
-
-TIME_IT(slow_computation())
-```
-
-**Expands to:**
-
-```r
-start <- Sys.time()
-result <- slow_computation()
-end <- Sys.time()
-cat("Execution time:", end - start, "\n")
-result
-```
-
-## Important Notes
-
-- Macros start with `#> macro` (or `#> macro local`) alone on a line
-- Macro definition uses standard R function syntax: `NAME <- function(...) { ... }`
-- Macros end with `#> endmacro`
-- Global macros (default) expand without wrapping
-- Local macros (`#> macro local`) are wrapped in `local({...})` to avoid namespace pollution
-- Macros support multiline definitions and can span many lines (up to 1024 lines)
-- Macro argument names **cannot** start with `.`
-- Use `.arg` to substitute the argument value, `..arg` for stringification
-- Bare argument names (without `.` prefix) are **not** replaced
+- Macros can span up to 1024 lines
 - Use `#> define NAME value` for simple constants (not function-like macros)
