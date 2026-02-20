@@ -148,6 +148,9 @@
           <li><a href="#else" id="toc-else">#&gt; else</a></li>
           <li><a href="#endif" id="toc-endif">#&gt; endif</a></li>
           <li><a href="#error" id="toc-error">#&gt; error</a></li>
+          <li><a href="#warning" id="toc-warning">#&gt; warning</a></li>
+          <li><a href="#deprecated" id="toc-deprecated">#&gt;
+          deprecated</a></li>
           <li><a href="#assert" id="toc-assert">#&gt; assert</a></li>
           <li><a href="#for" id="toc-for">#&gt; for</a></li>
           <li><a href="#nesting-limitation"
@@ -270,36 +273,56 @@
           class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; error &quot;DEBUG mode is not supported&quot;</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+          <h2 id="warning">#&gt; warning</h2>
+          <p>Print a warning message during compilation without stopping
+          the build. Useful for alerting developers about potential
+          issues or non-critical concerns.</p>
+          <p><strong>Syntax:</strong>
+          <code>#&gt; warning message text</code></p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef LEGACY_API</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; warning Using legacy API - consider migrating to v2</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+          <h2 id="deprecated">#&gt; deprecated</h2>
+          <p>Print a deprecation notice during compilation without
+          stopping the build. Useful for marking features that will be
+          removed in future versions.</p>
+          <p><strong>Syntax:</strong>
+          <code>#&gt; deprecated message text</code></p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef OLD_PARSER</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; deprecated Old parser will be removed in version 3.0</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
           <h2 id="assert">#&gt; assert</h2>
           <p>Validate conditions at build time. If the assertion fails,
           compilation stops with an error message.</p>
           <p><strong>Syntax:</strong>
           <code>#&gt; assert (expression)</code></p>
-          <div class="sourceCode" id="cb8"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assert (VERSION &gt; 1)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build continues - assertion passes</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assert (VERSION &gt; 5)</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build fails: Assertion failed: (VERSION &gt; 5)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assert (VERSION &gt; 1)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build continues - assertion passes</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assert (VERSION &gt; 5)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build fails: Assertion failed: (VERSION &gt; 5)</span></span></code></pre></div>
           <h2 id="for">#&gt; for</h2>
           <p>Generate repetitive code by iterating over a numeric range.
           The loop variable is replaced using the
           <code>..variable..</code> syntax within the loop body.</p>
           <p><strong>Syntax:</strong>
           <code>#&gt; for VARIABLE in START:END ... #&gt; endfor</code></p>
-          <div class="sourceCode" id="cb9"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; for i in 1:5</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>validate_col_..i.. <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col..i..)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endfor</span></span></code></pre></div>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; for i in 1:5</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>validate_col_..i.. <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col..i..)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endfor</span></span></code></pre></div>
           <p>Expands to:</p>
-          <div class="sourceCode" id="cb10"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>validate_col_1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col1)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>validate_col_2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col2)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>validate_col_3 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col3)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>validate_col_4 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col4)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>validate_col_5 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col5)</span></code></pre></div>
+          <div class="sourceCode" id="cb12"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>validate_col_1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col1)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>validate_col_2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col2)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>validate_col_3 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col3)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>validate_col_4 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col4)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>validate_col_5 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col5)</span></code></pre></div>
           <p>The range is inclusive on both ends. Multiple occurrences
           of <code>..variable..</code> in each line are all
           replaced.</p>
@@ -308,62 +331,62 @@
           Each
           <code>#&gt; ifdef</code>/<code>#&gt; ifndef</code>/<code>#&gt; if</code>
           block must be independent:</p>
-          <div class="sourceCode" id="cb11"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NOT supported</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef A</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; ifdef B</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    code</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; endif</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use combined conditions instead</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if A &amp;&amp; B</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  code</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+          <div class="sourceCode" id="cb13"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NOT supported</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef A</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; ifdef B</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    code</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; endif</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use combined conditions instead</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if A &amp;&amp; B</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  code</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
           <h2 id="built-in-directives">Built-in directives</h2>
           <h3 id="file..">..FILE..</h3>
           <p>A directive that is automatically replaced with the current
           source file path. Useful for debugging and logging to track
           which file generated specific code.</p>
-          <div class="sourceCode" id="cb12"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: ..FILE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If in srcr/analysis.R, becomes: cat(&quot;Processing file: srcr/analysis.R \n&quot;)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb14"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: ..FILE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If in srcr/analysis.R, becomes: cat(&quot;Processing file: srcr/analysis.R \n&quot;)</span></span></code></pre></div>
           <h3 id="line..">..LINE..</h3>
           <p>A directive that is automatically replaced with the current
           line number in the source file. Useful for debugging and error
           tracking to identify the exact location of code execution.</p>
-          <div class="sourceCode" id="cb13"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line ..LINE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If on line 42, becomes: cat(&quot;Executing line 42\n&quot;)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb15"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line ..LINE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If on line 42, becomes: cat(&quot;Executing line 42\n&quot;)</span></span></code></pre></div>
           <h3 id="os..">..OS..</h3>
           <p>A directive that is automatically populated with the
           current operating system. Useful for conditionally compiling
           code based on the current OS.</p>
-          <div class="sourceCode" id="cb14"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..OS..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb16"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..OS..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div>
           <h3 id="date..">..DATE..</h3>
           <p>A directive that is automatically populated with the
           current date (compile time).</p>
-          <div class="sourceCode" id="cb15"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..DATE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 2026-01-01\n&quot;)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb17"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..DATE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 2026-01-01\n&quot;)</span></span></code></pre></div>
           <h3 id="time..">..TIME..</h3>
           <p>A directive that is automatically populated with the
           current time (compile time).</p>
-          <div class="sourceCode" id="cb16"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..TIME..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 12:00:00\n&quot;)</span></span></code></pre></div>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..TIME..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 12:00:00\n&quot;)</span></span></code></pre></div>
           <h3 id="counter..">..COUNTER..</h3>
           <p>A directive that is automatically replaced with a unique
           incrementing integer, starting at 0. Each occurrence of
           <code>..COUNTER..</code> in the source code is replaced with
           the next value in the sequence. Useful for generating unique
           identifiers or labels.</p>
-          <div class="sourceCode" id="cb17"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: x &lt;- 0</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: y &lt;- 1</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: z &lt;- 2</span></span></code></pre></div>
+          <div class="sourceCode" id="cb19"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: x &lt;- 0</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: y &lt;- 1</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: z &lt;- 2</span></span></code></pre></div>
           <footer class="page-nav">
                         <a href="packages.html" class="nav-prev">← Previous</a>
                         <span class="nav-spacer"></span>

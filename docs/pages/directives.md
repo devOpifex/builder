@@ -119,6 +119,30 @@ You can use `#> error` to stop compilation and print an error message.
 #> endif
 ```
 
+## #> warning
+
+Print a warning message during compilation without stopping the build. Useful for alerting developers about potential issues or non-critical concerns.
+
+**Syntax:** `#> warning message text`
+
+```r
+#> ifdef LEGACY_API
+#> warning Using legacy API - consider migrating to v2
+#> endif
+```
+
+## #> deprecated
+
+Print a deprecation notice during compilation without stopping the build. Useful for marking features that will be removed in future versions.
+
+**Syntax:** `#> deprecated message text`
+
+```r
+#> ifdef OLD_PARSER
+#> deprecated Old parser will be removed in version 3.0
+#> endif
+```
+
 ## #> assert
 
 Validate conditions at build time. If the assertion fails, compilation stops with an error message.

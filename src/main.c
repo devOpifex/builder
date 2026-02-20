@@ -3,23 +3,23 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "include.h"
-#include "depends.h"
-#include "define.h"
-#include "parser.h"
-#include "plugins.h"
 #include "config.h"
 #include "create.h"
-#include "watch.h"
+#include "define.h"
+#include "depends.h"
 #include "file.h"
+#include "include.h"
 #include "log.h"
+#include "parser.h"
+#include "plugins.h"
 #include "r.h"
+#include "watch.h"
 
 #define VERSION "0.0.2"
 
-static int build(BuildContext *ctx)
+static int build(BuildContext* ctx)
 {
-  Define *defines = create_define();
+  Define* defines = create_define();
   get_definitions(defines, ctx->argc, ctx->argv);
 
   if (!ctx->dry_run && ctx->must_clean) {
@@ -27,7 +27,7 @@ static int build(BuildContext *ctx)
     walk(ctx->output, clean);
   }
 
-  RFile *files = NULL;
+  RFile* files = NULL;
   int success = collect_files(&files, ctx->input, ctx->output);
 
   if (!success) {
@@ -51,40 +51,38 @@ static int build(BuildContext *ctx)
     return 1;
   }
 
-  Arguments args = {
-    .files = files,
-    .defs = &defines,
-    .plugins = ctx->plugins,
-    .prepend = ctx->prepend,
-    .append = ctx->append,
-    .bundle = ctx->bundle,
-    .sourcemap = ctx->sourcemap,
-    .deadcode = ctx->deadcode,
-    .registry = &ctx->registry,
-    .dry_run = ctx->dry_run,
-    .strip = ctx->strip,
-    .input = ctx->input,
-    .output = ctx->output
-  };
+  Arguments args = {.files = files,
+                    .defs = &defines,
+                    .plugins = ctx->plugins,
+                    .prepend = ctx->prepend,
+                    .append = ctx->append,
+                    .bundle = ctx->bundle,
+                    .sourcemap = ctx->sourcemap,
+                    .deadcode = ctx->deadcode,
+                    .registry = &ctx->registry,
+                    .dry_run = ctx->dry_run,
+                    .strip = ctx->strip,
+                    .input = ctx->input,
+                    .output = ctx->output};
 
   int result = two_pass(&args);
 
-  if(ctx->diff) {
+  if (ctx->diff) {
     printf("%s Running diff\n", LOG_INFO);
 
-    RFile *current = files;
-    while(current != NULL) {
-      if(!current->dst) {
+    RFile* current = files;
+    while (current != NULL) {
+      if (!current->dst) {
         current = current->next;
         continue;
       }
       // Get relative path by skipping ctx->output prefix
-      char *relative = current->dst + strlen(ctx->output);
+      char* relative = current->dst + strlen(ctx->output);
       // Construct original file path
-      char *original_file = malloc(strlen(ctx->output_original) + strlen(relative) + 2);
+      char* original_file = malloc(strlen(ctx->output_original) + strlen(relative) + 2);
       sprintf(original_file, "%s/%s", ctx->output_original, relative);
       // Run diff between original and dry-run output
-      char *cmd = malloc(strlen(original_file) + strlen(current->dst) + strlen("diff --color --side-by-side") + 3);
+      char* cmd = malloc(strlen(original_file) + strlen(current->dst) + strlen("diff --color --side-by-side") + 3);
       sprintf(cmd, "diff --color --side-by-side %s %s", original_file, current->dst);
       system(cmd);
       free(cmd);
@@ -105,21 +103,21 @@ static int build(BuildContext *ctx)
   return 0;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  if(has_arg(argc, argv, "-version")) {
+  if (has_arg(argc, argv, "-version")) {
     printf("Builder v%s\n", VERSION);
     return 0;
   }
 
   if (has_arg(argc, argv, "-init")) {
-    char *path = (char *)malloc(2);
+    char* path = (char*)malloc(2);
     strcpy(path, ".");
     create_config(path);
     return 0;
   }
 
-  char *create = get_arg_value(argc, argv, "-create");
+  char* create = get_arg_value(argc, argv, "-create");
   if (create != NULL) {
     create_package(create);
     return 0;
@@ -132,33 +130,55 @@ int main(int argc, char *argv[])
     printf("Input/Output:\n");
     printf("  -input <path>           Input directory (default: srcr/)\n");
     printf("  -output <path>          Output directory (default: R/)\n");
-    printf("  -noclean                Skip cleaning output directory before build\n");
+    printf(
+        "  -noclean                Skip cleaning output directory before "
+        "build\n");
     printf("\n");
 
     printf("Build Options:\n");
-    printf("  -watch                  Watch input directory and rebuild on changes\n");
+    printf(
+        "  -watch                  Watch input directory and rebuild on "
+        "changes\n");
     printf("  -deadcode               Enable dead variable/function detection\n");
     printf("  -sourcemap              Enable source map generation\n");
-    printf("  -dry-run                Build to temporary directory without modifying output\n");
-    printf("  -diff                   Show differences between -dry-run output and existing output\n");
-    printf("  -strip                  Strip comments, preserves special comments: #'\n");
+    printf(
+        "  -dry-run                Build to temporary directory without "
+        "modifying output\n");
+    printf(
+        "  -diff                   Show differences between -dry-run output "
+        "and existing output\n");
+    printf(
+        "  -strip                  Strip comments, preserves special "
+        "comments: #'\n");
     printf("\n");
 
     printf("Preprocessing:\n");
-    printf("  -D<NAME> [value]        Define a macro, e.g., -DDEBUG or -DVALUE 42\n");
-    printf("  -import <file> ...      Import .rh header files, e.g., -import inst/main.rh\n");
-    printf("  -reader <type> <fn>     Define file type reader, e.g., -reader tsv read.delim\n");
+    printf(
+        "  -D<NAME> [value]        Define a macro, e.g., -DDEBUG or -DVALUE "
+        "42\n");
+    printf(
+        "  -import <file> ...      Import .rh header files, e.g., -import "
+        "inst/main.rh\n");
+    printf(
+        "  -reader <type> <fn>     Define file type reader, e.g., -reader "
+        "tsv read.delim\n");
     printf("\n");
 
     printf("File Injection:\n");
-    printf("  -prepend <path>         Prepend file contents to every output file\n");
-    printf("  -append <path>          Append file contents to every output file\n");
+    printf(
+        "  -prepend <path>         Prepend file contents to every output "
+        "file\n");
+    printf(
+        "  -append <path>          Append file contents to every output "
+        "file\n");
     printf("  -bundle <path>          Bundle all output into a single file\n");
     printf("\n");
 
     printf("Plugins & Dependencies:\n");
     printf("  -plugin <pkg::fn> ...   Use plugins, e.g., -plugin pkg::minify\n");
-    printf("  -depends <pkg> ...      Declare package dependencies, e.g., -depends rlang\n");
+    printf(
+        "  -depends <pkg> ...      Declare package dependencies, e.g., "
+        "-depends rlang\n");
     printf("\n");
 
     printf("Project Setup:\n");
@@ -181,17 +201,17 @@ int main(int argc, char *argv[])
 
   set_R_home();
 
-  char *r_argv[] = {"R", "--silent", "--no-save"};
+  char* r_argv[] = {"R", "--silent", "--no-save"};
   Rf_initEmbeddedR(3, r_argv);
 
-  Registry *registry = initialize_registry();
+  Registry* registry = initialize_registry();
 
-  BuildContext *cfg = NULL;
+  BuildContext* cfg = NULL;
   if (has_config()) {
     cfg = get_config(&registry);
   }
 
-  char *input = get_arg_value(argc, argv, "-input");
+  char* input = get_arg_value(argc, argv, "-input");
   if (input == NULL && cfg != NULL && cfg->input != NULL) {
     input = strdup(cfg->input);
   }
@@ -212,26 +232,26 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  char *output = get_arg_value(argc, argv, "-output");
+  char* output = get_arg_value(argc, argv, "-output");
   if (output == NULL && cfg != NULL && cfg->output != NULL) {
     output = strdup(cfg->output);
   }
 
-  char *output_copy = NULL;
+  char* output_copy = NULL;
   int dry_run = has_arg(argc, argv, "-dry-run");
-  if(dry_run) {
+  if (dry_run) {
     output_copy = strdup(output);
-    char *template = strdup("/tmp/dryrun-XXXXXX");
+    char* template = strdup("/tmp/dryrun-XXXXXX");
     free(output);
     output = mkdtemp(template);
-    if(output == NULL) {
+    if (output == NULL) {
       printf("%s Failed to create temporary directory\n", LOG_ERROR);
       free_config(cfg);
       free(input);
       return 1;
     }
   }
-  
+
   if (output == NULL) {
     output = strdup("R/");
     printf("%s No -output, defaulting to R\n", LOG_WARNING);
@@ -254,27 +274,27 @@ int main(int argc, char *argv[])
 
   output = ensure_dir(output);
 
-  Value *imports = get_arg_values(argc, argv, "-import");
+  Value* imports = get_arg_values(argc, argv, "-import");
   if (imports == NULL && cfg != NULL && cfg->imports != NULL) {
-    Value *current = cfg->imports;
+    Value* current = cfg->imports;
     while (current != NULL) {
       imports = push_value(imports, strdup(current->name));
       current = current->next;
     }
   }
 
-  Value *plugins_str = get_arg_values(argc, argv, "-plugin");
+  Value* plugins_str = get_arg_values(argc, argv, "-plugin");
   if (plugins_str == NULL && cfg != NULL && cfg->plugins_str != NULL) {
-    Value *current = cfg->plugins_str;
+    Value* current = cfg->plugins_str;
     while (current != NULL) {
       plugins_str = push_value(plugins_str, strdup(current->name));
       current = current->next;
     }
   }
 
-  Value *depends = get_arg_values(argc, argv, "-depends");
+  Value* depends = get_arg_values(argc, argv, "-depends");
   if (depends == NULL && cfg != NULL && cfg->depends != NULL) {
-    Value *current = cfg->depends;
+    Value* current = cfg->depends;
     while (current != NULL) {
       depends = push_value(depends, strdup(current->name));
       current = current->next;
@@ -283,7 +303,7 @@ int main(int argc, char *argv[])
 
   if (plugins_str != NULL) {
     printf("%s Using plugins:", LOG_INFO);
-    Value *current = plugins_str;
+    Value* current = plugins_str;
     while (current != NULL) {
       printf(" %s", current->name);
       current = current->next;
@@ -291,7 +311,7 @@ int main(int argc, char *argv[])
     printf("\n");
   }
 
-  Plugins *plugins = plugins_init(plugins_str, input, output);
+  Plugins* plugins = plugins_init(plugins_str, input, output);
   free_value(plugins_str);
 
   int p_failed = plugins_failed(plugins);
@@ -305,7 +325,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  char *prepend = get_arg_value(argc, argv, "-prepend");
+  char* prepend = get_arg_value(argc, argv, "-prepend");
   if (prepend == NULL && cfg != NULL && cfg->prepend != NULL) {
     prepend = strdup(cfg->prepend);
   }
@@ -313,7 +333,7 @@ int main(int argc, char *argv[])
     printf("%s Prepending: %s\n", LOG_INFO, prepend);
   }
 
-  char *append = get_arg_value(argc, argv, "-append");
+  char* append = get_arg_value(argc, argv, "-append");
   if (append == NULL && cfg != NULL && cfg->append != NULL) {
     append = strdup(cfg->append);
   }
@@ -321,7 +341,7 @@ int main(int argc, char *argv[])
     printf("%s Appending: %s\n", LOG_INFO, append);
   }
 
-  char *bundle = get_arg_value(argc, argv, "-bundle");
+  char* bundle = get_arg_value(argc, argv, "-bundle");
   if (bundle == NULL && cfg != NULL && cfg->bundle != NULL) {
     bundle = strdup(cfg->bundle);
   }
@@ -361,33 +381,31 @@ int main(int argc, char *argv[])
   free_config(cfg);
 
   int diff = has_arg(argc, argv, "-diff");
-  if(diff && !dry_run) {
+  if (diff && !dry_run) {
     printf("%s -diff requires -dry-run\n", LOG_ERROR);
     return 1;
   }
 
-  BuildContext ctx = {
-    .argc = argc,
-    .argv = argv,
-    .input = input,
-    .output = output,
-    .output_original = output_copy,
-    .imports = imports,
-    .plugins_str = NULL,
-    .prepend = prepend,
-    .append = append,
-    .bundle = bundle,
-    .deadcode = deadcode,
-    .sourcemap = sourcemap,
-    .must_clean = must_clean,
-    .watch = watch_mode,
-    .plugins = plugins,
-    .registry = registry,
-    .depends = depends,
-    .diff = diff,
-    .dry_run = dry_run,
-    .strip = has_arg(argc, argv, "-strip")
-  };
+  BuildContext ctx = {.argc = argc,
+                      .argv = argv,
+                      .input = input,
+                      .output = output,
+                      .output_original = output_copy,
+                      .imports = imports,
+                      .plugins_str = NULL,
+                      .prepend = prepend,
+                      .append = append,
+                      .bundle = bundle,
+                      .deadcode = deadcode,
+                      .sourcemap = sourcemap,
+                      .must_clean = must_clean,
+                      .watch = watch_mode,
+                      .plugins = plugins,
+                      .registry = registry,
+                      .depends = depends,
+                      .diff = diff,
+                      .dry_run = dry_run,
+                      .strip = has_arg(argc, argv, "-strip")};
 
   int result = 0;
 
@@ -424,7 +442,7 @@ int main(int argc, char *argv[])
   free_value(depends);
   free(input);
 
-  if(has_arg(argc, argv, "-dry-run")) {
+  if (has_arg(argc, argv, "-dry-run")) {
     walk(output, clean);
     rmdir(output);
   }
