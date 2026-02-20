@@ -116,8 +116,3 @@ You call it with the namespace prefix:
 ```r
 logger::LOG("Application started")
 ```
-
-## Notes
-
-- Macros can span up to 1024 lines
-- Use `#> define NAME value` for simple constants (not function-like macros)
