@@ -1,181 +1,177 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Architecture</title>
-    <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      div.columns{display: flex; gap: min(4vw, 1.5em);}
-      div.column{flex: auto; overflow-x: auto;}
-      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-      /* The extra [class] is a hack that increases specificity enough to
-         override a similar rule in reveal.js */
-      ul.task-list[class]{list-style: none;}
-      ul.task-list li input[type="checkbox"] {
-        font-size: inherit;
-        width: 0.8em;
-        margin: 0 0.8em 0.2em -1.6em;
-        vertical-align: middle;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
       }
-      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-      /* CSS for syntax highlighting */
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
-      div.sourceCode { margin: 1em 0; }
-      pre.sourceCode { margin: 0; }
-      @media screen {
-      div.sourceCode { overflow: auto; }
-      }
-      @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-      }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
-          position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
-          -webkit-touch-callout: none; -webkit-user-select: none;
-          -khtml-user-select: none; -moz-user-select: none;
-          -ms-user-select: none; user-select: none;
-          padding: 0 4px; width: 4em;
-        }
-      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-      div.sourceCode
-        { color: #deeeed; background-color: #080808; }
-      @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-      }
-      code span { color: #deeeed; } /* Normal */
-      code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
-      code span.an { color: #789978; } /* Annotation */
-      code span.at { color: #abab77; } /* Attribute */
-      code span.bn { color: #aaaaaa; } /* BaseN */
-      code span.bu { color: #555555; } /* BuiltIn */
-      code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
-      code span.ch { color: #708090; } /* Char */
-      code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
-      code span.co { color: #3a3a3a; } /* Comment */
-      code span.cv { color: #3a3a3a; } /* CommentVar */
-      code span.do { color: #789978; } /* Documentation */
-      code span.dt { color: #aaaaaa; } /* DataType */
-      code span.dv { color: #aaaaaa; } /* DecVal */
-      code span.er { color: #d70000; text-decoration: underline; } /* Error */
-      code span.ex { color: #708090; font-weight: bold; } /* Extension */
-      code span.fl { color: #aaaaaa; } /* Float */
-      code span.fu { color: #7a7a7a; } /* Function */
-      code span.im { color: #708090; } /* Import */
-      code span.in { color: #191919; background-color: #7788aa; } /* Information */
-      code span.kw { color: #666666; font-weight: bold; } /* Keyword */
-      code span.op { color: #7a7a7a; } /* Operator */
-      code span.ot { color: #708090; } /* Other */
-      code span.pp { color: #ffaa88; } /* Preprocessor */
-      code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
-      code span.sc { color: #789978; } /* SpecialChar */
-      code span.ss { color: #789978; } /* SpecialString */
-      code span.st { color: #708090; } /* String */
-      code span.va { color: #cccccc; } /* Variable */
-      code span.vs { color: #708090; } /* VerbatimString */
-      code span.wa { color: #191919; background-color: #abab77; } /* Warning */
-    </style>
-        <link rel="stylesheet" href="style.css" />
-        <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@devOpifex" />
-    <meta name="twitter:title" content="builder - R preprocessor" />
-    <meta
-      name="twitter:description"
-      content="An R preprocessor for the R programming language"
-    />
-    <meta
-      name="twitter:image"
-      content="https://builder.opifex.org/builder.png"
-    />
-  </head>
-  <body>
-    <main>
-      <nav class="top-nav">
-        <a href="index.html">Home</a>
-        <a href="installation.html">Install</a>
-        <a href="get-started.html">Get started</a>
-        <details class="dropdown">
-          <summary>Docs</summary>
-          <div class="dropdown-content">
-            <a href="config.html">Config</a>
-            <a href="architecture.html">Architecture</a>
-            <a href="packages.html">Packages</a>
-            <a href="directives.html">Directives</a>
-            <a href="macros.html">Macros</a>
-            <a href="include.html">Include</a>
-            <a href="headers.html">Headers</a>
-            <a href="import.html">Import</a>
-            <a href="fstrings.html">F-strings</a>
-            <a href="const.html">Const</a>
-            <a href="deconstruct.html">Deconstruct</a>
-            <a href="preflight.html">Preflight</a>
-            <a href="depends.html">Depends</a>
-            <a href="dry-run.html">Dry Run</a>
-            <a href="plugins.html">Plugins</a>
-            <a href="tests.html">Tests</a>
-            <a href="prepend-append.html">Prepend</a>
-            <a href="deadcode.html">Dead Code</a>
-            <a href="sourcemap.html">Source Map</a>
-            <a href="watch.html">Watch</a>
-            <a href="syntax-highlighting.html">Highlighting</a>
-          </div>
-        </details>
-      </nav>
-      <div class="content-wrapper">
-                <aside class="toc-sidebar">
-          <div class="toc-title">Contents</div>
-          <ul>
-          <li><a href="#architecture"
-          id="toc-architecture">Architecture</a>
-          <ul>
-          <li><a href="#two-pass-system"
-          id="toc-two-pass-system">Two-Pass System</a></li>
-          <li><a href="#first-pass" id="toc-first-pass">First Pass</a>
-          <ul>
-          <li><a href="#what-happens" id="toc-what-happens">What
-          happens:</a></li>
-          </ul></li>
-          <li><a href="#second-pass" id="toc-second-pass">Second
-          Pass</a>
-          <ul>
-          <li><a href="#loop-expansion" id="toc-loop-expansion">Loop
-          Expansion</a></li>
-          <li><a href="#replacement-order"
-          id="toc-replacement-order">Replacement Order</a></li>
-          </ul></li>
-          <li><a href="#why-order-matters"
-          id="toc-why-order-matters">Why Order Matters</a>
-          <ul>
-          <li><a href="#f-strings-first"
-          id="toc-f-strings-first">F-strings First</a></li>
-          <li><a href="#constants-last"
-          id="toc-constants-last">Constants Last</a></li>
-          </ul></li>
-          <li><a href="#built-in-definitions"
-          id="toc-built-in-definitions">Built-in Definitions</a></li>
-          </ul></li>
-          </ul>
-        </aside>
-                <article>
-          <h1 id="architecture">Architecture</h1>
-          <p>Builder assumes you’re building a package and simulates R’s
-          lazy loading behavior by performing a two-pass build.
-          Understanding this architecture helps you write more
-          predictable preprocessing directives.</p>
-          <h2 id="two-pass-system">Two-Pass System</h2>
-          <div class="desktop-only">
-          <pre><code>┌─────────────────────────────────────────────────────────────┐
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #deeeed; background-color: #080808; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #deeeed; } /* Normal */
+    code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
+    code span.an { color: #789978; } /* Annotation */
+    code span.at { color: #abab77; } /* Attribute */
+    code span.bn { color: #aaaaaa; } /* BaseN */
+    code span.bu { color: #555555; } /* BuiltIn */
+    code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #708090; } /* Char */
+    code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
+    code span.co { color: #3a3a3a; } /* Comment */
+    code span.cv { color: #3a3a3a; } /* CommentVar */
+    code span.do { color: #789978; } /* Documentation */
+    code span.dt { color: #aaaaaa; } /* DataType */
+    code span.dv { color: #aaaaaa; } /* DecVal */
+    code span.er { color: #d70000; text-decoration: underline; } /* Error */
+    code span.ex { color: #708090; font-weight: bold; } /* Extension */
+    code span.fl { color: #aaaaaa; } /* Float */
+    code span.fu { color: #7a7a7a; } /* Function */
+    code span.im { color: #708090; } /* Import */
+    code span.in { color: #191919; background-color: #7788aa; } /* Information */
+    code span.kw { color: #666666; font-weight: bold; } /* Keyword */
+    code span.op { color: #7a7a7a; } /* Operator */
+    code span.ot { color: #708090; } /* Other */
+    code span.pp { color: #ffaa88; } /* Preprocessor */
+    code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
+    code span.sc { color: #789978; } /* SpecialChar */
+    code span.ss { color: #789978; } /* SpecialString */
+    code span.st { color: #708090; } /* String */
+    code span.va { color: #cccccc; } /* Variable */
+    code span.vs { color: #708090; } /* VerbatimString */
+    code span.wa { color: #191919; background-color: #abab77; } /* Warning */
+  </style>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@devOpifex" />
+  <meta name="twitter:title" content="builder - R preprocessor" />
+  <meta name="twitter:description" content="An R preprocessor for the R programming language" />
+  <meta name="twitter:image" content="https://builder.opifex.org/builder.png" />
+</head>
+
+<body>
+  <main>
+    <nav class="top-nav">
+      <a href="index.html">Home</a>
+      <a href="installation.html">Install</a>
+      <a href="get-started.html">Get started</a>
+      <details class="dropdown">
+        <summary>Docs</summary>
+        <div class="dropdown-content">
+          <a href="config.html">Config</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="packages.html">Packages</a>
+          <a href="directives.html">Directives</a>
+          <a href="macros.html">Macros</a>
+          <a href="include.html">Include</a>
+          <a href="headers.html">Headers</a>
+          <a href="import.html">Import</a>
+          <a href="fstrings.html">F-strings</a>
+          <a href="const.html">Const</a>
+          <a href="deconstruct.html">Deconstruct</a>
+          <a href="preflight.html">Preflight</a>
+          <a href="depends.html">Depends</a>
+          <a href="dry-run.html">Dry Run</a>
+          <a href="plugins.html">Plugins</a>
+          <a href="tests.html">Tests</a>
+          <a href="prepend-append.html">Prepend</a>
+          <a href="deadcode.html">Dead Code</a>
+          <a href="sourcemap.html">Source Map</a>
+          <a href="bundle.html">Bundle</a>
+          <a href="watch.html">Watch</a>
+          <a href="syntax-highlighting.html">Highlighting</a>
+        </div>
+      </details>
+    </nav>
+    <div class="content-wrapper">
+            <aside class="toc-sidebar">
+        <div class="toc-title">Contents</div>
+        <ul>
+        <li><a href="#architecture"
+        id="toc-architecture">Architecture</a>
+        <ul>
+        <li><a href="#two-pass-system" id="toc-two-pass-system">Two-Pass
+        System</a></li>
+        <li><a href="#first-pass" id="toc-first-pass">First Pass</a>
+        <ul>
+        <li><a href="#what-happens" id="toc-what-happens">What
+        happens:</a></li>
+        </ul></li>
+        <li><a href="#second-pass" id="toc-second-pass">Second Pass</a>
+        <ul>
+        <li><a href="#loop-expansion" id="toc-loop-expansion">Loop
+        Expansion</a></li>
+        <li><a href="#replacement-order"
+        id="toc-replacement-order">Replacement Order</a></li>
+        </ul></li>
+        <li><a href="#why-order-matters" id="toc-why-order-matters">Why
+        Order Matters</a>
+        <ul>
+        <li><a href="#f-strings-first"
+        id="toc-f-strings-first">F-strings First</a></li>
+        <li><a href="#constants-last" id="toc-constants-last">Constants
+        Last</a></li>
+        </ul></li>
+        <li><a href="#built-in-definitions"
+        id="toc-built-in-definitions">Built-in Definitions</a></li>
+        </ul></li>
+        </ul>
+      </aside>
+            <article>
+        <h1 id="architecture">Architecture</h1>
+        <p>Builder assumes you’re building a package and simulates R’s
+        lazy loading behavior by performing a two-pass build.
+        Understanding this architecture helps you write more predictable
+        preprocessing directives.</p>
+        <h2 id="two-pass-system">Two-Pass System</h2>
+        <div class="desktop-only">
+        <pre><code>┌─────────────────────────────────────────────────────────────┐
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │  Collect    │  │    Run      │  │     Validate        │  │
@@ -212,167 +208,168 @@
 │                                                   ▼         │
 │                              Plugin postprocess hook        │
 └─────────────────────────────────────────────────────────────┘</code></pre>
-          </div>
-          <h2 id="first-pass">First Pass</h2>
-          <p>The first pass scans all source files to collect
-          definitions and run preflight checks. No output is written
-          during this pass.</p>
-          <h3 id="what-happens">What happens:</h3>
-          <ol type="1">
-          <li><strong>Macro Collection</strong> - All
-          <code>#&gt; define</code> and <code>#&gt; macro</code>
-          directives are parsed and stored</li>
-          <li><strong>Preflight Execution</strong> -
-          <code>#&gt; preflight</code> / <code>#&gt; endflight</code>
-          blocks are evaluated</li>
-          <li><strong>Assert Validation</strong> -
-          <code>#&gt; assert</code> directives are checked; build fails
-          if any assertion is false</li>
-          <li><strong>Import Processing</strong> -
-          <code>#&gt; import</code> directives are noted (for namespace
-          prefixing)</li>
-          <li><strong>Plugin Hook</strong> - The <code>preprocess</code>
-          plugin hook is called on each file’s content</li>
-          </ol>
-          <h2 id="second-pass">Second Pass</h2>
-          <p>The second pass processes each line through a series of
-          replacements and writes the final output.</p>
-          <h3 id="loop-expansion">Loop Expansion</h3>
-          <p>Before line-by-line processing, <code>#&gt; for</code> /
-          <code>#&gt; endfor</code> blocks are collected and expanded
-          into repeated code. The loop variable uses
-          <code>..variable..</code> syntax for substitution.</p>
-          <h3 id="replacement-order">Replacement Order</h3>
-          <p>Each line is processed through these transformations in
-          order:</p>
-          <table>
-          <thead>
-          <tr class="header">
-          <th>Order</th>
-          <th>Transformation</th>
-          <th>Example</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr class="odd">
-          <td>1</td>
-          <td>F-strings</td>
-          <td><code>..FMT("{x}")</code> →
-          <code>sprintf('%s', x)</code></td>
-          </tr>
-          <tr class="even">
-          <td>2</td>
-          <td>#&gt; include:</td>
-          <td><code>#&gt; include:READ file.sql q</code> →
-          <code>q &lt;- c(...)</code></td>
-          </tr>
-          <tr class="odd">
-          <td>3</td>
-          <td>Macro expansion</td>
-          <td><code>MY_MACRO(x)</code> → expanded code</td>
-          </tr>
-          <tr class="even">
-          <td>4</td>
-          <td>Deconstruction</td>
-          <td><code>.[a, b] &lt;- fn()</code> → indexed assignments</td>
-          </tr>
-          <tr class="odd">
-          <td>5</td>
-          <td>Constants</td>
-          <td><code>x -&lt; 1</code> →
-          <code>x &lt;- 1;lockBinding(...)</code></td>
-          </tr>
-          </tbody>
-          </table>
-          <p>After replacements, the line goes through:</p>
-          <ul>
-          <li><strong>Conditional compilation</strong> -
-          <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>,
-          <code>#&gt; if</code>, <code>#&gt; elif</code>,
-          <code>#&gt; else</code>, <code>#&gt; endif</code></li>
-          <li><strong>Test collection</strong> - <code>#&gt; test</code>
-          blocks are extracted</li>
-          <li><strong>Error checking</strong> - <code>#&gt; error</code>
-          directives halt compilation</li>
-          </ul>
-          <h2 id="why-order-matters">Why Order Matters</h2>
-          <p>The replacement order has important implications:</p>
-          <h3 id="f-strings-first">F-strings First</h3>
-          <p>F-strings are processed before macros, so you can use
-          macro-defined values inside f-strings:</p>
-          <div class="sourceCode" id="cb2"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2.0.0</span></span>
+        </div>
+        <h2 id="first-pass">First Pass</h2>
+        <p>The first pass scans all source files to collect definitions
+        and run preflight checks. No output is written during this
+        pass.</p>
+        <h3 id="what-happens">What happens:</h3>
+        <ol type="1">
+        <li><strong>Macro Collection</strong> - All
+        <code>#&gt; define</code> and <code>#&gt; macro</code>
+        directives are parsed and stored</li>
+        <li><strong>Preflight Execution</strong> -
+        <code>#&gt; preflight</code> / <code>#&gt; endflight</code>
+        blocks are evaluated</li>
+        <li><strong>Assert Validation</strong> -
+        <code>#&gt; assert</code> directives are checked; build fails if
+        any assertion is false</li>
+        <li><strong>Import Processing</strong> -
+        <code>#&gt; import</code> directives are noted (for namespace
+        prefixing)</li>
+        <li><strong>Plugin Hook</strong> - The <code>preprocess</code>
+        plugin hook is called on each file’s content</li>
+        </ol>
+        <h2 id="second-pass">Second Pass</h2>
+        <p>The second pass processes each line through a series of
+        replacements and writes the final output.</p>
+        <h3 id="loop-expansion">Loop Expansion</h3>
+        <p>Before line-by-line processing, <code>#&gt; for</code> /
+        <code>#&gt; endfor</code> blocks are collected and expanded into
+        repeated code. The loop variable uses <code>..variable..</code>
+        syntax for substitution.</p>
+        <h3 id="replacement-order">Replacement Order</h3>
+        <p>Each line is processed through these transformations in
+        order:</p>
+        <table>
+        <thead>
+        <tr class="header">
+        <th>Order</th>
+        <th>Transformation</th>
+        <th>Example</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd">
+        <td>1</td>
+        <td>F-strings</td>
+        <td><code>..FMT("{x}")</code> →
+        <code>sprintf('%s', x)</code></td>
+        </tr>
+        <tr class="even">
+        <td>2</td>
+        <td>#&gt; include:</td>
+        <td><code>#&gt; include:READ file.sql q</code> →
+        <code>q &lt;- c(...)</code></td>
+        </tr>
+        <tr class="odd">
+        <td>3</td>
+        <td>Macro expansion</td>
+        <td><code>MY_MACRO(x)</code> → expanded code</td>
+        </tr>
+        <tr class="even">
+        <td>4</td>
+        <td>Deconstruction</td>
+        <td><code>.[a, b] &lt;- fn()</code> → indexed assignments</td>
+        </tr>
+        <tr class="odd">
+        <td>5</td>
+        <td>Constants</td>
+        <td><code>x -&lt; 1</code> →
+        <code>x &lt;- 1;lockBinding(...)</code></td>
+        </tr>
+        </tbody>
+        </table>
+        <p>After replacements, the line goes through:</p>
+        <ul>
+        <li><strong>Conditional compilation</strong> -
+        <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>,
+        <code>#&gt; if</code>, <code>#&gt; elif</code>,
+        <code>#&gt; else</code>, <code>#&gt; endif</code></li>
+        <li><strong>Test collection</strong> - <code>#&gt; test</code>
+        blocks are extracted</li>
+        <li><strong>Error checking</strong> - <code>#&gt; error</code>
+        directives halt compilation</li>
+        </ul>
+        <h2 id="why-order-matters">Why Order Matters</h2>
+        <p>The replacement order has important implications:</p>
+        <h3 id="f-strings-first">F-strings First</h3>
+        <p>F-strings are processed before macros, so you can use
+        macro-defined values inside f-strings:</p>
+        <div class="sourceCode" id="cb2"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2.0.0</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">..FMT</span>(<span class="st">&quot;Version: {VERSION}&quot;</span>))  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
-          <h3 id="constants-last">Constants Last</h3>
-          <p>The constant operator <code>-&lt;</code> is processed after
-          all other transformations, ensuring the final value is
-          locked:</p>
-          <div class="sourceCode" id="cb3"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEFAULT 42</span></span>
+        <h3 id="constants-last">Constants Last</h3>
+        <p>The constant operator <code>-&lt;</code> is processed after
+        all other transformations, ensuring the final value is
+        locked:</p>
+        <div class="sourceCode" id="cb3"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEFAULT 42</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span><span class="er">&lt;</span> DEFAULT  <span class="co"># First: DEFAULT → 42, Then: x &lt;- 42;lockBinding(&quot;x&quot;, environment())</span></span></code></pre></div>
-          <h2 id="built-in-definitions">Built-in Definitions</h2>
-          <p>These definitions are automatically available and updated
-          during processing:</p>
-          <table>
-          <thead>
-          <tr class="header">
-          <th>Definition</th>
-          <th>Description</th>
-          <th>Updated</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr class="odd">
-          <td><code>..FILE..</code></td>
-          <td>Current source file path</td>
-          <td>Per file</td>
-          </tr>
-          <tr class="even">
-          <td><code>..LINE..</code></td>
-          <td>Current line number</td>
-          <td>Per line</td>
-          </tr>
-          <tr class="odd">
-          <td><code>..OS..</code></td>
-          <td>Operating system name</td>
-          <td>Once at start</td>
-          </tr>
-          <tr class="even">
-          <td><code>..DATE..</code></td>
-          <td>Build date (YYYY-MM-DD)</td>
-          <td>Once at start</td>
-          </tr>
-          <tr class="odd">
-          <td><code>..TIME..</code></td>
-          <td>Build time (HH:MM:SS)</td>
-          <td>Once at start</td>
-          </tr>
-          <tr class="even">
-          <td><code>..COUNTER..</code></td>
-          <td>Auto-incrementing integer</td>
-          <td>Per occurrence</td>
-          </tr>
-          </tbody>
-          </table>
-          <footer class="page-nav">
-                        <a href="config.html" class="nav-prev">← Previous</a>
-                        <span class="nav-spacer"></span>
-                        <a href="packages.html" class="nav-next">Next →</a>
-                      </footer>
-        </article>
-      </div>
-    </main>
-    <script>
-      // Add anchor links to headings
-      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
-        var anchor = document.createElement('a');
-        anchor.className = 'heading-anchor';
-        anchor.href = '#' + heading.id;
-        anchor.textContent = '#';
-        anchor.setAttribute('aria-label', 'Link to this section');
-        heading.appendChild(anchor);
-      });
-    </script>
-  </body>
+        <h2 id="built-in-definitions">Built-in Definitions</h2>
+        <p>These definitions are automatically available and updated
+        during processing:</p>
+        <table>
+        <thead>
+        <tr class="header">
+        <th>Definition</th>
+        <th>Description</th>
+        <th>Updated</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd">
+        <td><code>..FILE..</code></td>
+        <td>Current source file path</td>
+        <td>Per file</td>
+        </tr>
+        <tr class="even">
+        <td><code>..LINE..</code></td>
+        <td>Current line number</td>
+        <td>Per line</td>
+        </tr>
+        <tr class="odd">
+        <td><code>..OS..</code></td>
+        <td>Operating system name</td>
+        <td>Once at start</td>
+        </tr>
+        <tr class="even">
+        <td><code>..DATE..</code></td>
+        <td>Build date (YYYY-MM-DD)</td>
+        <td>Once at start</td>
+        </tr>
+        <tr class="odd">
+        <td><code>..TIME..</code></td>
+        <td>Build time (HH:MM:SS)</td>
+        <td>Once at start</td>
+        </tr>
+        <tr class="even">
+        <td><code>..COUNTER..</code></td>
+        <td>Auto-incrementing integer</td>
+        <td>Per occurrence</td>
+        </tr>
+        </tbody>
+        </table>
+        <footer class="page-nav">
+                    <a href="config.html" class="nav-prev">← Previous</a>
+                    <span class="nav-spacer"></span>
+                    <a href="packages.html" class="nav-next">Next →</a>
+                  </footer>
+      </article>
+    </div>
+  </main>
+  <script>
+    // Add anchor links to headings
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function (heading) {
+      var anchor = document.createElement('a');
+      anchor.className = 'heading-anchor';
+      anchor.href = '#' + heading.id;
+      anchor.textContent = '#';
+      anchor.setAttribute('aria-label', 'Link to this section');
+      heading.appendChild(anchor);
+    });
+  </script>
+</body>
+
 </html>

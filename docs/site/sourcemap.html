@@ -1,169 +1,166 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Source Map</title>
-    <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      div.columns{display: flex; gap: min(4vw, 1.5em);}
-      div.column{flex: auto; overflow-x: auto;}
-      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-      /* The extra [class] is a hack that increases specificity enough to
-         override a similar rule in reveal.js */
-      ul.task-list[class]{list-style: none;}
-      ul.task-list li input[type="checkbox"] {
-        font-size: inherit;
-        width: 0.8em;
-        margin: 0 0.8em 0.2em -1.6em;
-        vertical-align: middle;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Source Map</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
       }
-      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-      /* CSS for syntax highlighting */
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
-      div.sourceCode { margin: 1em 0; }
-      pre.sourceCode { margin: 0; }
-      @media screen {
-      div.sourceCode { overflow: auto; }
-      }
-      @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-      }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
-          position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
-          -webkit-touch-callout: none; -webkit-user-select: none;
-          -khtml-user-select: none; -moz-user-select: none;
-          -ms-user-select: none; user-select: none;
-          padding: 0 4px; width: 4em;
-        }
-      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-      div.sourceCode
-        { color: #deeeed; background-color: #080808; }
-      @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-      }
-      code span { color: #deeeed; } /* Normal */
-      code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
-      code span.an { color: #789978; } /* Annotation */
-      code span.at { color: #abab77; } /* Attribute */
-      code span.bn { color: #aaaaaa; } /* BaseN */
-      code span.bu { color: #555555; } /* BuiltIn */
-      code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
-      code span.ch { color: #708090; } /* Char */
-      code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
-      code span.co { color: #3a3a3a; } /* Comment */
-      code span.cv { color: #3a3a3a; } /* CommentVar */
-      code span.do { color: #789978; } /* Documentation */
-      code span.dt { color: #aaaaaa; } /* DataType */
-      code span.dv { color: #aaaaaa; } /* DecVal */
-      code span.er { color: #d70000; text-decoration: underline; } /* Error */
-      code span.ex { color: #708090; font-weight: bold; } /* Extension */
-      code span.fl { color: #aaaaaa; } /* Float */
-      code span.fu { color: #7a7a7a; } /* Function */
-      code span.im { color: #708090; } /* Import */
-      code span.in { color: #191919; background-color: #7788aa; } /* Information */
-      code span.kw { color: #666666; font-weight: bold; } /* Keyword */
-      code span.op { color: #7a7a7a; } /* Operator */
-      code span.ot { color: #708090; } /* Other */
-      code span.pp { color: #ffaa88; } /* Preprocessor */
-      code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
-      code span.sc { color: #789978; } /* SpecialChar */
-      code span.ss { color: #789978; } /* SpecialString */
-      code span.st { color: #708090; } /* String */
-      code span.va { color: #cccccc; } /* Variable */
-      code span.vs { color: #708090; } /* VerbatimString */
-      code span.wa { color: #191919; background-color: #abab77; } /* Warning */
-    </style>
-        <link rel="stylesheet" href="style.css" />
-        <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@devOpifex" />
-    <meta name="twitter:title" content="builder - R preprocessor" />
-    <meta
-      name="twitter:description"
-      content="An R preprocessor for the R programming language"
-    />
-    <meta
-      name="twitter:image"
-      content="https://builder.opifex.org/builder.png"
-    />
-  </head>
-  <body>
-    <main>
-      <nav class="top-nav">
-        <a href="index.html">Home</a>
-        <a href="installation.html">Install</a>
-        <a href="get-started.html">Get started</a>
-        <details class="dropdown">
-          <summary>Docs</summary>
-          <div class="dropdown-content">
-            <a href="config.html">Config</a>
-            <a href="architecture.html">Architecture</a>
-            <a href="packages.html">Packages</a>
-            <a href="directives.html">Directives</a>
-            <a href="macros.html">Macros</a>
-            <a href="include.html">Include</a>
-            <a href="headers.html">Headers</a>
-            <a href="import.html">Import</a>
-            <a href="fstrings.html">F-strings</a>
-            <a href="const.html">Const</a>
-            <a href="deconstruct.html">Deconstruct</a>
-            <a href="preflight.html">Preflight</a>
-            <a href="depends.html">Depends</a>
-            <a href="dry-run.html">Dry Run</a>
-            <a href="plugins.html">Plugins</a>
-            <a href="tests.html">Tests</a>
-            <a href="prepend-append.html">Prepend</a>
-            <a href="deadcode.html">Dead Code</a>
-            <a href="sourcemap.html">Source Map</a>
-            <a href="watch.html">Watch</a>
-            <a href="syntax-highlighting.html">Highlighting</a>
-          </div>
-        </details>
-      </nav>
-      <div class="content-wrapper">
-                <aside class="toc-sidebar">
-          <div class="toc-title">Contents</div>
-          <ul>
-          <li><a href="#source-map" id="toc-source-map">Source Map</a>
-          <ul>
-          <li><a href="#usage" id="toc-usage">Usage</a></li>
-          <li><a href="#how-it-works" id="toc-how-it-works">How It
-          Works</a></li>
-          <li><a href="#example" id="toc-example">Example</a></li>
-          <li><a href="#skipped-lines" id="toc-skipped-lines">Skipped
-          Lines</a></li>
-          </ul></li>
-          </ul>
-        </aside>
-                <article>
-          <h1 id="source-map">Source Map</h1>
-          <p>Builder can add line number comments to your output files
-          with the <code>-sourcemap</code> flag. This helps trace errors
-          in processed R files back to their original source line
-          numbers.</p>
-          <h2 id="usage">Usage</h2>
-          <div class="sourceCode" id="cb1"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-sourcemap</span></span></code></pre></div>
-          <h2 id="how-it-works">How It Works</h2>
-          <p>When enabled, Builder appends a <code># filename:N</code>
-          comment to the end of each line, indicating the source file
-          and original line number.</p>
-          <h2 id="example">Example</h2>
-          <p><strong>Input (srcr/utils.R):</strong></p>
-          <div class="sourceCode" id="cb2"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define API_URL &quot;https://api.example.com&quot;</span></span>
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #deeeed; background-color: #080808; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #deeeed; } /* Normal */
+    code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
+    code span.an { color: #789978; } /* Annotation */
+    code span.at { color: #abab77; } /* Attribute */
+    code span.bn { color: #aaaaaa; } /* BaseN */
+    code span.bu { color: #555555; } /* BuiltIn */
+    code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #708090; } /* Char */
+    code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
+    code span.co { color: #3a3a3a; } /* Comment */
+    code span.cv { color: #3a3a3a; } /* CommentVar */
+    code span.do { color: #789978; } /* Documentation */
+    code span.dt { color: #aaaaaa; } /* DataType */
+    code span.dv { color: #aaaaaa; } /* DecVal */
+    code span.er { color: #d70000; text-decoration: underline; } /* Error */
+    code span.ex { color: #708090; font-weight: bold; } /* Extension */
+    code span.fl { color: #aaaaaa; } /* Float */
+    code span.fu { color: #7a7a7a; } /* Function */
+    code span.im { color: #708090; } /* Import */
+    code span.in { color: #191919; background-color: #7788aa; } /* Information */
+    code span.kw { color: #666666; font-weight: bold; } /* Keyword */
+    code span.op { color: #7a7a7a; } /* Operator */
+    code span.ot { color: #708090; } /* Other */
+    code span.pp { color: #ffaa88; } /* Preprocessor */
+    code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
+    code span.sc { color: #789978; } /* SpecialChar */
+    code span.ss { color: #789978; } /* SpecialString */
+    code span.st { color: #708090; } /* String */
+    code span.va { color: #cccccc; } /* Variable */
+    code span.vs { color: #708090; } /* VerbatimString */
+    code span.wa { color: #191919; background-color: #abab77; } /* Warning */
+  </style>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@devOpifex" />
+  <meta name="twitter:title" content="builder - R preprocessor" />
+  <meta name="twitter:description" content="An R preprocessor for the R programming language" />
+  <meta name="twitter:image" content="https://builder.opifex.org/builder.png" />
+</head>
+
+<body>
+  <main>
+    <nav class="top-nav">
+      <a href="index.html">Home</a>
+      <a href="installation.html">Install</a>
+      <a href="get-started.html">Get started</a>
+      <details class="dropdown">
+        <summary>Docs</summary>
+        <div class="dropdown-content">
+          <a href="config.html">Config</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="packages.html">Packages</a>
+          <a href="directives.html">Directives</a>
+          <a href="macros.html">Macros</a>
+          <a href="include.html">Include</a>
+          <a href="headers.html">Headers</a>
+          <a href="import.html">Import</a>
+          <a href="fstrings.html">F-strings</a>
+          <a href="const.html">Const</a>
+          <a href="deconstruct.html">Deconstruct</a>
+          <a href="preflight.html">Preflight</a>
+          <a href="depends.html">Depends</a>
+          <a href="dry-run.html">Dry Run</a>
+          <a href="plugins.html">Plugins</a>
+          <a href="tests.html">Tests</a>
+          <a href="prepend-append.html">Prepend</a>
+          <a href="deadcode.html">Dead Code</a>
+          <a href="sourcemap.html">Source Map</a>
+          <a href="bundle.html">Bundle</a>
+          <a href="watch.html">Watch</a>
+          <a href="syntax-highlighting.html">Highlighting</a>
+        </div>
+      </details>
+    </nav>
+    <div class="content-wrapper">
+            <aside class="toc-sidebar">
+        <div class="toc-title">Contents</div>
+        <ul>
+        <li><a href="#source-map" id="toc-source-map">Source Map</a>
+        <ul>
+        <li><a href="#usage" id="toc-usage">Usage</a></li>
+        <li><a href="#how-it-works" id="toc-how-it-works">How It
+        Works</a></li>
+        <li><a href="#example" id="toc-example">Example</a></li>
+        <li><a href="#skipped-lines" id="toc-skipped-lines">Skipped
+        Lines</a></li>
+        </ul></li>
+        </ul>
+      </aside>
+            <article>
+        <h1 id="source-map">Source Map</h1>
+        <p>Builder can add line number comments to your output files
+        with the <code>-sourcemap</code> flag. This helps trace errors
+        in processed R files back to their original source line
+        numbers.</p>
+        <h2 id="usage">Usage</h2>
+        <div class="sourceCode" id="cb1"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-sourcemap</span></span></code></pre></div>
+        <h2 id="how-it-works">How It Works</h2>
+        <p>When enabled, Builder appends a <code># filename:N</code>
+        comment to the end of each line, indicating the source file and
+        original line number.</p>
+        <h2 id="example">Example</h2>
+        <p><strong>Input (srcr/utils.R):</strong></p>
+        <div class="sourceCode" id="cb2"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define API_URL &quot;https://api.example.com&quot;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) {</span>
@@ -175,9 +172,9 @@
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> API_URL</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  httr<span class="sc">::</span><span class="fu">GET</span>(url)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-          <p><strong>Output (R/utils.R):</strong></p>
-          <div class="sourceCode" id="cb3"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) { <span class="co"># srcr/utils.R:4</span></span>
+        <p><strong>Output (R/utils.R):</strong></p>
+        <div class="sourceCode" id="cb3"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) { <span class="co"># srcr/utils.R:4</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>) <span class="co"># srcr/utils.R:5</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>} <span class="co"># srcr/utils.R:6</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -185,40 +182,41 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">&quot;https://api.example.com&quot;</span> <span class="co"># srcr/utils.R:10</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  httr<span class="sc">::</span><span class="fu">GET</span>(url) <span class="co"># srcr/utils.R:11</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>} <span class="co"># srcr/utils.R:12</span></span></code></pre></div>
-          <p>Notice how:</p>
-          <ul>
-          <li>The <code>#&gt; define</code> and
-          <code>#&gt; ifdef</code>/<code>#&gt; endif</code> directives
-          are removed from output</li>
-          <li>Output has only 8 lines, but annotations reference the
-          original source lines (4-6, 9-12)</li>
-          <li>Each comment shows the source file and line number (e.g.,
-          <code># srcr/utils.R:5</code>)</li>
-          </ul>
-          <h2 id="skipped-lines">Skipped Lines</h2>
-          <p>The following lines do not receive sourcemap comments:</p>
-          <ul>
-          <li>Empty or whitespace-only lines</li>
-          <li>Lines containing <code>#</code> (comments)</li>
-          </ul>
-          <footer class="page-nav">
-                        <a href="deadcode.html" class="nav-prev">← Previous</a>
-                        <span class="nav-spacer"></span>
-                        <a href="watch.html" class="nav-next">Next →</a>
-                      </footer>
-        </article>
-      </div>
-    </main>
-    <script>
-      // Add anchor links to headings
-      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
-        var anchor = document.createElement('a');
-        anchor.className = 'heading-anchor';
-        anchor.href = '#' + heading.id;
-        anchor.textContent = '#';
-        anchor.setAttribute('aria-label', 'Link to this section');
-        heading.appendChild(anchor);
-      });
-    </script>
-  </body>
+        <p>Notice how:</p>
+        <ul>
+        <li>The <code>#&gt; define</code> and
+        <code>#&gt; ifdef</code>/<code>#&gt; endif</code> directives are
+        removed from output</li>
+        <li>Output has only 8 lines, but annotations reference the
+        original source lines (4-6, 9-12)</li>
+        <li>Each comment shows the source file and line number (e.g.,
+        <code># srcr/utils.R:5</code>)</li>
+        </ul>
+        <h2 id="skipped-lines">Skipped Lines</h2>
+        <p>The following lines do not receive sourcemap comments:</p>
+        <ul>
+        <li>Empty or whitespace-only lines</li>
+        <li>Lines containing <code>#</code> (comments)</li>
+        </ul>
+        <footer class="page-nav">
+                    <a href="deadcode.html" class="nav-prev">← Previous</a>
+                    <span class="nav-spacer"></span>
+                    <a href="watch.html" class="nav-next">Next →</a>
+                  </footer>
+      </article>
+    </div>
+  </main>
+  <script>
+    // Add anchor links to headings
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function (heading) {
+      var anchor = document.createElement('a');
+      anchor.className = 'heading-anchor';
+      anchor.href = '#' + heading.id;
+      anchor.textContent = '#';
+      anchor.setAttribute('aria-label', 'Link to this section');
+      heading.appendChild(anchor);
+    });
+  </script>
+</body>
+
 </html>

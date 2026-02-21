@@ -1,215 +1,209 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tests</title>
-    <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      div.columns{display: flex; gap: min(4vw, 1.5em);}
-      div.column{flex: auto; overflow-x: auto;}
-      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-      /* The extra [class] is a hack that increases specificity enough to
-         override a similar rule in reveal.js */
-      ul.task-list[class]{list-style: none;}
-      ul.task-list li input[type="checkbox"] {
-        font-size: inherit;
-        width: 0.8em;
-        margin: 0 0.8em 0.2em -1.6em;
-        vertical-align: middle;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tests</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
       }
-      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-      /* CSS for syntax highlighting */
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
-      div.sourceCode { margin: 1em 0; }
-      pre.sourceCode { margin: 0; }
-      @media screen {
-      div.sourceCode { overflow: auto; }
-      }
-      @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-      }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
-          position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
-          -webkit-touch-callout: none; -webkit-user-select: none;
-          -khtml-user-select: none; -moz-user-select: none;
-          -ms-user-select: none; user-select: none;
-          padding: 0 4px; width: 4em;
-        }
-      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-      div.sourceCode
-        { color: #deeeed; background-color: #080808; }
-      @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-      }
-      code span { color: #deeeed; } /* Normal */
-      code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
-      code span.an { color: #789978; } /* Annotation */
-      code span.at { color: #abab77; } /* Attribute */
-      code span.bn { color: #aaaaaa; } /* BaseN */
-      code span.bu { color: #555555; } /* BuiltIn */
-      code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
-      code span.ch { color: #708090; } /* Char */
-      code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
-      code span.co { color: #3a3a3a; } /* Comment */
-      code span.cv { color: #3a3a3a; } /* CommentVar */
-      code span.do { color: #789978; } /* Documentation */
-      code span.dt { color: #aaaaaa; } /* DataType */
-      code span.dv { color: #aaaaaa; } /* DecVal */
-      code span.er { color: #d70000; text-decoration: underline; } /* Error */
-      code span.ex { color: #708090; font-weight: bold; } /* Extension */
-      code span.fl { color: #aaaaaa; } /* Float */
-      code span.fu { color: #7a7a7a; } /* Function */
-      code span.im { color: #708090; } /* Import */
-      code span.in { color: #191919; background-color: #7788aa; } /* Information */
-      code span.kw { color: #666666; font-weight: bold; } /* Keyword */
-      code span.op { color: #7a7a7a; } /* Operator */
-      code span.ot { color: #708090; } /* Other */
-      code span.pp { color: #ffaa88; } /* Preprocessor */
-      code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
-      code span.sc { color: #789978; } /* SpecialChar */
-      code span.ss { color: #789978; } /* SpecialString */
-      code span.st { color: #708090; } /* String */
-      code span.va { color: #cccccc; } /* Variable */
-      code span.vs { color: #708090; } /* VerbatimString */
-      code span.wa { color: #191919; background-color: #abab77; } /* Warning */
-    </style>
-        <link rel="stylesheet" href="style.css" />
-        <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@devOpifex" />
-    <meta name="twitter:title" content="builder - R preprocessor" />
-    <meta
-      name="twitter:description"
-      content="An R preprocessor for the R programming language"
-    />
-    <meta
-      name="twitter:image"
-      content="https://builder.opifex.org/builder.png"
-    />
-  </head>
-  <body>
-    <main>
-      <nav class="top-nav">
-        <a href="index.html">Home</a>
-        <a href="installation.html">Install</a>
-        <a href="get-started.html">Get started</a>
-        <details class="dropdown">
-          <summary>Docs</summary>
-          <div class="dropdown-content">
-            <a href="config.html">Config</a>
-            <a href="architecture.html">Architecture</a>
-            <a href="packages.html">Packages</a>
-            <a href="directives.html">Directives</a>
-            <a href="macros.html">Macros</a>
-            <a href="include.html">Include</a>
-            <a href="headers.html">Headers</a>
-            <a href="import.html">Import</a>
-            <a href="fstrings.html">F-strings</a>
-            <a href="const.html">Const</a>
-            <a href="deconstruct.html">Deconstruct</a>
-            <a href="preflight.html">Preflight</a>
-            <a href="depends.html">Depends</a>
-            <a href="dry-run.html">Dry Run</a>
-            <a href="plugins.html">Plugins</a>
-            <a href="tests.html">Tests</a>
-            <a href="prepend-append.html">Prepend</a>
-            <a href="deadcode.html">Dead Code</a>
-            <a href="sourcemap.html">Source Map</a>
-            <a href="watch.html">Watch</a>
-            <a href="syntax-highlighting.html">Highlighting</a>
-          </div>
-        </details>
-      </nav>
-      <div class="content-wrapper">
-                <aside class="toc-sidebar">
-          <div class="toc-title">Contents</div>
-          <ul>
-          <li><a href="#tests" id="toc-tests">Tests</a>
-          <ul>
-          <li><a href="#how-it-works" id="toc-how-it-works">How It
-          Works</a></li>
-          <li><a href="#syntax" id="toc-syntax">Syntax</a></li>
-          <li><a href="#file-naming-convention"
-          id="toc-file-naming-convention">File Naming
-          Convention</a></li>
-          <li><a href="#example" id="toc-example">Example</a></li>
-          <li><a href="#multiple-tests" id="toc-multiple-tests">Multiple
-          Tests</a></li>
-          <li><a href="#cleaning-test-files"
-          id="toc-cleaning-test-files">Cleaning Test Files</a></li>
-          <li><a href="#integration-with-testthat"
-          id="toc-integration-with-testthat">Integration with
-          testthat</a></li>
-          <li><a href="#best-practices" id="toc-best-practices">Best
-          Practices</a></li>
-          <li><a href="#limitations"
-          id="toc-limitations">Limitations</a></li>
-          </ul></li>
-          </ul>
-        </aside>
-                <article>
-          <h1 id="tests">Tests</h1>
-          <p>Builder automatically generates testthat test files from
-          inline <code>#&gt; test</code> blocks in your R source code.
-          This allows you to keep tests close to the code they’re
-          testing while maintaining a clean separation in the
-          output.</p>
-          <h2 id="how-it-works">How It Works</h2>
-          <p>When Builder processes your source files, it:</p>
-          <ul>
-          <li>Detects <code>#&gt; test</code> blocks in your source
-          code</li>
-          <li>Extracts the test description and test expressions</li>
-          <li>Generates testthat test files in
-          <code>tests/testthat/</code></li>
-          <li>Automatically creates the directory structure if
-          needed</li>
-          </ul>
-          <h2 id="syntax">Syntax</h2>
-          <p>Test blocks are defined using <code>#&gt; test</code> and
-          <code>#&gt; endtest</code> directives:</p>
-          <div class="sourceCode" id="cb1"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test Description of what you&#39;re testing</span></span>
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #deeeed; background-color: #080808; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #deeeed; } /* Normal */
+    code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
+    code span.an { color: #789978; } /* Annotation */
+    code span.at { color: #abab77; } /* Attribute */
+    code span.bn { color: #aaaaaa; } /* BaseN */
+    code span.bu { color: #555555; } /* BuiltIn */
+    code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #708090; } /* Char */
+    code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
+    code span.co { color: #3a3a3a; } /* Comment */
+    code span.cv { color: #3a3a3a; } /* CommentVar */
+    code span.do { color: #789978; } /* Documentation */
+    code span.dt { color: #aaaaaa; } /* DataType */
+    code span.dv { color: #aaaaaa; } /* DecVal */
+    code span.er { color: #d70000; text-decoration: underline; } /* Error */
+    code span.ex { color: #708090; font-weight: bold; } /* Extension */
+    code span.fl { color: #aaaaaa; } /* Float */
+    code span.fu { color: #7a7a7a; } /* Function */
+    code span.im { color: #708090; } /* Import */
+    code span.in { color: #191919; background-color: #7788aa; } /* Information */
+    code span.kw { color: #666666; font-weight: bold; } /* Keyword */
+    code span.op { color: #7a7a7a; } /* Operator */
+    code span.ot { color: #708090; } /* Other */
+    code span.pp { color: #ffaa88; } /* Preprocessor */
+    code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
+    code span.sc { color: #789978; } /* SpecialChar */
+    code span.ss { color: #789978; } /* SpecialString */
+    code span.st { color: #708090; } /* String */
+    code span.va { color: #cccccc; } /* Variable */
+    code span.vs { color: #708090; } /* VerbatimString */
+    code span.wa { color: #191919; background-color: #abab77; } /* Warning */
+  </style>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@devOpifex" />
+  <meta name="twitter:title" content="builder - R preprocessor" />
+  <meta name="twitter:description" content="An R preprocessor for the R programming language" />
+  <meta name="twitter:image" content="https://builder.opifex.org/builder.png" />
+</head>
+
+<body>
+  <main>
+    <nav class="top-nav">
+      <a href="index.html">Home</a>
+      <a href="installation.html">Install</a>
+      <a href="get-started.html">Get started</a>
+      <details class="dropdown">
+        <summary>Docs</summary>
+        <div class="dropdown-content">
+          <a href="config.html">Config</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="packages.html">Packages</a>
+          <a href="directives.html">Directives</a>
+          <a href="macros.html">Macros</a>
+          <a href="include.html">Include</a>
+          <a href="headers.html">Headers</a>
+          <a href="import.html">Import</a>
+          <a href="fstrings.html">F-strings</a>
+          <a href="const.html">Const</a>
+          <a href="deconstruct.html">Deconstruct</a>
+          <a href="preflight.html">Preflight</a>
+          <a href="depends.html">Depends</a>
+          <a href="dry-run.html">Dry Run</a>
+          <a href="plugins.html">Plugins</a>
+          <a href="tests.html">Tests</a>
+          <a href="prepend-append.html">Prepend</a>
+          <a href="deadcode.html">Dead Code</a>
+          <a href="sourcemap.html">Source Map</a>
+          <a href="bundle.html">Bundle</a>
+          <a href="watch.html">Watch</a>
+          <a href="syntax-highlighting.html">Highlighting</a>
+        </div>
+      </details>
+    </nav>
+    <div class="content-wrapper">
+            <aside class="toc-sidebar">
+        <div class="toc-title">Contents</div>
+        <ul>
+        <li><a href="#tests" id="toc-tests">Tests</a>
+        <ul>
+        <li><a href="#how-it-works" id="toc-how-it-works">How It
+        Works</a></li>
+        <li><a href="#syntax" id="toc-syntax">Syntax</a></li>
+        <li><a href="#file-naming-convention"
+        id="toc-file-naming-convention">File Naming Convention</a></li>
+        <li><a href="#example" id="toc-example">Example</a></li>
+        <li><a href="#multiple-tests" id="toc-multiple-tests">Multiple
+        Tests</a></li>
+        <li><a href="#cleaning-test-files"
+        id="toc-cleaning-test-files">Cleaning Test Files</a></li>
+        <li><a href="#integration-with-testthat"
+        id="toc-integration-with-testthat">Integration with
+        testthat</a></li>
+        <li><a href="#best-practices" id="toc-best-practices">Best
+        Practices</a></li>
+        <li><a href="#limitations"
+        id="toc-limitations">Limitations</a></li>
+        </ul></li>
+        </ul>
+      </aside>
+            <article>
+        <h1 id="tests">Tests</h1>
+        <p>Builder automatically generates testthat test files from
+        inline <code>#&gt; test</code> blocks in your R source code.
+        This allows you to keep tests close to the code they’re testing
+        while maintaining a clean separation in the output.</p>
+        <h2 id="how-it-works">How It Works</h2>
+        <p>When Builder processes your source files, it:</p>
+        <ul>
+        <li>Detects <code>#&gt; test</code> blocks in your source
+        code</li>
+        <li>Extracts the test description and test expressions</li>
+        <li>Generates testthat test files in
+        <code>tests/testthat/</code></li>
+        <li>Automatically creates the directory structure if needed</li>
+        </ul>
+        <h2 id="syntax">Syntax</h2>
+        <p>Test blocks are defined using <code>#&gt; test</code> and
+        <code>#&gt; endtest</code> directives:</p>
+        <div class="sourceCode" id="cb1"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test Description of what you&#39;re testing</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">my_function</span>(), expected_value)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_true</span>(some_condition)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
-          <p><strong>Important notes:</strong></p>
-          <ul>
-          <li>The description comes on the same line as
-          <code>#&gt; test</code></li>
-          <li>Test expressions are written as normal R code (no
-          <code>#&gt;</code> prefix needed)</li>
-          <li>Empty test blocks (no expressions) are skipped with a
-          warning</li>
-          </ul>
-          <h2 id="file-naming-convention">File Naming Convention</h2>
-          <p>Generated test files follow this pattern:</p>
-          <pre><code>tests/testthat/test-builder-&lt;filename&gt;</code></pre>
-          <p><strong>Examples:</strong></p>
-          <ul>
-          <li><code>srcr/main.R</code> →
-          <code>tests/testthat/test-builder-main.R</code></li>
-          <li><code>srcr/sub/utils.R</code> →
-          <code>tests/testthat/test-builder-sub-utils.R</code></li>
-          </ul>
-          <p>Subdirectory paths are flattened using hyphens to keep all
-          test files in a single directory.</p>
-          <h2 id="example">Example</h2>
-          <p><strong>Input file (srcr/main.R):</strong></p>
-          <div class="sourceCode" id="cb3"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+        <p><strong>Important notes:</strong></p>
+        <ul>
+        <li>The description comes on the same line as
+        <code>#&gt; test</code></li>
+        <li>Test expressions are written as normal R code (no
+        <code>#&gt;</code> prefix needed)</li>
+        <li>Empty test blocks (no expressions) are skipped with a
+        warning</li>
+        </ul>
+        <h2 id="file-naming-convention">File Naming Convention</h2>
+        <p>Generated test files follow this pattern:</p>
+        <pre><code>tests/testthat/test-builder-&lt;filename&gt;</code></pre>
+        <p><strong>Examples:</strong></p>
+        <ul>
+        <li><code>srcr/main.R</code> →
+        <code>tests/testthat/test-builder-main.R</code></li>
+        <li><code>srcr/sub/utils.R</code> →
+        <code>tests/testthat/test-builder-sub-utils.R</code></li>
+        </ul>
+        <p>Subdirectory paths are flattened using hyphens to keep all
+        test files in a single directory.</p>
+        <h2 id="example">Example</h2>
+        <p><strong>Input file (srcr/main.R):</strong></p>
+        <div class="sourceCode" id="cb3"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="dv">1</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -217,21 +211,21 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">foo</span>(), <span class="dv">1</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_type</span>(<span class="fu">foo</span>(), <span class="st">&quot;double&quot;</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
-          <p><strong>Command:</strong></p>
-          <div class="sourceCode" id="cb4"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-          <p><strong>Generated test file
-          (tests/testthat/test-builder-main.R):</strong></p>
-          <div class="sourceCode" id="cb5"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;That it returns one!&quot;</span>, {</span>
+        <p><strong>Command:</strong></p>
+        <div class="sourceCode" id="cb4"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+        <p><strong>Generated test file
+        (tests/testthat/test-builder-main.R):</strong></p>
+        <div class="sourceCode" id="cb5"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;That it returns one!&quot;</span>, {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">foo</span>(), <span class="dv">1</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_type</span>(<span class="fu">foo</span>(), <span class="st">&quot;double&quot;</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
-          <h2 id="multiple-tests">Multiple Tests</h2>
-          <p>You can have multiple test blocks in a single source
-          file:</p>
-          <div class="sourceCode" id="cb6"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>add <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+        <h2 id="multiple-tests">Multiple Tests</h2>
+        <p>You can have multiple test blocks in a single source
+        file:</p>
+        <div class="sourceCode" id="cb6"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>add <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">+</span> b)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -248,64 +242,65 @@
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">6</span>)</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dv">0</span>)</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
-          <p>All tests from the same source file are collected into a
-          single test file with multiple <code>test_that()</code>
-          blocks.</p>
-          <h2 id="cleaning-test-files">Cleaning Test Files</h2>
-          <p>When Builder cleans the output directory (default
-          behavior), it also automatically removes the corresponding
-          test files. This ensures a fresh build each time.</p>
-          <div class="sourceCode" id="cb7"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default: cleans R/ output and tests/testthat/ test files</span></span>
+        <p>All tests from the same source file are collected into a
+        single test file with multiple <code>test_that()</code>
+        blocks.</p>
+        <h2 id="cleaning-test-files">Cleaning Test Files</h2>
+        <p>When Builder cleans the output directory (default behavior),
+        it also automatically removes the corresponding test files. This
+        ensures a fresh build each time.</p>
+        <div class="sourceCode" id="cb7"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default: cleans R/ output and tests/testthat/ test files</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip cleaning with -noclean flag</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-noclean</span></span></code></pre></div>
-          <h2 id="integration-with-testthat">Integration with
-          testthat</h2>
-          <p>The generated test files are standard testthat format and
-          can be run using:</p>
-          <div class="sourceCode" id="cb8"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In R console</span></span>
+        <h2 id="integration-with-testthat">Integration with
+        testthat</h2>
+        <p>The generated test files are standard testthat format and can
+        be run using:</p>
+        <div class="sourceCode" id="cb8"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In R console</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(testthat)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test_dir</span>(<span class="st">&quot;tests/testthat&quot;</span>)</span></code></pre></div>
-          <p>Or with the standard R CMD check workflow for package
-          development.</p>
-          <h2 id="best-practices">Best Practices</h2>
-          <ul>
-          <li><strong>Keep tests close to code</strong> - Write tests
-          right after the functions they test</li>
-          <li><strong>Use descriptive names</strong> - Make test
-          descriptions clear and specific</li>
-          <li><strong>One concern per test</strong> - Test one specific
-          behavior per test block</li>
-          <li><strong>Include edge cases</strong> - Test boundary
-          conditions and error cases</li>
-          </ul>
-          <h2 id="limitations">Limitations</h2>
-          <ul>
-          <li>Test expressions cannot span multiple lines without proper
-          R continuation</li>
-          <li>Tests are removed from the processed R output</li>
-          </ul>
-          <footer class="page-nav">
-                        <a href="plugins.html" class="nav-prev">← Previous</a>
-                        <span class="nav-spacer"></span>
-                        <a href="prepend-append.html" class="nav-next">Next →</a>
-                      </footer>
-        </article>
-      </div>
-    </main>
-    <script>
-      // Add anchor links to headings
-      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
-        var anchor = document.createElement('a');
-        anchor.className = 'heading-anchor';
-        anchor.href = '#' + heading.id;
-        anchor.textContent = '#';
-        anchor.setAttribute('aria-label', 'Link to this section');
-        heading.appendChild(anchor);
-      });
-    </script>
-  </body>
+        <p>Or with the standard R CMD check workflow for package
+        development.</p>
+        <h2 id="best-practices">Best Practices</h2>
+        <ul>
+        <li><strong>Keep tests close to code</strong> - Write tests
+        right after the functions they test</li>
+        <li><strong>Use descriptive names</strong> - Make test
+        descriptions clear and specific</li>
+        <li><strong>One concern per test</strong> - Test one specific
+        behavior per test block</li>
+        <li><strong>Include edge cases</strong> - Test boundary
+        conditions and error cases</li>
+        </ul>
+        <h2 id="limitations">Limitations</h2>
+        <ul>
+        <li>Test expressions cannot span multiple lines without proper R
+        continuation</li>
+        <li>Tests are removed from the processed R output</li>
+        </ul>
+        <footer class="page-nav">
+                    <a href="plugins.html" class="nav-prev">← Previous</a>
+                    <span class="nav-spacer"></span>
+                    <a href="prepend-append.html" class="nav-next">Next →</a>
+                  </footer>
+      </article>
+    </div>
+  </main>
+  <script>
+    // Add anchor links to headings
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function (heading) {
+      var anchor = document.createElement('a');
+      anchor.className = 'heading-anchor';
+      anchor.href = '#' + heading.id;
+      anchor.textContent = '#';
+      anchor.setAttribute('aria-label', 'Link to this section');
+      heading.appendChild(anchor);
+    });
+  </script>
+</body>
+
 </html>

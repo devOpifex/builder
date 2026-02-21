@@ -29,6 +29,8 @@ R
 
 Note that the file order is preserved, though it's unlikely to matter in an R package.
 
+Also look at how you can write inlin [unit tests](/tests) for your R packages.
+
 ## Creating a Package
 
 Use `-create` to scaffold a new R package with builder support:
@@ -53,3 +55,4 @@ Then navigate to the package and start building:
 ```bash
 cd mypackage && builder
 ```
+

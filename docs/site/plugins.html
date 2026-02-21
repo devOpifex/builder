@@ -1,237 +1,233 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plugins</title>
-    <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      div.columns{display: flex; gap: min(4vw, 1.5em);}
-      div.column{flex: auto; overflow-x: auto;}
-      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-      /* The extra [class] is a hack that increases specificity enough to
-         override a similar rule in reveal.js */
-      ul.task-list[class]{list-style: none;}
-      ul.task-list li input[type="checkbox"] {
-        font-size: inherit;
-        width: 0.8em;
-        margin: 0 0.8em 0.2em -1.6em;
-        vertical-align: middle;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plugins</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
       }
-      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-      /* CSS for syntax highlighting */
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
-      div.sourceCode { margin: 1em 0; }
-      pre.sourceCode { margin: 0; }
-      @media screen {
-      div.sourceCode { overflow: auto; }
-      }
-      @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-      }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
-          position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
-          -webkit-touch-callout: none; -webkit-user-select: none;
-          -khtml-user-select: none; -moz-user-select: none;
-          -ms-user-select: none; user-select: none;
-          padding: 0 4px; width: 4em;
-        }
-      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-      div.sourceCode
-        { color: #deeeed; background-color: #080808; }
-      @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-      }
-      code span { color: #deeeed; } /* Normal */
-      code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
-      code span.an { color: #789978; } /* Annotation */
-      code span.at { color: #abab77; } /* Attribute */
-      code span.bn { color: #aaaaaa; } /* BaseN */
-      code span.bu { color: #555555; } /* BuiltIn */
-      code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
-      code span.ch { color: #708090; } /* Char */
-      code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
-      code span.co { color: #3a3a3a; } /* Comment */
-      code span.cv { color: #3a3a3a; } /* CommentVar */
-      code span.do { color: #789978; } /* Documentation */
-      code span.dt { color: #aaaaaa; } /* DataType */
-      code span.dv { color: #aaaaaa; } /* DecVal */
-      code span.er { color: #d70000; text-decoration: underline; } /* Error */
-      code span.ex { color: #708090; font-weight: bold; } /* Extension */
-      code span.fl { color: #aaaaaa; } /* Float */
-      code span.fu { color: #7a7a7a; } /* Function */
-      code span.im { color: #708090; } /* Import */
-      code span.in { color: #191919; background-color: #7788aa; } /* Information */
-      code span.kw { color: #666666; font-weight: bold; } /* Keyword */
-      code span.op { color: #7a7a7a; } /* Operator */
-      code span.ot { color: #708090; } /* Other */
-      code span.pp { color: #ffaa88; } /* Preprocessor */
-      code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
-      code span.sc { color: #789978; } /* SpecialChar */
-      code span.ss { color: #789978; } /* SpecialString */
-      code span.st { color: #708090; } /* String */
-      code span.va { color: #cccccc; } /* Variable */
-      code span.vs { color: #708090; } /* VerbatimString */
-      code span.wa { color: #191919; background-color: #abab77; } /* Warning */
-    </style>
-        <link rel="stylesheet" href="style.css" />
-        <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@devOpifex" />
-    <meta name="twitter:title" content="builder - R preprocessor" />
-    <meta
-      name="twitter:description"
-      content="An R preprocessor for the R programming language"
-    />
-    <meta
-      name="twitter:image"
-      content="https://builder.opifex.org/builder.png"
-    />
-  </head>
-  <body>
-    <main>
-      <nav class="top-nav">
-        <a href="index.html">Home</a>
-        <a href="installation.html">Install</a>
-        <a href="get-started.html">Get started</a>
-        <details class="dropdown">
-          <summary>Docs</summary>
-          <div class="dropdown-content">
-            <a href="config.html">Config</a>
-            <a href="architecture.html">Architecture</a>
-            <a href="packages.html">Packages</a>
-            <a href="directives.html">Directives</a>
-            <a href="macros.html">Macros</a>
-            <a href="include.html">Include</a>
-            <a href="headers.html">Headers</a>
-            <a href="import.html">Import</a>
-            <a href="fstrings.html">F-strings</a>
-            <a href="const.html">Const</a>
-            <a href="deconstruct.html">Deconstruct</a>
-            <a href="preflight.html">Preflight</a>
-            <a href="depends.html">Depends</a>
-            <a href="dry-run.html">Dry Run</a>
-            <a href="plugins.html">Plugins</a>
-            <a href="tests.html">Tests</a>
-            <a href="prepend-append.html">Prepend</a>
-            <a href="deadcode.html">Dead Code</a>
-            <a href="sourcemap.html">Source Map</a>
-            <a href="watch.html">Watch</a>
-            <a href="syntax-highlighting.html">Highlighting</a>
-          </div>
-        </details>
-      </nav>
-      <div class="content-wrapper">
-                <aside class="toc-sidebar">
-          <div class="toc-title">Contents</div>
-          <ul>
-          <li><a href="#plugins" id="toc-plugins">Plugins</a>
-          <ul>
-          <li><a href="#using-plugins" id="toc-using-plugins">Using
-          Plugins</a>
-          <ul>
-          <li><a href="#via-cli" id="toc-via-cli">Via CLI</a></li>
-          <li><a href="#via-config-file" id="toc-via-config-file">Via
-          Config File</a></li>
-          <li><a href="#multiple-plugins"
-          id="toc-multiple-plugins">Multiple Plugins</a></li>
-          </ul></li>
-          <li><a href="#developing-plugins"
-          id="toc-developing-plugins">Developing Plugins</a>
-          <ul>
-          <li><a href="#overview" id="toc-overview">Overview</a></li>
-          <li><a href="#lifecycle-methods"
-          id="toc-lifecycle-methods">Lifecycle Methods</a></li>
-          <li><a href="#examples" id="toc-examples">Examples</a></li>
-          <li><a href="#tips" id="toc-tips">Tips</a></li>
-          <li><a href="#using-r6-classes"
-          id="toc-using-r6-classes">Using R6 Classes</a></li>
-          </ul></li>
-          </ul></li>
-          </ul>
-        </aside>
-                <article>
-          <h1 id="plugins">Plugins</h1>
-          <p>WARNING: The plugins API is subject to change!</p>
-          <p>Builder supports plugins to extend processing. Plugins are
-          R packages that export a function returning a list of
-          lifecycle methods.</p>
-          <p>Note, you can always make use tof the
-          <code>builder.ini</code> file for configuration if needed.</p>
-          <hr />
-          <h2 id="using-plugins">Using Plugins</h2>
-          <h3 id="via-cli">Via CLI</h3>
-          <p>Specify plugins with the <code>-plugin</code> flag:</p>
-          <div class="sourceCode" id="cb1"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> package::function</span></code></pre></div>
-          <h3 id="via-config-file">Via Config File</h3>
-          <p>Add plugins to your <code>builder.ini</code>:</p>
-          <div class="sourceCode" id="cb2"><pre
-          class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: package::function</span></span></code></pre></div>
-          <h3 id="multiple-plugins">Multiple Plugins</h3>
-          <p>You can use multiple plugins. They are called in order.</p>
-          <p><strong>CLI:</strong></p>
-          <div class="sourceCode" id="cb3"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> pkg1::fn1 pkg2::fn2</span></code></pre></div>
-          <p><strong>Config (space-separated):</strong></p>
-          <div class="sourceCode" id="cb4"><pre
-          class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: pkg1::fn1 pkg2::fn2</span></span></code></pre></div>
-          <hr />
-          <h2 id="developing-plugins">Developing Plugins</h2>
-          <h3 id="overview">Overview</h3>
-          <p>A plugin is an R function that returns a list of lifecycle
-          methods. Each method is called at a specific point during the
-          build process.</p>
-          <p>See <a
-          href="https://github.com/devOpifex/builder.air">builder.air</a>
-          for a real-world example plugin.</p>
-          <h3 id="lifecycle-methods">Lifecycle Methods</h3>
-          <h4 id="setupinput-output">setup(input, output)</h4>
-          <p>Called during initialization with the input and output
-          directory paths. Use this to store configuration or perform
-          one-time setup.</p>
-          <h4 id="preprocessstr-file">preprocess(str, file)</h4>
-          <p>Called on each file’s content <strong>before</strong>
-          Builder processes it. Receives the file content as a string
-          and should return the modified content.</p>
-          <h4 id="postprocessstr-file">postprocess(str, file)</h4>
-          <p>Called on each file’s content <strong>after</strong>
-          Builder processes it. Receives the file content as a string
-          and should return the modified content.</p>
-          <h4 id="includetype-path-object-file">include(type, path,
-          object, file)</h4>
-          <p>Called for each <code>#&gt; include</code> directive with
-          parsed components:</p>
-          <ul>
-          <li><code>type</code> - The file type (e.g.,
-          <code>"csv"</code>, <code>"json"</code>)</li>
-          <li><code>path</code> - The file path to include</li>
-          <li><code>object</code> - The variable name for the
-          result</li>
-          <li><code>file</code> - The source file being processed</li>
-          </ul>
-          <p>Return <code>NULL</code> to use default processing, or
-          return a replacement line.</p>
-          <h4 id="end">end()</h4>
-          <p>Called when Builder finishes processing all files. Use this
-          for cleanup or final operations.</p>
-          <h3 id="examples">Examples</h3>
-          <p>A simple minifier plugin that removes empty lines and joins
-          with semicolons (<em>It’s doing it wrong, don’t actually use
-          this!</em>):</p>
-          <div class="sourceCode" id="cb5"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #deeeed; background-color: #080808; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #deeeed; } /* Normal */
+    code span.al { color: #191919; background-color: #d70000; font-weight: bold; } /* Alert */
+    code span.an { color: #789978; } /* Annotation */
+    code span.at { color: #abab77; } /* Attribute */
+    code span.bn { color: #aaaaaa; } /* BaseN */
+    code span.bu { color: #555555; } /* BuiltIn */
+    code span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #708090; } /* Char */
+    code span.cn { color: #aaaaaa; font-weight: bold; } /* Constant */
+    code span.co { color: #3a3a3a; } /* Comment */
+    code span.cv { color: #3a3a3a; } /* CommentVar */
+    code span.do { color: #789978; } /* Documentation */
+    code span.dt { color: #aaaaaa; } /* DataType */
+    code span.dv { color: #aaaaaa; } /* DecVal */
+    code span.er { color: #d70000; text-decoration: underline; } /* Error */
+    code span.ex { color: #708090; font-weight: bold; } /* Extension */
+    code span.fl { color: #aaaaaa; } /* Float */
+    code span.fu { color: #7a7a7a; } /* Function */
+    code span.im { color: #708090; } /* Import */
+    code span.in { color: #191919; background-color: #7788aa; } /* Information */
+    code span.kw { color: #666666; font-weight: bold; } /* Keyword */
+    code span.op { color: #7a7a7a; } /* Operator */
+    code span.ot { color: #708090; } /* Other */
+    code span.pp { color: #ffaa88; } /* Preprocessor */
+    code span.re { color: #3a3a3a; background-color: #080808; } /* RegionMarker */
+    code span.sc { color: #789978; } /* SpecialChar */
+    code span.ss { color: #789978; } /* SpecialString */
+    code span.st { color: #708090; } /* String */
+    code span.va { color: #cccccc; } /* Variable */
+    code span.vs { color: #708090; } /* VerbatimString */
+    code span.wa { color: #191919; background-color: #abab77; } /* Warning */
+  </style>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@devOpifex" />
+  <meta name="twitter:title" content="builder - R preprocessor" />
+  <meta name="twitter:description" content="An R preprocessor for the R programming language" />
+  <meta name="twitter:image" content="https://builder.opifex.org/builder.png" />
+</head>
+
+<body>
+  <main>
+    <nav class="top-nav">
+      <a href="index.html">Home</a>
+      <a href="installation.html">Install</a>
+      <a href="get-started.html">Get started</a>
+      <details class="dropdown">
+        <summary>Docs</summary>
+        <div class="dropdown-content">
+          <a href="config.html">Config</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="packages.html">Packages</a>
+          <a href="directives.html">Directives</a>
+          <a href="macros.html">Macros</a>
+          <a href="include.html">Include</a>
+          <a href="headers.html">Headers</a>
+          <a href="import.html">Import</a>
+          <a href="fstrings.html">F-strings</a>
+          <a href="const.html">Const</a>
+          <a href="deconstruct.html">Deconstruct</a>
+          <a href="preflight.html">Preflight</a>
+          <a href="depends.html">Depends</a>
+          <a href="dry-run.html">Dry Run</a>
+          <a href="plugins.html">Plugins</a>
+          <a href="tests.html">Tests</a>
+          <a href="prepend-append.html">Prepend</a>
+          <a href="deadcode.html">Dead Code</a>
+          <a href="sourcemap.html">Source Map</a>
+          <a href="bundle.html">Bundle</a>
+          <a href="watch.html">Watch</a>
+          <a href="syntax-highlighting.html">Highlighting</a>
+        </div>
+      </details>
+    </nav>
+    <div class="content-wrapper">
+            <aside class="toc-sidebar">
+        <div class="toc-title">Contents</div>
+        <ul>
+        <li><a href="#plugins" id="toc-plugins">Plugins</a>
+        <ul>
+        <li><a href="#using-plugins" id="toc-using-plugins">Using
+        Plugins</a>
+        <ul>
+        <li><a href="#via-cli" id="toc-via-cli">Via CLI</a></li>
+        <li><a href="#via-config-file" id="toc-via-config-file">Via
+        Config File</a></li>
+        <li><a href="#multiple-plugins"
+        id="toc-multiple-plugins">Multiple Plugins</a></li>
+        </ul></li>
+        <li><a href="#developing-plugins"
+        id="toc-developing-plugins">Developing Plugins</a>
+        <ul>
+        <li><a href="#overview" id="toc-overview">Overview</a></li>
+        <li><a href="#lifecycle-methods"
+        id="toc-lifecycle-methods">Lifecycle Methods</a></li>
+        <li><a href="#examples" id="toc-examples">Examples</a></li>
+        <li><a href="#tips" id="toc-tips">Tips</a></li>
+        <li><a href="#using-r6-classes" id="toc-using-r6-classes">Using
+        R6 Classes</a></li>
+        </ul></li>
+        </ul></li>
+        </ul>
+      </aside>
+            <article>
+        <h1 id="plugins">Plugins</h1>
+        <p>WARNING: The plugins API is subject to change!</p>
+        <p>Builder supports plugins to extend processing. Plugins are R
+        packages that export a function returning a list of lifecycle
+        methods.</p>
+        <p>Note, you can always make use tof the
+        <code>builder.ini</code> file for configuration if needed.</p>
+        <hr />
+        <h2 id="using-plugins">Using Plugins</h2>
+        <h3 id="via-cli">Via CLI</h3>
+        <p>Specify plugins with the <code>-plugin</code> flag:</p>
+        <div class="sourceCode" id="cb1"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> package::function</span></code></pre></div>
+        <h3 id="via-config-file">Via Config File</h3>
+        <p>Add plugins to your <code>builder.ini</code>:</p>
+        <div class="sourceCode" id="cb2"><pre
+        class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: package::function</span></span></code></pre></div>
+        <h3 id="multiple-plugins">Multiple Plugins</h3>
+        <p>You can use multiple plugins. They are called in order.</p>
+        <p><strong>CLI:</strong></p>
+        <div class="sourceCode" id="cb3"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> pkg1::fn1 pkg2::fn2</span></code></pre></div>
+        <p><strong>Config (space-separated):</strong></p>
+        <div class="sourceCode" id="cb4"><pre
+        class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: pkg1::fn1 pkg2::fn2</span></span></code></pre></div>
+        <hr />
+        <h2 id="developing-plugins">Developing Plugins</h2>
+        <h3 id="overview">Overview</h3>
+        <p>A plugin is an R function that returns a list of lifecycle
+        methods. Each method is called at a specific point during the
+        build process.</p>
+        <p>See <a
+        href="https://github.com/devOpifex/builder.air">builder.air</a>
+        for a real-world example plugin.</p>
+        <h3 id="lifecycle-methods">Lifecycle Methods</h3>
+        <h4 id="setupinput-output">setup(input, output)</h4>
+        <p>Called during initialization with the input and output
+        directory paths. Use this to store configuration or perform
+        one-time setup.</p>
+        <h4 id="preprocessstr-file">preprocess(str, file)</h4>
+        <p>Called on each file’s content <strong>before</strong> Builder
+        processes it. Receives the file content as a string and should
+        return the modified content.</p>
+        <h4 id="postprocessstr-file">postprocess(str, file)</h4>
+        <p>Called on each file’s content <strong>after</strong> Builder
+        processes it. Receives the file content as a string and should
+        return the modified content.</p>
+        <h4 id="includetype-path-object-file">include(type, path,
+        object, file)</h4>
+        <p>Called for each <code>#&gt; include</code> directive with
+        parsed components:</p>
+        <ul>
+        <li><code>type</code> - The file type (e.g., <code>"csv"</code>,
+        <code>"json"</code>)</li>
+        <li><code>path</code> - The file path to include</li>
+        <li><code>object</code> - The variable name for the result</li>
+        <li><code>file</code> - The source file being processed</li>
+        </ul>
+        <p>Return <code>NULL</code> to use default processing, or return
+        a replacement line.</p>
+        <h4 id="end">end()</h4>
+        <p>Called when Builder finishes processing all files. Use this
+        for cleanup or final operations.</p>
+        <h3 id="examples">Examples</h3>
+        <p>A simple minifier plugin that removes empty lines and joins
+        with semicolons (<em>It’s doing it wrong, don’t actually use
+        this!</em>):</p>
+        <div class="sourceCode" id="cb5"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">list</span>(</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {</span>
@@ -257,12 +253,12 @@
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>   }</span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a> )</span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-          <p>A plugin that uses <a
-          href="https://readr.tidyverse.org/">readr</a> to read CSV
-          files (and overrides the default <code>csv</code> type which
-          uses the built-in <code>read.csv</code>):</p>
-          <div class="sourceCode" id="cb6"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+        <p>A plugin that uses <a
+        href="https://readr.tidyverse.org/">readr</a> to read CSV files
+        (and overrides the default <code>csv</code> type which uses the
+        built-in <code>read.csv</code>):</p>
+        <div class="sourceCode" id="cb6"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  enabled <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">list</span>(</span>
@@ -281,11 +277,11 @@
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>   }</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a> )</span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-          <p>A formatter plugin that uses <a
-          href="https://github.com/posit-dev/air">air</a> to format the
-          files:</p>
-          <div class="sourceCode" id="cb7"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+        <p>A formatter plugin that uses <a
+        href="https://github.com/posit-dev/air">air</a> to format the
+        files:</p>
+        <div class="sourceCode" id="cb7"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  out_dir <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
@@ -304,21 +300,21 @@
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {}</span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-          <h3 id="tips">Tips</h3>
-          <ul>
-          <li>Use <code>...</code> in function signatures for forward
-          compatibility</li>
-          <li>Methods that don’t modify content can return
-          <code>NULL</code></li>
-          <li>If your plugin requires configuration, read from a config
-          file in <code>setup()</code></li>
-          <li>Plugins are called in the order they are specified</li>
-          </ul>
-          <h3 id="using-r6-classes">Using R6 Classes</h3>
-          <p>For plugins with complex state or when you want
-          inheritance, you can use R6 classes:</p>
-          <div class="sourceCode" id="cb8"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+        <h3 id="tips">Tips</h3>
+        <ul>
+        <li>Use <code>...</code> in function signatures for forward
+        compatibility</li>
+        <li>Methods that don’t modify content can return
+        <code>NULL</code></li>
+        <li>If your plugin requires configuration, read from a config
+        file in <code>setup()</code></li>
+        <li>Plugins are called in the order they are specified</li>
+        </ul>
+        <h3 id="using-r6-classes">Using R6 Classes</h3>
+        <p>For plugins with complex state or when you want inheritance,
+        you can use R6 classes:</p>
+        <div class="sourceCode" id="cb8"><pre
+        class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Plugin <span class="ot">&lt;-</span> R6<span class="sc">::</span><span class="fu">R6Class</span>(<span class="st">&quot;Plugin&quot;</span>,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">private =</span> <span class="fu">list</span>(</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">out_dir =</span> <span class="cn">NULL</span>,</span>
@@ -346,33 +342,34 @@
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> \() Plugin<span class="sc">$</span><span class="fu">new</span>()</span></code></pre></div>
-          <p>This approach offers:</p>
-          <ul>
-          <li><strong>Encapsulated state</strong> - Private fields
-          instead of <code>&lt;&lt;-</code> assignments</li>
-          <li><strong>Inheritance</strong> - Create plugin families with
-          shared behavior</li>
-          <li><strong>Testability</strong> - Instantiate and test
-          methods directly</li>
-          </ul>
-          <footer class="page-nav">
-                        <a href="dry-run.html" class="nav-prev">← Previous</a>
-                        <span class="nav-spacer"></span>
-                        <a href="tests.html" class="nav-next">Next →</a>
-                      </footer>
-        </article>
-      </div>
-    </main>
-    <script>
-      // Add anchor links to headings
-      document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function(heading) {
-        var anchor = document.createElement('a');
-        anchor.className = 'heading-anchor';
-        anchor.href = '#' + heading.id;
-        anchor.textContent = '#';
-        anchor.setAttribute('aria-label', 'Link to this section');
-        heading.appendChild(anchor);
-      });
-    </script>
-  </body>
+        <p>This approach offers:</p>
+        <ul>
+        <li><strong>Encapsulated state</strong> - Private fields instead
+        of <code>&lt;&lt;-</code> assignments</li>
+        <li><strong>Inheritance</strong> - Create plugin families with
+        shared behavior</li>
+        <li><strong>Testability</strong> - Instantiate and test methods
+        directly</li>
+        </ul>
+        <footer class="page-nav">
+                    <a href="dry-run.html" class="nav-prev">← Previous</a>
+                    <span class="nav-spacer"></span>
+                    <a href="tests.html" class="nav-next">Next →</a>
+                  </footer>
+      </article>
+    </div>
+  </main>
+  <script>
+    // Add anchor links to headings
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach(function (heading) {
+      var anchor = document.createElement('a');
+      anchor.className = 'heading-anchor';
+      anchor.href = '#' + heading.id;
+      anchor.textContent = '#';
+      anchor.setAttribute('aria-label', 'Link to this section');
+      heading.appendChild(anchor);
+    });
+  </script>
+</body>
+
 </html>
