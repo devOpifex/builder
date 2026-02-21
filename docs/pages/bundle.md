@@ -32,4 +32,4 @@ All processed files from `srcr/` are combined into `R/package.R`. Individual fil
 
 ## With Prepend/Append
 
-When using `-bundle` with `-prepend` or `-append`, the prepend/append content is applied to each file before bundling.
+When using `-bundle` with `-prepend` or `-append`, the prepend/append content is applied to once to the output file.
