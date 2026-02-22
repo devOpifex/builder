@@ -20,12 +20,30 @@ void set_R_home()
   if(fgets(path, sizeof(path), fp) != NULL) {
     path[strcspn(path, "\n")] = 0;
     setenv("R_HOME", path, 1);
-    printf("%s Setting R_HOME environment variable to `%s` (R RHOME)\n", LOG_WARNING, path);
+    printf("%s Setting R_HOME environment variable to `%s` - R RHOME\n", LOG_WARNING, path);
   } else {
     printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
   }
 
   pclose(fp);
+}
+
+void set_R_share() 
+{
+  if (getenv("R_SHARE_DIR") != NULL) return;
+
+  FILE *fp2 = popen("R --slave -e 'cat(R.home(\"share\"))'", "r");
+
+  if (fp2 == NULL) return;
+
+  char path[1024];
+  if (fgets(path, sizeof(path), fp2) != NULL) {
+    path[strcspn(path, "\n")] = '\0';
+    printf("%s Setting R_SHARE_DIR environment variable to `%s` - R.home(\"share\")\n", LOG_WARNING, path);
+    setenv("R_SHARE_DIR", path, 1);
+  }
+
+  pclose(fp2);
 }
 
 static char *remove_trailing_newline(char *line)

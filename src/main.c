@@ -200,6 +200,7 @@ int main(int argc, char* argv[])
   }
 
   set_R_home();
+  set_R_share();
 
   char* r_argv[] = {"R", "--silent", "--no-save"};
   Rf_initEmbeddedR(3, r_argv);

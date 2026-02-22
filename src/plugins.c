@@ -91,6 +91,19 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
 
     SEXP obj = PROTECT(findVar(install(current->name), R_GlobalEnv));
 
+    // check that method exists
+    char* caller = malloc(strlen("setup") + strlen(current->name) + 4);
+    sprintf(caller, "`%s`$setup", current->name);
+    SEXP called = PROTECT(evaluate(caller));
+    free(caller);
+    UNPROTECT(1);
+
+    if (isNull(called)) {
+      head = push_plugins(head, current->name, 1, R_NilValue);
+      current = current->next;
+      continue;
+    }
+
     SEXP setup_func = PROTECT(eval(lang3(install("$"), obj, install("setup")), R_GlobalEnv));
 
     SEXP setup_call = PROTECT(lang3(setup_func, mkString(input), mkString(output)));
