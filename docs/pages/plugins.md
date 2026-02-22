@@ -130,8 +130,6 @@ plugin <- function() {
      enabled <<- requireNamespace("readr", quietly = TRUE)
      warning("readr not installed, fallback on default `csv` support")
    },
-   preprocess = function(str, file, ...) {},
-   postprocess = function(str, file, ...) {},
    include = function(type, path, object, file, ...) {
      if(!enabled) return(NULL)
      if(type != "csv") return(NULL)
@@ -153,8 +151,6 @@ plugin <- function() {
     setup = function(input, output, ...) {
       out_dir <<- output
     },
-    preprocess = function(str, file, ...) {},
-    postprocess = function(str, file, ...) {},
     end = function(...) {
       if (is.null(out_dir)) {
         return()
