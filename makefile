@@ -39,6 +39,7 @@ FILES = src/main.c \
 # Development commands
 CMD = ./bin/$(NAME) \
 	-input srcr \
+	-profile dev \
 	-DDEBUG -DTEST '"a string"' -DXXX 42 \
 	-deadcode \
 	-import builder.r::generate.rh \

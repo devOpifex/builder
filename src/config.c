@@ -17,6 +17,30 @@ int has_config()
   return 1;
 }
 
+static char *get_profile(char *line)
+{
+  char *bracket = strchr(line, '[');
+  if (bracket == NULL) return NULL;
+
+  char *colon = strchr(line, ':');
+  if (bracket == NULL) return NULL;
+
+  char *value = colon + 1;
+  while (*value == ' ') value++;
+
+  size_t len = strlen(value);
+  while(len > 0 && value[len - 1] != ']') {
+    len--;
+  }
+
+  // remove trailing ]
+  len--;
+
+  value[len] = '\0';
+
+  return strdup(value);
+}
+
 static char *get_value(char *line)
 {
   char *colon = strchr(line, ':');
@@ -86,7 +110,7 @@ static void parse_registry(char *line, Registry **registry)
   free(str);
 }
 
-BuildContext *get_config(Registry **registry)
+BuildContext *get_config(Registry **registry, char *profile)
 {
   FILE *fp = fopen("builder.ini", "r");
   if (fp == NULL) return NULL;
@@ -115,10 +139,36 @@ BuildContext *get_config(Registry **registry)
   ctx->must_clean = 1;
   ctx->watch = 0;
 
+  int profile_found = 0;
+
   char line[MAX_LINE];
   while (fgets(line, MAX_LINE, fp) != NULL) {
     if (line[0] == '#') continue;
     if (line[0] == '\n') continue;
+
+    char *p = get_profile(line);
+    if(p != NULL && !profile_found) {
+      // we have profiles in the config
+      // but no profile was specified to cli
+      if(profile == NULL) {
+        printf("%s No profile specified\n", LOG_ERROR);
+        return NULL;
+      }
+      // we found a found a [profile]
+      // but we already had a match
+      // we're done
+      if(profile_found) {
+        return ctx;
+      }
+
+      profile_found = strcmp(p, profile) == 0;
+
+      if(profile_found) {
+        printf("%s Using profile [%s]\n", LOG_INFO, p);
+      }
+      free(p);
+      continue;
+    }
 
     if (strstr(line, "input:") != NULL) {
       ctx->input = get_value(line);
@@ -261,7 +311,10 @@ void create_config(char *root)
 
   fprintf(fp, "input: srcr/\n");
   fprintf(fp, "output: R/\n");
-  fprintf(fp, "must_clean: true\n");
+  fprintf(fp, "must_clean: true\n\n");
+  fprintf(fp, "[profile: dev]\n");
+  fprintf(fp, "sourcemap: true\n\n");
+  fprintf(fp, "[profile: prod]\n");
   fprintf(fp, "sourcemap: false\n");
 
   fclose(fp);

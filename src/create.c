@@ -81,6 +81,6 @@ void create_package(char *name)
   create_config(name);
 
   printf("%s Created %s package skeleton\n", LOG_SUCCESS, copy);
-  printf("cd %s && builder\n", copy);
+  printf("cd %s && builder --profile dev\n", copy);
   free(copy);
 }

@@ -150,6 +150,8 @@ int main(int argc, char* argv[])
     printf(
         "  -strip                  Strip comments, preserves special "
         "comments: #'\n");
+    printf(
+        "  -profile                builder.ini profile to use\n");
     printf("\n");
 
     printf("Preprocessing:\n");
@@ -207,9 +209,15 @@ int main(int argc, char* argv[])
 
   Registry* registry = initialize_registry();
 
+  char* profile = get_arg_value(argc, argv, "-profile");
+
   BuildContext* cfg = NULL;
   if (has_config()) {
-    cfg = get_config(&registry);
+    cfg = get_config(&registry, profile);
+    if(cfg == NULL) {
+      printf("%s Failed to get config\n", LOG_ERROR);
+      return 1;
+    }
   }
 
   char* input = get_arg_value(argc, argv, "-input");

@@ -29,7 +29,7 @@ typedef struct {
 } BuildContext;
 
 int has_config();
-BuildContext *get_config(Registry **registry);
+BuildContext *get_config(Registry **registry, char *profile);
 void free_config(BuildContext *ctx);
 void create_config(char *root);
 
