@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "log.h"
+
 char *add_sourcemap(char *line, int line_number, char *filename)
 {
   // there's a special comment in the R code that we don't want to touch
@@ -16,7 +18,11 @@ char *add_sourcemap(char *line, int line_number, char *filename)
   }
 
   char *line_str = NULL;
-  asprintf(&line_str, "# %s:%d", filename, line_number);
+  int line_ast = asprintf(&line_str, "# %s:%d", filename, line_number);
+  if(line_ast == -1) {
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    return NULL;
+  }
 
   size_t len = strlen(line);
   int add_new_line = (len == 0 || line[len - 1] != '\n') ? 1 : 0;

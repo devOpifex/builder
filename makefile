@@ -10,7 +10,7 @@ CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
 EXTRAFLAGS = -Wall -Iinclude
-RELEASEFLAGS = -s
+RELEASEFLAGS = -O2 -s
 DEBUGFLAGS = -g
 
 # Source files

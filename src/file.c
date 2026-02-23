@@ -445,7 +445,12 @@ static int prepend_import(RFile **files, char *import_spec, char ***seen, int *s
   fseek(file, 0, SEEK_SET);
 
   char *content = malloc(size + 1);
-  fread(content, 1, size, file);
+  int read_result = fread(content, 1, size, file);
+  if (read_result != size) {
+    printf("%s Failed to read import: %s\n", LOG_ERROR, resolved_path);
+    free(resolved_path);
+    return 0;
+  }
   content[size] = '\0';
   fclose(file);
 
@@ -591,7 +596,11 @@ static int first_pass(Arguments *args)
       pos = new_line + 1;
 
       free(line_number_str);
-      asprintf(&line_number_str, "%d", line_number);
+      int number_astr = asprintf(&line_number_str, "%d", line_number);
+      if (number_astr == -1) {
+        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        return 1;
+      }
       overwrite(args->defs, "..LINE..", line_number_str);
 
       if(enter_macro(line)) {
@@ -792,7 +801,11 @@ static int second_pass(Arguments *args)
       }
 
       free(line_number_str);
-      asprintf(&line_number_str, "%d", line_number);
+      int number_astr = asprintf(&line_number_str, "%d", line_number);
+      if (number_astr == -1) {
+        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        return 1;
+      }
       overwrite(args->defs, "..LINE..", line_number_str);
       increment_counter(args->defs, line);
 

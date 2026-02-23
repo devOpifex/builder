@@ -82,7 +82,11 @@ static int build(BuildContext* ctx)
       // Run diff between original and dry-run output
       char* cmd = malloc(strlen(original_file) + strlen(current->dst) + strlen("diff --color --side-by-side") + 3);
       sprintf(cmd, "diff --color --side-by-side %s %s", original_file, current->dst);
-      system(cmd);
+      int sys_result = system(cmd);
+      if (sys_result == -1) {
+        printf("%s Failed to run diff\n", LOG_ERROR);
+        result = 1;
+      }
       free(cmd);
       free(original_file);
       current = current->next;

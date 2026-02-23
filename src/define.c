@@ -112,7 +112,11 @@ void increment_counter(Define** arr, char* line)
 
   int counter = atoi(value);
   counter++;
-  asprintf(&value, "%d", counter);
+  int value_astr = asprintf(&value, "%d", counter);
+  if (value_astr == -1) {
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    return;
+  }
   overwrite(arr, "..COUNTER..", value);
   free(value);
 
@@ -427,9 +431,17 @@ static char* define_replace_once(Define** defines, char* line)
 
       // 1. replace ..argname -> "value" (stringify) - MUST be first
       char* dblpat = NULL;
-      asprintf(&dblpat, "..%s", args_macro[i]);
+      int dblpat_astr = asprintf(&dblpat, "..%s", args_macro[i]);
+      if (dblpat_astr == -1) {
+        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        return current;
+      }
       char* quoted = NULL;
-      asprintf(&quoted, "\"%s\"", args[i]);
+      int quoted_astr = asprintf(&quoted, "\"%s\"", args[i]);
+      if (quoted_astr == -1) {
+        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        return current;
+      }
       old_body = body_macro;
       body_macro = str_replace(body_macro, dblpat, quoted);
       free(old_body);
@@ -438,7 +450,11 @@ static char* define_replace_once(Define** defines, char* line)
 
       // 2. replace .argname -> value (second)
       char* dotpat = NULL;
-      asprintf(&dotpat, ".%s", args_macro[i]);
+      int dotpat_astr = asprintf(&dotpat, ".%s", args_macro[i]);
+      if (dotpat_astr == -1) {
+        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        return current;
+      }
       old_body = body_macro;
       body_macro = str_replace(body_macro, dotpat, args[i]);
       free(old_body);
