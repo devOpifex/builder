@@ -30,6 +30,7 @@ pages=(
   watch
   syntax-highlighting
   bundle
+  ci
 )
 
 # Build each page with TOC and prev/next navigation
