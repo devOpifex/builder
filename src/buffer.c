@@ -34,6 +34,12 @@ void buffer_append(Buffer *buffer, char *data)
   buffer->data[buffer->size] = '\0';
 }
 
+void buffer_append_nl(Buffer *buffer, char *data)
+{
+  buffer_append(buffer, data);
+  buffer_append(buffer, "\n");
+}
+
 void buffer_reset(Buffer *buffer) 
 {
   buffer->size = 0;

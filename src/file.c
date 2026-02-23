@@ -20,6 +20,7 @@
 #include "log.h"
 #include "for.h"
 #include "r.h"
+#include "buffer.h"
 #include "deadcode.h"
 
 int exists(char *path)
@@ -235,32 +236,6 @@ static char *make_dest_path(char *src, char *dst)
   memmove(start, hyphen + 1, strlen(hyphen + 1) + 1);
 
   return path;
-}
-
-static char *append_buffer(char *buffer, char *line)
-{
-  if(buffer == NULL) {
-    return strdup(line);
-  }
-
-  size_t buf_len = strlen(buffer);
-  int add_new_line = (buf_len == 0 || buffer[buf_len - 1] != '\n') ? 1 : 0;
-
-  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 1 + add_new_line);
-  if(new_buffer == NULL) {
-    // we're fucked down here
-    // heap failed to allocate memory: run for the hills
-    return NULL;
-  }
-
-  strcpy(new_buffer, buffer);
-  if(add_new_line) {
-    strcat(new_buffer, "\n");
-  }
-  strcat(new_buffer, line);
-  free(buffer);
-
-  return new_buffer;
 }
 
 int walk(char *src_dir, Callback func)
@@ -594,14 +569,12 @@ static int first_pass(Arguments *args)
   while(current != NULL) {
     overwrite(args->defs, "..FILE..", current->src);
 
-    // state
-    char *buffer = NULL;
+    Buffer *buffer = buffer_init();
     int line_number = -1;
     char *line_number_str = NULL;
     int in_preflight = 0;
     int in_macro = 0;
 
-    // line
     char *pos = current->content;
 
     while (*pos) {
@@ -623,21 +596,21 @@ static int first_pass(Arguments *args)
 
       if(enter_macro(line)) {
         in_macro = 1;
-        buffer = append_buffer(buffer, line);
+        buffer_append_nl(buffer, line);
         free(line);
         continue;
       }
 
       if(strncmp(line, "#> endmacro", 11) == 0) {
         in_macro = 0;
-        push_macro(args->defs, buffer, current->ns);
-        buffer = NULL;
+        push_macro(args->defs, strdup(buffer->data), current->ns);
+        buffer_reset(buffer);
         free(line);
         continue;
       }
 
       if(in_macro) {
-        buffer = append_buffer(buffer, line);
+        buffer_append_nl(buffer, line);
         free(line);
         continue;
       }
@@ -651,7 +624,7 @@ static int first_pass(Arguments *args)
 
       if(strncmp(line, "#> preflight", 12) == 0) {
         in_preflight = 1;
-        buffer = append_buffer(buffer, line);
+        buffer_append_nl(buffer, line);
         free(line);
         continue;
       }
@@ -665,21 +638,20 @@ static int first_pass(Arguments *args)
       if(strncmp(line, "#> endflight", 12) == 0) {
         in_preflight = 0;
         printf("%s Running preflight checks\n", LOG_INFO);
-        SEXP result = evaluate(buffer);
+        SEXP result = evaluate(buffer->data);
         if(result == NULL) {
           printf("%s Preflight checks failed\n", LOG_ERROR);
-          free(buffer);
+          buffer_free(buffer);
           free(line);
           return 1;
         }
-        free(buffer);
-        buffer = NULL;
+        buffer_reset(buffer);
         free(line);
         continue;
       }
 
       if(in_preflight) {
-        buffer = append_buffer(buffer, line);
+        buffer_append_nl(buffer, line);
         free(line);
         continue;
       }
@@ -694,7 +666,7 @@ static int first_pass(Arguments *args)
     }
 
     free(line_number_str);
-    free(buffer);  // Free buffer if preflight wasn't properly closed
+    buffer_free(buffer);
 
     char *output = plugins_call(args->plugins, "preprocess", current->content, current->src);
     if(output != NULL) {
@@ -711,7 +683,7 @@ static int first_pass(Arguments *args)
 
 static int second_pass(Arguments *args)
 {
-  char *bundle_buffer = NULL;
+  Buffer *bundle_buf = buffer_init();
   int bundling = args->bundle != NULL;
 
   RFile *current = args->files;
@@ -723,9 +695,8 @@ static int second_pass(Arguments *args)
     printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
     overwrite(args->defs, "..FILE..", current->src);
 
-    // state
-    char *buffer = NULL;
-    char *for_buffer = NULL;
+    Buffer *buf = buffer_init();
+    Buffer *for_buf = buffer_init();
     int line_number = 0;
     char *line_number_str = NULL;
     int should_write = 1;
@@ -742,15 +713,13 @@ static int second_pass(Arguments *args)
       }
       char prepend_buffer[1024];
       while(fgets(prepend_buffer, sizeof(prepend_buffer), prepend_file) != NULL) {
-        buffer = append_buffer(buffer, prepend_buffer);
+        buffer_append(buf, prepend_buffer);
       }
       fclose(prepend_file);
     }
 
-    // test collector
     TestCollector tc = {NULL, NULL, NULL, 0};
 
-    // line
     char *pos = current->content;
 
     while (*pos) {
@@ -803,20 +772,20 @@ static int second_pass(Arguments *args)
 
       if(enter_for(trimmed)) {
         in_for = 1;
-        for_buffer = strdup(line);
+        buffer_reset(for_buf);
+        buffer_append_nl(for_buf, line);
         free(line);
         continue;
       }
 
       if(in_for && !exit_for(trimmed)) {
-        for_buffer = append_buffer(for_buffer, line);
+        buffer_append_nl(for_buf, line);
         free(line);
         continue;
       }
 
       if(exit_for(trimmed)) {
-        char *expanded = replace_for(for_buffer, line);
-        free(for_buffer);
+        char *expanded = replace_for(for_buf->data, line);
         free(line);
         line = expanded;
         in_for = 0;
@@ -841,7 +810,6 @@ static int second_pass(Arguments *args)
       char *cnst = replace_const(deconstructed);
       if(cnst != deconstructed) free(deconstructed);
 
-      // Test collection - if line was consumed, skip to next
       if(collect_test_line(&tc, cnst)) {
         free(cnst);
         continue;
@@ -857,7 +825,6 @@ static int second_pass(Arguments *args)
       catch_warning(cnst);
       catch_deprecated(cnst);
 
-      // skip directives
       char *directive_check = remove_leading_spaces(cnst);
       if(strncmp(directive_check, "#> ", 3) == 0) {
         should_write = should_write_line(should_write, &branch_taken, cnst, args->defs);
@@ -865,7 +832,6 @@ static int second_pass(Arguments *args)
         continue;
       }
 
-      // For content lines (including # comments), check if we should write
       if(!should_write) {
         free(cnst);
         continue;
@@ -876,7 +842,9 @@ static int second_pass(Arguments *args)
         continue;
       }
 
-      buffer = append_buffer(buffer, cnst);
+      if(buf->size > 0 && buf->data[buf->size - 1] != '\n')
+        buffer_append(buf, "\n");
+      buffer_append(buf, cnst);
       free(cnst);
     }
 
@@ -888,18 +856,22 @@ static int second_pass(Arguments *args)
       }
       char app_buffer[1024];
       while(fgets(app_buffer, sizeof(app_buffer), append_file) != NULL) {
-        buffer = append_buffer(buffer, app_buffer);
+        buffer_append(buf, app_buffer);
       }
       fclose(append_file);
     }
 
-    char *output = plugins_call(args->plugins, "postprocess", buffer, current->src);
+    char *output = plugins_call(args->plugins, "postprocess", buf->data, current->src);
 
     if(bundling) {
       if(output != NULL) {
-        bundle_buffer = append_buffer(bundle_buffer, output);
-      } else if(buffer != NULL) {
-        bundle_buffer = append_buffer(bundle_buffer, buffer);
+        if(bundle_buf->size > 0 && bundle_buf->data[bundle_buf->size - 1] != '\n')
+          buffer_append(bundle_buf, "\n");
+        buffer_append(bundle_buf, output);
+      } else if(buf->size > 0) {
+        if(bundle_buf->size > 0 && bundle_buf->data[bundle_buf->size - 1] != '\n')
+          buffer_append(bundle_buf, "\n");
+        buffer_append(bundle_buf, buf->data);
       }
     } else {
       FILE *dst_file = fopen(current->dst, "w");
@@ -909,13 +881,14 @@ static int second_pass(Arguments *args)
       }
       if(output != NULL) {
         fputs(output, dst_file);
-      } else if(buffer != NULL) {
-        fputs(buffer, dst_file);
+      } else if(buf->size > 0) {
+        fputs(buf->data, dst_file);
       }
       fclose(dst_file);
     }
 
-    free(buffer);
+    buffer_free(buf);
+    buffer_free(for_buf);
     free(output);
 
     if(!args->dry_run) {
@@ -927,17 +900,19 @@ static int second_pass(Arguments *args)
     current = current->next;
   }
 
-  if(bundling && bundle_buffer != NULL) {
+  if(bundling && bundle_buf->size > 0) {
     FILE *bundle_file = fopen(args->bundle, "w");
     if(bundle_file == NULL) {
       printf("%s Failed to open bundle file %s\n", LOG_ERROR, args->bundle);
-      free(bundle_buffer);
+      buffer_free(bundle_buf);
       return 1;
     }
-    fputs(bundle_buffer, bundle_file);
+    fputs(bundle_buf->data, bundle_file);
     fclose(bundle_file);
-    free(bundle_buffer);
+    buffer_free(bundle_buf);
     printf("%s Bundled to %s\n", LOG_INFO, args->bundle);
+  } else {
+    buffer_free(bundle_buf);
   }
 
   return 0;
