@@ -140,6 +140,16 @@
         <li><a href="#options" id="toc-options">Options</a></li>
         <li><a href="#full-example" id="toc-full-example">Full
         Example</a></li>
+        <li><a href="#profiles" id="toc-profiles">Profiles</a>
+        <ul>
+        <li><a href="#common-settings" id="toc-common-settings">Common
+        Settings</a></li>
+        <li><a href="#selecting-a-profile"
+        id="toc-selecting-a-profile">Selecting a Profile</a></li>
+        <li><a href="#config-without-profiles"
+        id="toc-config-without-profiles">Config Without
+        Profiles</a></li>
+        </ul></li>
         <li><a href="#overriding-with-cli"
         id="toc-overriding-with-cli">Overriding with CLI</a></li>
         <li><a href="#comments" id="toc-comments">Comments</a></li>
@@ -293,15 +303,57 @@
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
+        <h2 id="profiles">Profiles</h2>
+        <p>You can define named profiles in your config file using
+        <code>[profile: &lt;name&gt;]</code> headers. This lets you
+        maintain multiple configurations (e.g., development
+        vs. production) in a single file.</p>
+        <h3 id="common-settings">Common Settings</h3>
+        <p>Any settings placed <strong>before</strong> the first
+        <code>[profile: ...]</code> header are common and shared across
+        all profiles. Profile-specific settings override these shared
+        defaults.</p>
+        <div class="sourceCode" id="cb4"><pre
+        class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Common settings (shared by all profiles)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">input: srcr/</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">clean: true</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: dplyr</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">[profile: dev]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">output: R/</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">sourcemap: true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">[profile: prod]</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="dt">output: R/</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="dt">sourcemap: false</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="dt">strip: true</span></span></code></pre></div>
+        <p>In this example, both <code>dev</code> and <code>prod</code>
+        inherit <code>input: srcr/</code>, <code>clean: true</code>, and
+        <code>depends: dplyr</code>. The <code>dev</code> profile
+        enables source maps, while <code>prod</code> disables them and
+        strips comments.</p>
+        <h3 id="selecting-a-profile">Selecting a Profile</h3>
+        <p>Use the <code>-profile</code> flag to select which profile to
+        use:</p>
+        <div class="sourceCode" id="cb5"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-profile</span> dev</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-profile</span> prod</span></code></pre></div>
+        <p>When your config file contains profiles, the
+        <code>-profile</code> flag is <strong>required</strong>. Running
+        <code>builder</code> without it will produce an error.</p>
+        <h3 id="config-without-profiles">Config Without Profiles</h3>
+        <p>If your config file has no <code>[profile: ...]</code>
+        headers, it works exactly as before — no <code>-profile</code>
+        flag is needed.</p>
         <h2 id="overriding-with-cli">Overriding with CLI</h2>
         <p>Config values are defaults. CLI arguments take
         precedence:</p>
-        <div class="sourceCode" id="cb4"><pre
-        class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but overrides input</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> other/</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but disables cleaning</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-noclean</span></span></code></pre></div>
+        <div class="sourceCode" id="cb6"><pre
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but overrides input</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> other/</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses config, but disables cleaning</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-noclean</span></span></code></pre></div>
         <h2 id="comments">Comments</h2>
         <p>Lines starting with <code>#</code> are ignored.</p>
         <footer class="page-nav">

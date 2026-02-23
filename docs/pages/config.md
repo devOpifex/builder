@@ -71,6 +71,47 @@ reader: tsv \(x) read.delim(x, sep="\t", header=FALSE)
 reader: myformat mypackage::read_myformat
 ```
 
+## Profiles
+
+You can define named profiles in your config file using `[profile: <name>]` headers. This lets you maintain multiple configurations (e.g., development vs. production) in a single file.
+
+### Common Settings
+
+Any settings placed **before** the first `[profile: ...]` header are common and shared across all profiles. Profile-specific settings override these shared defaults.
+
+```ini
+# Common settings (shared by all profiles)
+input: srcr/
+clean: true
+depends: dplyr
+
+[profile: dev]
+output: R/
+sourcemap: true
+
+[profile: prod]
+output: R/
+sourcemap: false
+strip: true
+```
+
+In this example, both `dev` and `prod` inherit `input: srcr/`, `clean: true`, and `depends: dplyr`. The `dev` profile enables source maps, while `prod` disables them and strips comments.
+
+### Selecting a Profile
+
+Use the `-profile` flag to select which profile to use:
+
+```bash
+builder -profile dev
+builder -profile prod
+```
+
+When your config file contains profiles, the `-profile` flag is **required**. Running `builder` without it will produce an error.
+
+### Config Without Profiles
+
+If your config file has no `[profile: ...]` headers, it works exactly as before — no `-profile` flag is needed.
+
 ## Overriding with CLI
 
 Config values are defaults. CLI arguments take precedence:
