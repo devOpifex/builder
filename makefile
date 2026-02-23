@@ -34,6 +34,7 @@ FILES = src/main.c \
 	src/depends.c \
 	src/create.c \
 	src/assert.c \
+	src/buffer.c \
 	src/config.c
 
 # Development commands
