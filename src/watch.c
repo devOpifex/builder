@@ -56,12 +56,12 @@ int watch_init(const char *path)
 
 		int fd = inotify_init();
 		if (fd == -1) {
-				printf("%s Failed to initialize inotify\n", LOG_ERROR);
+				LOG_ERROR("Failed to initialize inotify");
 				return -1;
 		}
 
 		if (add_watch_recursive(fd, path) == -1) {
-				printf("%s Failed to add watch on %s\n", LOG_ERROR, path);
+				LOG_ERROR("Failed to add watch on %s", path);
 				close(fd);
 				return -1;
 		}
@@ -80,7 +80,7 @@ int watch_wait(int fd)
 
 		if (length < 0) {
 				if (errno == EINTR) return 0;
-				printf("%s Error reading inotify events\n", LOG_ERROR);
+				LOG_ERROR("Error reading inotify events");
 				return 0;
 		}
 

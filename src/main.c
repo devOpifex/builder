@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#define LOGGING_IMPL
+
 #include "config.h"
 #include "create.h"
 #include "define.h"
@@ -23,7 +25,7 @@ static int build(BuildContext* ctx)
   get_definitions(defines, ctx->argc, ctx->argv);
 
   if (!ctx->dry_run && ctx->must_clean) {
-    printf("%s Cleaning: %s and testthat/\n", LOG_INFO, ctx->output);
+    LOG_INFO("Cleaning: %s and testthat/", ctx->output);
     walk(ctx->output, clean);
   }
 
@@ -31,7 +33,7 @@ static int build(BuildContext* ctx)
   int success = collect_files(&files, ctx->input, ctx->output);
 
   if (!success) {
-    printf("%s Failed to collect files\n", LOG_ERROR);
+    LOG_ERROR("Failed to collect files");
     free_array(defines);
     return 1;
   }
@@ -66,7 +68,7 @@ static int build(BuildContext* ctx)
   int result = two_pass(&args);
 
   if (ctx->diff) {
-    printf("%s Running diff\n", LOG_INFO);
+    LOG_INFO("Running diff");
 
     RFile* current = files;
     while (current != NULL) {
@@ -84,7 +86,7 @@ static int build(BuildContext* ctx)
       sprintf(cmd, "diff --color --side-by-side %s %s", original_file, current->dst);
       int sys_result = system(cmd);
       if (sys_result == -1) {
-        printf("%s Failed to run diff\n", LOG_ERROR);
+        LOG_ERROR("Failed to run diff");
         result = 1;
       }
       free(cmd);
@@ -97,11 +99,11 @@ static int build(BuildContext* ctx)
   free_array(defines);
 
   if (result) {
-    printf("%s Failed to process files\n", LOG_ERROR);
+    LOG_ERROR("Failed to process files");
     return 1;
   }
 
-  printf("%s All built!\n", LOG_SUCCESS);
+  LOG_SUCCESS("All built!");
   return 0;
 }
 
@@ -111,6 +113,8 @@ int main(int argc, char* argv[])
     printf("Builder v%s\n", VERSION);
     return 0;
   }
+
+  LOG_VERBOSE = has_arg(argc, argv, "-verbose");
 
   if (has_arg(argc, argv, "-init")) {
     char* path = (char*)malloc(2);
@@ -193,6 +197,7 @@ int main(int argc, char* argv[])
     printf("Info:\n");
     printf("  -version                Show version number\n");
     printf("  -help                   Show this help message\n");
+    printf("  -verbose                Show verbose output\n");
     printf("\n");
 
     printf("Examples:\n");
@@ -217,7 +222,7 @@ int main(int argc, char* argv[])
   if (has_config()) {
     cfg = get_config(&registry, profile);
     if(cfg == NULL) {
-      printf("%s Failed to get config\n", LOG_ERROR);
+      LOG_ERROR("Failed to get config");
       return 1;
     }
   }
@@ -228,16 +233,16 @@ int main(int argc, char* argv[])
   }
   if (input == NULL) {
     input = strdup("srcr/");
-    printf("%s No -input, defaulting to srcr\n", LOG_WARNING);
+    LOG_WARNING("No -input, defaulting to srcr");
   }
   if (input == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     free_config(cfg);
     return 1;
   }
   input = strip_last_slash(input);
   if (!exists(input)) {
-    printf("%s Input directory does not exist\n", LOG_ERROR);
+    LOG_ERROR("Input directory does not exist");
     free_config(cfg);
     free(input);
     return 1;
@@ -256,7 +261,7 @@ int main(int argc, char* argv[])
     free(output);
     output = mkdtemp(template);
     if (output == NULL) {
-      printf("%s Failed to create temporary directory\n", LOG_ERROR);
+      LOG_ERROR("Failed to create temporary directory");
       free_config(cfg);
       free(input);
       return 1;
@@ -265,18 +270,18 @@ int main(int argc, char* argv[])
 
   if (output == NULL) {
     output = strdup("R/");
-    printf("%s No -output, defaulting to R\n", LOG_WARNING);
+    LOG_WARNING("No -output, defaulting to R");
   }
 
   if (output == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     free_config(cfg);
     free(input);
     return 1;
   }
 
   if (!exists(output)) {
-    printf("%s Output directory does not exist\n", LOG_ERROR);
+    LOG_ERROR("Output directory does not exist");
     free_config(cfg);
     free(input);
     free(output);
@@ -312,8 +317,8 @@ int main(int argc, char* argv[])
     }
   }
 
-  if (plugins_str != NULL) {
-    printf("%s Using plugins:", LOG_INFO);
+  if (plugins_str != NULL && LOG_VERBOSE) {
+    printf(INFO " Using plugins:");
     Value* current = plugins_str;
     while (current != NULL) {
       printf(" %s", current->name);
@@ -327,7 +332,7 @@ int main(int argc, char* argv[])
 
   int p_failed = plugins_failed(plugins);
   if (p_failed) {
-    printf("%s Failed to initialize plugin(s) - stopping execution\n", LOG_ERROR);
+    LOG_ERROR("Failed to initialize plugin(s) - stopping execution");
     free_config(cfg);
     free(input);
     free(output);
@@ -341,7 +346,7 @@ int main(int argc, char* argv[])
     prepend = strdup(cfg->prepend);
   }
   if (prepend != NULL) {
-    printf("%s Prepending: %s\n", LOG_INFO, prepend);
+    LOG_INFO("Prepending: %s", prepend);
   }
 
   char* append = get_arg_value(argc, argv, "-append");
@@ -349,7 +354,7 @@ int main(int argc, char* argv[])
     append = strdup(cfg->append);
   }
   if (append != NULL) {
-    printf("%s Appending: %s\n", LOG_INFO, append);
+    LOG_INFO("Appending: %s", append);
   }
 
   char* bundle = get_arg_value(argc, argv, "-bundle");
@@ -357,7 +362,7 @@ int main(int argc, char* argv[])
     bundle = strdup(cfg->bundle);
   }
   if (bundle != NULL) {
-    printf("%s Bundling to: %s\n", LOG_INFO, bundle);
+    LOG_INFO("Bundling to: %s", bundle);
   }
 
   int deadcode = has_arg(argc, argv, "-deadcode");
@@ -393,35 +398,37 @@ int main(int argc, char* argv[])
 
   int diff = has_arg(argc, argv, "-diff");
   if (diff && !dry_run) {
-    printf("%s -diff requires -dry-run\n", LOG_ERROR);
+    LOG_ERROR("-diff requires -dry-run");
     return 1;
   }
 
-  BuildContext ctx = {.argc = argc,
-                      .argv = argv,
-                      .input = input,
-                      .output = output,
-                      .output_original = output_copy,
-                      .imports = imports,
-                      .plugins_str = NULL,
-                      .prepend = prepend,
-                      .append = append,
-                      .bundle = bundle,
-                      .deadcode = deadcode,
-                      .sourcemap = sourcemap,
-                      .must_clean = must_clean,
-                      .watch = watch_mode,
-                      .plugins = plugins,
-                      .registry = registry,
-                      .depends = depends,
-                      .diff = diff,
-                      .dry_run = dry_run,
-                      .strip = has_arg(argc, argv, "-strip")};
+  BuildContext ctx = {
+    .argc = argc,
+    .argv = argv,
+    .input = input,
+    .output = output,
+    .output_original = output_copy,
+    .imports = imports,
+    .plugins_str = NULL,
+    .prepend = prepend,
+    .append = append,
+    .bundle = bundle,
+    .deadcode = deadcode,
+    .sourcemap = sourcemap,
+    .must_clean = must_clean,
+    .watch = watch_mode,
+    .plugins = plugins,
+    .registry = registry,
+    .depends = depends,
+    .diff = diff,
+    .dry_run = dry_run,
+    .strip = has_arg(argc, argv, "-strip")
+  };
 
   int result = 0;
 
   if (watch_mode) {
-    printf("%s Watch mode enabled, monitoring %s\n", LOG_INFO, input);
+    LOG_INFO("Watch mode enabled, monitoring %s", input);
 
     int fd = watch_init(input);
     if (fd == -1) {
@@ -431,9 +438,9 @@ int main(int argc, char* argv[])
       ctx.must_clean = 0;
 
       while (1) {
-        printf("%s Waiting for changes...\n", LOG_INFO);
+        LOG_INFO("Waiting for changes...");
         if (!watch_wait(fd)) break;
-        printf("%s Change detected, rebuilding...\n", LOG_INFO);
+        LOG_INFO("Change detected, rebuilding...");
         build(&ctx);
       }
 

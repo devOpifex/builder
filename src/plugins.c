@@ -12,7 +12,7 @@ static Plugins* create_plugins(char* name, int setup, SEXP obj)
 {
   Plugins* plugins = malloc(sizeof(Plugins));
   if (plugins == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return NULL;
   }
 
@@ -58,7 +58,7 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
     int correct = is_installed(pkg);
 
     if (!correct) {
-      printf("%s Failed to initialize plugin %s, it is not installed\n", LOG_ERROR, current->name);
+      LOG_ERROR("Failed to initialize plugin %s, it is not installed", current->name);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
@@ -70,7 +70,7 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
     free(copy);
 
     if (ns == R_NilValue) {
-      printf("%s Failed to initialize plugin %s, it is not installed\n", LOG_ERROR, current->name);
+      LOG_ERROR("Failed to initialize plugin %s, it is not installed", current->name);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
@@ -83,7 +83,7 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
     defineVar(install(current->name), result, R_GlobalEnv);
 
     if (result == NULL) {
-      printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
+      LOG_ERROR("Failed to initialize plugin: %s", current->name);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
@@ -111,7 +111,7 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
     UNPROTECT(3);
 
     if (result == NULL) {
-      printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
+      LOG_ERROR("Failed to initialize plugin: %s", current->name);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
@@ -119,7 +119,7 @@ Plugins* plugins_init(Value* plugins, char* input, char* output)
 
     head = push_plugins(head, current->name, 1, obj);
 
-    printf("%s Initialized plugin: %s\n", LOG_INFO, current->name);
+    LOG_INFO("Initialized plugin: %s", current->name);
 
     current = current->next;
   }
@@ -153,7 +153,7 @@ char* plugins_call(Plugins* head, char* fn, char* str, char* file)
     max_iter--;
 
     if (max_iter == 0) {
-      printf("%s Plugin %s call to %s() exceeded max iterations (64)\n", LOG_ERROR, current->name, fn);
+      LOG_ERROR("Plugin %s call to %s() exceeded max iterations (64)", current->name, fn);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
@@ -194,7 +194,7 @@ char* plugins_call(Plugins* head, char* fn, char* str, char* file)
     }
 
     if (result == NULL || errorOccurred) {
-      printf("%s Failed to call plugin: %s => %s()\n", LOG_ERROR, current->name, fn);
+      LOG_ERROR("Failed to call plugin: %s => %s()", current->name, fn);
       UNPROTECT(2);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
@@ -249,7 +249,7 @@ char* plugins_call_include(Plugins* head, char* type, char* path, char* object, 
     SEXP result = R_tryEvalSilent(call, R_GlobalEnv, &errorOccurred);
 
     if (result == NULL || errorOccurred) {
-      printf("%s Failed to call plugin: %s => include()\n", LOG_ERROR, current->name);
+      LOG_ERROR("Failed to call plugin: %s => include()", current->name);
       UNPROTECT(3);
       current = current->next;
       continue;

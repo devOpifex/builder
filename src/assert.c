@@ -10,7 +10,7 @@ int valid_assert(char *line)
 
   line += strlen("#> assert ");
   if(line[0] != '(') {
-    printf("%s Failed to parse assert, expected '(' but got '%c'\n", LOG_ERROR, line[0]);
+    LOG_ERROR("Failed to parse assert, expected '(' but got '%c'", line[0]);
     return 1;
   }
 
@@ -38,6 +38,6 @@ int valid_assert(char *line)
     return 1;
   }
 
-  printf("%s Assertion failed:%s %s\n", LOG_ERROR, line, buffer);
+  LOG_ERROR("Assertion failed:%s %s", line, buffer);
   return 0;
 }

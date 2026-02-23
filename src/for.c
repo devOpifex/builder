@@ -20,7 +20,7 @@ char *replace_for(char *buffer, char *line)
   char *delimiter = strchr(buffer, '\n');
 
   if(delimiter == NULL) {
-    printf("%s Error: single line #> for loop\n", LOG_ERROR);
+    LOG_ERROR("Error: single line #> for loop");
     return "";
   }
 
@@ -33,7 +33,7 @@ char *replace_for(char *buffer, char *line)
   int end;
 
   if(sscanf(for_statement, "#> for %63s in %d:%d", token, &start, &end) != 3) {
-    printf("%s Error: invalid #> for statement\n", LOG_ERROR);
+    LOG_ERROR("Error: invalid #> for statement");
     return "";
   }
 

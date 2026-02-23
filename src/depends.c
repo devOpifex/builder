@@ -68,7 +68,7 @@ int process_depends(Value* depends)
 
     int installed = is_installed(name);
     if (!installed) {
-      printf("%s Package '%s' is not installed\n", LOG_ERROR, current->name);
+      LOG_ERROR("Package '%s' is not installed", current->name);
       result = 1;
       current = current->next;
       continue;
@@ -84,7 +84,7 @@ int process_depends(Value* depends)
     Version version_parsed = parse_version(version);
 
     if (!version_satisfies(installed_version_parsed, operator, version_parsed)) {
-      printf("%s '%s' is required but version '%s' is installed\n", LOG_ERROR, current->name, installed_version);
+      LOG_ERROR("'%s' is required but version '%s' is installed", current->name, installed_version);
       result = 1;
     }
 

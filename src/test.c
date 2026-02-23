@@ -13,7 +13,7 @@ Tests *create_test(char *description, char *expressions)
 {
   Tests *test = malloc(sizeof(Tests));
   if(test == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return NULL;
   }
 
@@ -108,13 +108,13 @@ static int create_test_directory(const char *path)
 {
   // Create tests/ directory
   if(mkdir("tests", 0755) == -1 && errno != EEXIST) {
-    printf("%s Failed to create tests/ directory: %s\n", LOG_ERROR, strerror(errno));
+    LOG_ERROR("Failed to create tests/ directory: %s", strerror(errno));
     return 1;
   }
 
   // Create tests/testthat/ directory
   if(mkdir("tests/testthat", 0755) == -1 && errno != EEXIST) {
-    printf("%s Failed to create tests/testthat/ directory: %s\n", LOG_ERROR, strerror(errno));
+    LOG_ERROR("Failed to create tests/testthat/ directory: %s", strerror(errno));
     return 1;
   }
 
@@ -178,19 +178,19 @@ void write_tests(Tests *tests, const char *src)
 
   FILE *f = fopen(test_filename, "w");
   if(f == NULL) {
-    printf("%s Failed to create test file: %s\n", LOG_ERROR, test_filename);
+    LOG_ERROR("Failed to create test file: %s", test_filename);
     free(test_filename);
     return;
   }
 
-  printf("%s Writing tests to %s\n", LOG_INFO, test_filename);
+  LOG_INFO("Writing tests to %s", test_filename);
 
   int tests_written = 0;
 
   Tests *current = tests;
   while(current != NULL) {
     if(current->expressions == NULL || strlen(current->expressions) == 0) {
-      printf("%s Skipping empty test: \"%s\"\n", LOG_WARNING, current->description);
+      LOG_WARNING("Skipping empty test: \"%s\"", current->description);
       Tests *next = current->next;
       free_test(current);
       current = next;
@@ -211,7 +211,7 @@ void write_tests(Tests *tests, const char *src)
   fclose(f);
 
   if(tests_written == 0) {
-    printf("%s No valid tests to write, removing %s\n", LOG_WARNING, test_filename);
+    LOG_WARNING("No valid tests to write, removing %s", test_filename);
     remove(test_filename);
   }
 

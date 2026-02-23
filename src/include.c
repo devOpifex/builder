@@ -22,7 +22,7 @@ void push_registry(Registry **registry, char *type, char *call)
   Registry *current = *registry;
   while(current != NULL) {
     if(strcmp(current->type, type) == 0) {
-      printf("%s Overriding reader for '%s'\n", LOG_WARNING, type);
+      LOG_WARNING("Overriding reader for '%s'", type);
       free(current->call);
       current->call = strdup(call);
       return;
@@ -153,7 +153,7 @@ char *include_replace(char *line, Plugins *plugins, char *file, Registry **regis
   const char *content = capture_path(registry, inc.type, inc.path);
 
   if(content == NULL) {
-    printf("%s Could not find reader for include:%s\n", LOG_ERROR, inc.type);
+    LOG_ERROR("Could not find reader for include:%s", inc.type);
     free_include(&inc);
     return line;
   }

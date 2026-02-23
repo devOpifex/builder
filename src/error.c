@@ -14,7 +14,7 @@ int catch_error(char* line)
 
   char *msg = match + strlen("#> error ");
 
-  printf("%s Error: %s\n", LOG_ERROR, msg);
+  LOG_ERROR("Error: %s", msg);
 
   return 1;
 }
@@ -29,7 +29,7 @@ void catch_warning(char* line)
 
   char *msg = match + strlen("#> warning ");
 
-  printf("%s Warning: %s\n", LOG_WARNING, msg);
+  LOG_WARNING("Warning: %s", msg);
 
   return;
 }
@@ -44,7 +44,7 @@ void catch_deprecated(char* line)
 
   char *msg = match + strlen("#> deprecated ");
 
-  printf("%s Deprecated: %s\n", LOG_WARNING, msg);
+  LOG_WARNING("Deprecated: %s", msg);
 
   return;
 }

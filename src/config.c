@@ -114,7 +114,7 @@ BuildContext *get_config(Registry **registry, char *profile)
 {
   FILE *fp = fopen("builder.ini", "r");
   if (fp == NULL) return NULL;
-  printf("%s Using config file: builder.ini\n", LOG_INFO);
+  LOG_INFO("Using config file: builder.ini");
 
   BuildContext *ctx = malloc(sizeof(BuildContext));
   if (ctx == NULL) {
@@ -151,7 +151,7 @@ BuildContext *get_config(Registry **registry, char *profile)
       // we have profiles in the config
       // but no profile was specified to cli
       if(profile == NULL) {
-        printf("%s No profile specified\n", LOG_ERROR);
+        LOG_ERROR("No profile specified");
         return NULL;
       }
       // we found a found a [profile]
@@ -164,7 +164,7 @@ BuildContext *get_config(Registry **registry, char *profile)
       profile_found = strcmp(p, profile) == 0;
 
       if(profile_found) {
-        printf("%s Using profile [%s]\n", LOG_INFO, p);
+        LOG_INFO("Using profile [%s]", p);
       }
       free(p);
       continue;
@@ -283,7 +283,7 @@ void free_config(BuildContext *ctx)
 void create_config(char *root)
 {
   if(root == NULL) {
-    printf("%s Failed to create config: root is NULL\n", LOG_ERROR);
+    LOG_ERROR("Failed to create config: root is NULL");
     return;
   }
 
@@ -294,7 +294,7 @@ void create_config(char *root)
 
   FILE *check = fopen(path, "r");
   if (check != NULL) {
-    printf("%s builder.ini already exists\n", LOG_INFO);
+    LOG_INFO("builder.ini already exists");
     free(path);
     fclose(check);
     return;
@@ -302,7 +302,7 @@ void create_config(char *root)
 
   FILE *fp = fopen(path, "w");
   if (fp == NULL) {
-    printf("%s builder.ini cannot be created at %s\n", LOG_INFO, path);
+    LOG_INFO("builder.ini cannot be created at %s", path);
     free(path);
     return;
   }
@@ -319,5 +319,5 @@ void create_config(char *root)
 
   fclose(fp);
 
-  printf("%s builder.ini created\n", LOG_INFO);
+  LOG_INFO("builder.ini created");
 }

@@ -13,7 +13,7 @@ void create_package(char *name)
 {
   int package = mkdir(name, 0755);
   if(package != 0) {
-    printf("%s Failed to create package: %s\n", LOG_ERROR, name);
+    LOG_ERROR("Failed to create package: %s", name);
     return;
   }
 
@@ -22,7 +22,7 @@ void create_package(char *name)
   strcpy(r, name);
   strcat(r, "/R");
   mkdir(r, 0755);
-  printf("%s Created R directory: %s\n", LOG_INFO, r);
+  LOG_INFO("Created R directory: %s", r);
   free(r);
 
   // create srcr directory
@@ -30,7 +30,7 @@ void create_package(char *name)
   strcpy(srcr, name);
   strcat(srcr, "/srcr");
   mkdir(srcr, 0755);
-  printf("%s Created srcr directory: %s\n", LOG_INFO, srcr);
+  LOG_INFO("Created srcr directory: %s", srcr);
   free(srcr);
 
   // .Rbuildignore
@@ -40,7 +40,7 @@ void create_package(char *name)
 
   FILE *build_ignore_file = fopen(build_ignore, "w");
   if(build_ignore_file == NULL) {
-    printf("%s Failed to create %s\n", LOG_ERROR, build_ignore);
+    LOG_ERROR("Failed to create %s", build_ignore);
     free(build_ignore);
     return;
   }
@@ -48,7 +48,7 @@ void create_package(char *name)
   fprintf(build_ignore_file, "^srcr/\n");
   fprintf(build_ignore_file, "^builder.ini\n");
   fclose(build_ignore_file);
-  printf("%s Creating %s, ignoring: %s\n", LOG_INFO, build_ignore, "srcr/ builder.ini");
+  LOG_INFO("Creating %s, ignoring: %s", build_ignore, "srcr/ builder.ini");
   free(build_ignore);
 
   // DESCRIPTION
@@ -58,7 +58,7 @@ void create_package(char *name)
 
   FILE *description_file = fopen(description, "w");
   if(description_file == NULL) {
-    printf("%s Failed to create %s\n", LOG_ERROR, description);
+    LOG_ERROR("Failed to create %s", description);
     free(description);
     return;
   }
@@ -72,7 +72,7 @@ void create_package(char *name)
   fprintf(description_file, "Encoding: UTF-8\n");
   fprintf(description_file, "Roxygen: list(markdown = TRUE)\n");
   fclose(description_file);
-  printf("%s Created %s\n", LOG_INFO, description);
+  LOG_INFO("Created %s", description);
   free(description);
 
   //
@@ -80,7 +80,7 @@ void create_package(char *name)
   char *copy = strdup(name);
   create_config(name);
 
-  printf("%s Created %s package skeleton\n", LOG_SUCCESS, copy);
+  LOG_SUCCESS("Created %s package skeleton", copy);
   printf("cd %s && builder --profile dev\n", copy);
   free(copy);
 }

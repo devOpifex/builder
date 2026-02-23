@@ -156,9 +156,7 @@ static void walk_function_def(SEXP expr, Environment *env, int pass, int line, c
     Binding *b = func_env->bindings;
     while (b != NULL) {
       if (!b->is_used && !is_excluded_name(b->name)) {
-        printf(
-          "%s Unused %s '%s' in function %s:%d\n", 
-          LOG_WARNING,
+        LOG_WARNING("Unused %s '%s' in function %s:%d",
           b->is_function ? "function" : "variable",
           b->name,
           b->file ? b->file : "",
@@ -301,7 +299,7 @@ static char* read_file(const char *path)
 
 int analyse_deadcode(RFile *files)
 {
-  printf("%s Running dead code analysis...\n", LOG_INFO);
+  LOG_INFO("Running dead code analysis...");
 
   Environment *global_env = env_create(NULL);
   if (global_env == NULL) return 1;
@@ -314,14 +312,14 @@ int analyse_deadcode(RFile *files)
     }
     char *content = read_file(current->dst);
     if (content == NULL) {
-      printf("%s Failed to read %s for dead code analysis\n", LOG_WARNING, current->dst);
+      LOG_WARNING("Failed to read %s for dead code analysis", current->dst);
       current = current->next;
       continue;
     }
 
     SEXP parsed = parse_code(content);
     if (parsed == R_NilValue) {
-      printf("%s Failed to parse %s for dead code analysis\n", LOG_WARNING, current->dst);
+      LOG_WARNING("Failed to parse %s for dead code analysis", current->dst);
       free(content);
       current = current->next;
       continue;
@@ -374,9 +372,7 @@ int analyse_deadcode(RFile *files)
   Binding *b = global_env->bindings;
   while (b != NULL) {
     if (!b->is_used && !is_excluded_name(b->name)) {
-      printf(
-        "%s Unused %s '%s' - %s:%d\n", 
-        LOG_WARNING,
+      LOG_WARNING("Unused %s '%s' - %s:%d",
         b->is_function ? "function" : "variable",
         b->name, 
         b->file ? b->file : "<unknown>",
@@ -388,9 +384,9 @@ int analyse_deadcode(RFile *files)
   }
 
   if (unused_count == 0) {
-    printf("%s No unused variables or functions detected\n", LOG_INFO);
+    LOG_INFO("No unused variables or functions detected");
   } else {
-    printf("%s Found %d unused variable(s)/function(s)\n", LOG_WARNING, unused_count);
+    LOG_WARNING("Found %d unused variable(s)/function(s)", unused_count);
   }
 
   env_free(global_env);

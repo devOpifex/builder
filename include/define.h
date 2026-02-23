@@ -29,7 +29,6 @@ void free_array(Define *arr);
 void capture_define(Define **defines, char *line, char *ns);
 char *define_replace(Define **defines, char *line);
 char *get_define_value(Define **defines, char *name);
-void print_defines(Define *defines);
 void *define_macro_init(char **macro);
 char* str_replace(const char *orig, const char *find, const char *replace);
 void push_macro(Define **defs, char *macro, char *ns);

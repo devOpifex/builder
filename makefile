@@ -42,7 +42,6 @@ CMD = ./bin/$(NAME) \
 	-input srcr \
 	-profile dev \
 	-DDEBUG -DTEST '"a string"' -DXXX 42 \
-	-deadcode \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
 	-strip \
@@ -52,7 +51,6 @@ CMD = ./bin/$(NAME) \
 CMD_DEBUG = ./bin/$(NAME)-debug \
 	-input srcr \
 	-DDEBUG -DTEST '"a string"' -DXXX 42 \
-	-deadcode \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
 	-strip \
@@ -83,7 +81,7 @@ uninstall:
 	rm -f $(DESTDIR)$(BINDIR)/$(NAME)
 
 dev: build
-	$(CMD)
+	time $(CMD)
 
 dryrun: build
 	$(CMD) -dry-run -diff

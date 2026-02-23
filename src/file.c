@@ -217,7 +217,7 @@ static char *make_dest_path(char *src, char *dst)
   char *path = malloc(l);
 
   if(path == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return NULL;
   }
 
@@ -246,7 +246,7 @@ int walk(char *src_dir, Callback func)
   
   source = opendir(src_dir);
   if (source == NULL) {
-    printf("%s Failed to open source directory: %s\n", LOG_ERROR, src_dir);
+    LOG_ERROR("Failed to open source directory: %s", src_dir);
     return 1;
   }
 
@@ -276,7 +276,7 @@ static RFile *create_rfile(char *src, char *dst, char *content, char *ns)
 {
   RFile *file = malloc(sizeof(RFile));
   if(file == NULL) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return NULL;
   }
 
@@ -421,7 +421,7 @@ static int prepend_import(RFile **files, char *import_spec, char ***seen, int *s
 {
   char *resolved_path = get_import_path(import_spec);
   if(resolved_path == NULL || strlen(resolved_path) == 0) {
-    printf("%s Failed to resolve import: %s\n", LOG_ERROR, import_spec);
+    LOG_ERROR("Failed to resolve import: %s", import_spec);
     free(resolved_path);
     return 0;
   }
@@ -435,7 +435,7 @@ static int prepend_import(RFile **files, char *import_spec, char ***seen, int *s
 
   FILE *file = fopen(resolved_path, "r");
   if(file == NULL) {
-    printf("%s Failed to open import: %s\n", LOG_ERROR, resolved_path);
+    LOG_ERROR("Failed to open import: %s", resolved_path);
     free(resolved_path);
     return 0;
   }
@@ -447,7 +447,7 @@ static int prepend_import(RFile **files, char *import_spec, char ***seen, int *s
   char *content = malloc(size + 1);
   int read_result = fread(content, 1, size, file);
   if (read_result != size) {
-    printf("%s Failed to read import: %s\n", LOG_ERROR, resolved_path);
+    LOG_ERROR("Failed to read import: %s", resolved_path);
     free(resolved_path);
     return 0;
   }
@@ -471,7 +471,7 @@ static int prepend_import(RFile **files, char *import_spec, char ***seen, int *s
   free_value(nested);
 
   push_rfile(files, resolved_path, NULL, content, ns);
-  printf("%s Import: %s\n", LOG_INFO, resolved_path);
+  LOG_INFO("Import: %s", resolved_path);
 
   free(content);
   free(resolved_path);
@@ -531,7 +531,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
   
   source = opendir(src_dir);
   if (source == NULL) {
-    printf("%s Failed to open source directory: %s\n", LOG_ERROR, src_dir);
+    LOG_ERROR("Failed to open source directory: %s", src_dir);
     return 0;
   }
 
@@ -598,7 +598,7 @@ static int first_pass(Arguments *args)
       free(line_number_str);
       int number_astr = asprintf(&line_number_str, "%d", line_number);
       if (number_astr == -1) {
-        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        LOG_ERROR("Failed to allocate memory");
         return 1;
       }
       overwrite(args->defs, "..LINE..", line_number_str);
@@ -646,10 +646,10 @@ static int first_pass(Arguments *args)
 
       if(strncmp(line, "#> endflight", 12) == 0) {
         in_preflight = 0;
-        printf("%s Running preflight checks\n", LOG_INFO);
+        LOG_INFO("Running preflight checks");
         SEXP result = evaluate(buffer->data);
         if(result == NULL) {
-          printf("%s Preflight checks failed\n", LOG_ERROR);
+          LOG_ERROR("Preflight checks failed");
           buffer_free(buffer);
           free(line);
           return 1;
@@ -701,7 +701,7 @@ static int second_pass(Arguments *args)
       current = current->next;
       continue;
     }
-    printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
+    LOG_INFO("Copying %s to %s", current->src, current->dst);
     overwrite(args->defs, "..FILE..", current->src);
 
     Buffer *buf = buffer_init();
@@ -717,7 +717,7 @@ static int second_pass(Arguments *args)
     if(args->prepend != NULL) {
       FILE *prepend_file = fopen(args->prepend, "r");
       if(prepend_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, args->prepend);
+        LOG_ERROR("Failed to open %s", args->prepend);
         return 1;
       }
       char prepend_buffer[1024];
@@ -803,7 +803,7 @@ static int second_pass(Arguments *args)
       free(line_number_str);
       int number_astr = asprintf(&line_number_str, "%d", line_number);
       if (number_astr == -1) {
-        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        LOG_ERROR("Failed to allocate memory");
         return 1;
       }
       overwrite(args->defs, "..LINE..", line_number_str);
@@ -864,7 +864,7 @@ static int second_pass(Arguments *args)
     if(args->append != NULL) {
       FILE *append_file = fopen(args->append, "r");
       if(append_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, args->append);
+        LOG_ERROR("Failed to open %s", args->append);
         return 1;
       }
       char app_buffer[1024];
@@ -889,7 +889,7 @@ static int second_pass(Arguments *args)
     } else {
       FILE *dst_file = fopen(current->dst, "w");
       if(dst_file == NULL) {
-        printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
+        LOG_ERROR("Failed to open %s", current->dst);
         return 1;
       }
       if(output != NULL) {
@@ -916,17 +916,18 @@ static int second_pass(Arguments *args)
   if(bundling && bundle_buf->size > 0) {
     FILE *bundle_file = fopen(args->bundle, "w");
     if(bundle_file == NULL) {
-      printf("%s Failed to open bundle file %s\n", LOG_ERROR, args->bundle);
+      LOG_ERROR("Failed to open bundle file %s", args->bundle);
       buffer_free(bundle_buf);
       return 1;
     }
     fputs(bundle_buf->data, bundle_file);
     fclose(bundle_file);
     buffer_free(bundle_buf);
-    printf("%s Bundled to %s\n", LOG_INFO, args->bundle);
-  } else {
-    buffer_free(bundle_buf);
+    LOG_INFO("Bundled to %s", args->bundle);
+    return 0;
   }
+  
+  buffer_free(bundle_buf);
 
   return 0;
 }

@@ -114,7 +114,7 @@ void increment_counter(Define** arr, char* line)
   counter++;
   int value_astr = asprintf(&value, "%d", counter);
   if (value_astr == -1) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return;
   }
   overwrite(arr, "..COUNTER..", value);
@@ -223,7 +223,7 @@ void push_macro(Define** defs, char* macro, char* ns)
   char** temp_args = extract_macro_args(macro, &temp_nargs);
   for (int i = 0; i < temp_nargs; i++) {
     if (temp_args[i][0] == '.') {
-      printf("%s Macro argument '%s' cannot start with '.'\n", LOG_ERROR, temp_args[i]);
+      LOG_ERROR("Macro argument '%s' cannot start with '.'", temp_args[i]);
       for (int j = 0; j < temp_nargs; j++) free(temp_args[j]);
       free(temp_args);
       free(original_macro);
@@ -271,7 +271,7 @@ void capture_define(Define** defines, char* line, char* ns)
     }
 
     if (get_define_value(defines, name) != NULL) {
-      printf("%s %s is already defined\n", LOG_WARNING, name);
+      LOG_WARNING("%s is already defined", name);
       return;
     }
 
@@ -411,7 +411,7 @@ static char* define_replace_once(Define** defines, char* line)
     char** args = extract_macro_args(current, &nargs);
 
     if (nargs != nargs_macro) {
-      printf("%s Macro %s has %d arguments but function %s has %d arguments\n", LOG_ERROR, name, nargs_macro, fn,
+      LOG_ERROR("Macro %s has %d arguments but function %s has %d arguments", name, nargs_macro, fn,
              nargs);
       // Cleanup before returning
       free(body_macro);
@@ -433,13 +433,13 @@ static char* define_replace_once(Define** defines, char* line)
       char* dblpat = NULL;
       int dblpat_astr = asprintf(&dblpat, "..%s", args_macro[i]);
       if (dblpat_astr == -1) {
-        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        LOG_ERROR("Failed to allocate memory");
         return current;
       }
       char* quoted = NULL;
       int quoted_astr = asprintf(&quoted, "\"%s\"", args[i]);
       if (quoted_astr == -1) {
-        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        LOG_ERROR("Failed to allocate memory");
         return current;
       }
       old_body = body_macro;
@@ -452,7 +452,7 @@ static char* define_replace_once(Define** defines, char* line)
       char* dotpat = NULL;
       int dotpat_astr = asprintf(&dotpat, ".%s", args_macro[i]);
       if (dotpat_astr == -1) {
-        printf("%s Failed to allocate memory\n", LOG_ERROR);
+        LOG_ERROR("Failed to allocate memory");
         return current;
       }
       old_body = body_macro;
@@ -523,7 +523,7 @@ char* define_replace(Define** defines, char* line)
   }
 
   if (depth == MAX_MACRO_DEPTH) {
-    printf("%s Max macro expansion depth (%d) reached, possible circular definition\n", LOG_WARNING, MAX_MACRO_DEPTH);
+    LOG_WARNING("Max macro expansion depth (%d) reached, possible circular definition", MAX_MACRO_DEPTH);
   }
 
   return current;
@@ -542,17 +542,6 @@ char* get_define_value(Define** defines, char* name)
   }
 
   return NULL;
-}
-
-void print_defines(Define* defines)
-{
-  if (defines == NULL) {
-    return;
-  }
-
-  for (int i = 0; i < defines->size; i++) {
-    printf("%s = %s\n", defines->name[i], defines->value[i]);
-  }
 }
 
 int enter_macro(char* line)

@@ -20,7 +20,7 @@ char *add_sourcemap(char *line, int line_number, char *filename)
   char *line_str = NULL;
   int line_ast = asprintf(&line_str, "# %s:%d", filename, line_number);
   if(line_ast == -1) {
-    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    LOG_ERROR("Failed to allocate memory");
     return NULL;
   }
 

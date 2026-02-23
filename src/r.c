@@ -12,7 +12,7 @@ void set_R_home()
 
   FILE *fp = popen("R RHOME", "r");
   if(fp == NULL) {
-    printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
+    LOG_ERROR("Failed to run R RHOME and R_HOME environment variables are not set");
     return;
   }
 
@@ -20,9 +20,9 @@ void set_R_home()
   if(fgets(path, sizeof(path), fp) != NULL) {
     path[strcspn(path, "\n")] = 0;
     setenv("R_HOME", path, 1);
-    printf("%s Setting R_HOME environment variable to `%s` - R RHOME\n", LOG_WARNING, path);
+    LOG_WARNING("Setting R_HOME environment variable to `%s` - R RHOME", path);
   } else {
-    printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
+    LOG_ERROR("Failed to run R RHOME and R_HOME environment variables are not set");
   }
 
   pclose(fp);
@@ -39,7 +39,7 @@ void set_R_share()
   char path[1024];
   if (fgets(path, sizeof(path), fp2) != NULL) {
     path[strcspn(path, "\n")] = '\0';
-    printf("%s Setting R_SHARE_DIR environment variable to `%s` - R.home(\"share\")\n", LOG_WARNING, path);
+    LOG_WARNING("Setting R_SHARE_DIR environment variable to `%s` - R.home(\"share\")", path);
     setenv("R_SHARE_DIR", path, 1);
   }
 
@@ -67,7 +67,7 @@ SEXP evaluate(char *expr)
 
   if (status != PARSE_OK) {
     UNPROTECT(2);
-    printf("%s Parsing expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
+    LOG_ERROR("Parsing expression `%s`", remove_trailing_newline(expr));
     return NULL;
   }
 
@@ -75,7 +75,7 @@ SEXP evaluate(char *expr)
 
   if (has_error) {
     UNPROTECT(3);
-    printf("%s Evaluating expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
+    LOG_ERROR("Evaluating expression `%s`", remove_trailing_newline(expr));
     return NULL;
   }
 
@@ -93,7 +93,7 @@ int evaluate_if(char *expr)
   }
 
   if(TYPEOF(result) != LGLSXP) {
-    printf("%s Expression `%s` did not evaluate to a logical value\n", LOG_ERROR, remove_trailing_newline(expr));
+    LOG_ERROR("Expression `%s` did not evaluate to a logical value", remove_trailing_newline(expr));
     return 0;
   }
 
@@ -109,7 +109,7 @@ const char *eval_string(char *expr)
   }
 
   if(TYPEOF(result) != STRSXP) {
-    printf("%s Expression `%s` did not evaluate to a character value\n", LOG_ERROR, remove_trailing_newline(expr));
+    LOG_ERROR("Expression `%s` did not evaluate to a character value", remove_trailing_newline(expr));
     return 0;
   }
 
