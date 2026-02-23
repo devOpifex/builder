@@ -46,9 +46,9 @@ void create_package(char *name)
   }
 
   fprintf(build_ignore_file, "^srcr/\n");
-  fprintf(build_ignore_file, "^builder.ini/\n");
+  fprintf(build_ignore_file, "^builder.ini\n");
   fclose(build_ignore_file);
-  printf("%s Creating %s, ignoring: %s\n", LOG_INFO, build_ignore, "srcr/ builder.ini/");
+  printf("%s Creating %s, ignoring: %s\n", LOG_INFO, build_ignore, "srcr/ builder.ini");
   free(build_ignore);
 
   // DESCRIPTION
