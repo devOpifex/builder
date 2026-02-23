@@ -37,7 +37,6 @@ static int build(BuildContext* ctx)
   }
 
   if (!resolve_imports(&files, ctx->imports)) {
-    printf("%s Failed to resolve imports\n", LOG_ERROR);
     free_rfile(files);
     free_array(defines);
     return 1;
@@ -45,7 +44,6 @@ static int build(BuildContext* ctx)
 
   int ok = process_depends(ctx->depends);
   if (ok) {
-    printf("%s Failed to process depends\n", LOG_ERROR);
     free_rfile(files);
     free_array(defines);
     return 1;
