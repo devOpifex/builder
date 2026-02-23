@@ -9,7 +9,6 @@ Instead of passing command-line arguments, you can use a `builder.ini` file in y
 ## Usage
 
 Create a `builder.ini` file, you can also call `builder -init` to create one.
-
 ```ini
 input: srcr/
 output: R/
@@ -82,15 +81,14 @@ Any settings placed **before** the first `[profile: ...]` header are common and 
 ```ini
 # Common settings (shared by all profiles)
 input: srcr/
+output: R/
 clean: true
 depends: dplyr
 
 [profile: dev]
-output: R/
 sourcemap: true
 
 [profile: prod]
-output: R/
 sourcemap: false
 strip: true
 ```
