@@ -112,6 +112,7 @@ int has_arg(int argc, char *argv[], char *arg)
 void get_definitions(Define *arr, int argc, char *argv[])
 {
   for (int i = 1; i < argc; i++){
+    // this is awful: need refactor
     if (strcmp(argv[i], "-noclean") == 0){
       continue;
     }
@@ -167,6 +168,26 @@ void get_definitions(Define *arr, int argc, char *argv[])
     }
 
     if(strcmp(argv[i], "-profile") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-help") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-init") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-bundle") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-reader") == 0){
       i++;
       continue;
     }
