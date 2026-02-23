@@ -213,6 +213,9 @@ int main(int argc, char* argv[])
 
   char* r_argv[] = {"R", "--silent", "--no-save"};
   Rf_initEmbeddedR(3, r_argv);
+  if (!LOG_VERBOSE) {
+    evaluate("sink(file('/dev/null', open='wt'))");
+  }
 
   Registry* registry = initialize_registry();
 
