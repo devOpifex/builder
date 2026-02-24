@@ -21,29 +21,83 @@
 <body>
   <main>
     <nav class="top-nav">
-      <a href="index.html">Home</a>
-      <a href="installation.html">Install</a>
-      <a href="get-started.html">Get started</a>
-      <details class="dropdown">
-        <summary>Docs</summary>
-        <div class="dropdown-content">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="installation.html">Install</a>
+        <a href="get-started.html">Get started</a>
+        <details class="dropdown">
+          <summary>Docs</summary>
+          <div class="dropdown-content">
+            <div class="dropdown-group">
+              <span class="dropdown-group-title">Getting Started</span>
+              <a href="config.html">Config</a>
+              <a href="architecture.html">Architecture</a>
+              <a href="packages.html">Packages</a>
+            </div>
+            <div class="dropdown-group">
+              <span class="dropdown-group-title">Directives</span>
+              <a href="directives.html">Directives</a>
+              <a href="macros.html">Macros</a>
+              <a href="include.html">Include</a>
+              <a href="headers.html">Headers</a>
+              <a href="import.html">Import</a>
+            </div>
+            <div class="dropdown-group">
+              <span class="dropdown-group-title">Language Features</span>
+              <a href="fstrings.html">F-strings</a>
+              <a href="const.html">Const</a>
+              <a href="deconstruct.html">Deconstruct</a>
+            </div>
+            <div class="dropdown-group">
+              <span class="dropdown-group-title">Build</span>
+              <a href="preflight.html">Preflight</a>
+              <a href="depends.html">Depends</a>
+              <a href="dry-run.html">Dry Run</a>
+              <a href="plugins.html">Plugins</a>
+              <a href="tests.html">Tests</a>
+              <a href="prepend-append.html">Prepend</a>
+            </div>
+            <div class="dropdown-group">
+              <span class="dropdown-group-title">Advanced</span>
+              <a href="deadcode.html">Dead Code</a>
+              <a href="sourcemap.html">Source Map</a>
+              <a href="bundle.html">Bundle</a>
+              <a href="watch.html">Watch</a>
+              <a href="syntax-highlighting.html">Highlighting</a>
+              <a href="ci.html">CI</a>
+            </div>
+          </div>
+        </details>
+      </div>
+      <details class="mobile-menu">
+        <summary class="hamburger">&#9776;</summary>
+        <div class="mobile-menu-content">
+          <a href="index.html">Home</a>
+          <a href="installation.html">Install</a>
+          <a href="get-started.html">Get started</a>
+          <hr class="mobile-menu-divider" />
+          <span class="dropdown-group-title">Getting Started</span>
           <a href="config.html">Config</a>
           <a href="architecture.html">Architecture</a>
           <a href="packages.html">Packages</a>
+          <span class="dropdown-group-title">Directives</span>
           <a href="directives.html">Directives</a>
           <a href="macros.html">Macros</a>
           <a href="include.html">Include</a>
           <a href="headers.html">Headers</a>
           <a href="import.html">Import</a>
+          <span class="dropdown-group-title">Language Features</span>
           <a href="fstrings.html">F-strings</a>
           <a href="const.html">Const</a>
           <a href="deconstruct.html">Deconstruct</a>
+          <span class="dropdown-group-title">Build</span>
           <a href="preflight.html">Preflight</a>
           <a href="depends.html">Depends</a>
           <a href="dry-run.html">Dry Run</a>
           <a href="plugins.html">Plugins</a>
           <a href="tests.html">Tests</a>
           <a href="prepend-append.html">Prepend</a>
+          <span class="dropdown-group-title">Advanced</span>
           <a href="deadcode.html">Dead Code</a>
           <a href="sourcemap.html">Source Map</a>
           <a href="bundle.html">Bundle</a>

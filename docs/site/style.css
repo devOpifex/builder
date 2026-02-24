@@ -129,19 +129,57 @@ main {
   }
 }
 
+/* Navbar: sticky bar */
+nav.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #191919;
+  border-bottom: 1px solid #333;
+  padding: 0.6rem 0;
+  margin: -2rem -1.5rem 0;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Desktop nav links row */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-links > a {
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.nav-links > a:hover {
+  background-color: rgba(119, 136, 170, 0.1);
+}
+
+/* Dropdown trigger */
 .dropdown {
   position: relative;
-  margin-right: 3rem;
-  float: right;
 }
 
 .dropdown summary {
   cursor: pointer;
   color: #7788aa;
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  list-style: none;
 }
 
 .dropdown summary:hover {
   color: #789978;
+  background-color: rgba(119, 136, 170, 0.1);
 }
 
 .dropdown summary::marker {
@@ -153,32 +191,128 @@ main {
 }
 
 .dropdown summary::after {
-  content: " ▾";
+  content: " \25BE";
+  font-size: 0.75em;
+  opacity: 0.6;
 }
 
 .dropdown[open] summary::after {
-  content: " ▴";
+  content: " \25B4";
 }
 
+/* Dropdown panel: compact multi-column */
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #080808;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 0.2rem 1rem;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 0.75rem;
+  columns: 3;
+  column-gap: 0.5rem;
+  min-width: 480px;
 }
 
 .dropdown[open] .dropdown-content {
   display: block;
-  z-index: 1;
+  z-index: 200;
 }
 
-nav.top-nav > a {
-  padding-right: 0.75rem;
+/* Dropdown group */
+.dropdown-group {
+  break-inside: avoid;
+  padding-bottom: 0.6rem;
+}
+
+.dropdown-group-title {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #789978;
+  padding: 0.3rem 0.6rem 0.15rem;
+  white-space: nowrap;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(119, 136, 170, 0.12);
+  color: #789978;
+}
+
+/* Mobile hamburger menu - hidden on desktop */
+.mobile-menu {
+  display: none;
+}
+
+.hamburger {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #7788aa;
+  list-style: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.hamburger:hover {
+  color: #789978;
+  background-color: rgba(119, 136, 170, 0.1);
+}
+
+.hamburger::marker {
+  content: "";
+}
+
+.hamburger::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #111;
+  border-bottom: 1px solid #333;
+  padding: 0.5rem 1rem 1rem;
+  z-index: 200;
+}
+
+.mobile-menu-content > a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.mobile-menu-content > a:hover {
+  background-color: rgba(119, 136, 170, 0.12);
+  color: #789978;
+}
+
+.mobile-menu-content .dropdown-group-title {
+  margin-top: 0.3rem;
+}
+
+.mobile-menu-divider {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 0.5rem 0;
 }
 
 /* Content wrapper with sidebar layout */
@@ -192,7 +326,7 @@ nav.top-nav > a {
 .toc-sidebar {
   flex: 0 0 220px;
   position: sticky;
-  top: 1rem;
+  top: 4rem;
   align-self: flex-start;
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
@@ -299,6 +433,20 @@ h6:hover .heading-anchor {
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  nav.top-nav {
+    margin: -1.5rem -1rem 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .content-wrapper {
     flex-direction: column;
   }
@@ -324,5 +472,13 @@ h6:hover .heading-anchor {
 
   .nav-spacer {
     display: none;
+  }
+}
+
+/* Medium screens: 2-column dropdown */
+@media (max-width: 900px) and (min-width: 769px) {
+  .dropdown-content {
+    columns: 2;
+    min-width: 340px;
   }
 }
