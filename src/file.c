@@ -9,6 +9,7 @@
 #include "preflight.h"
 #include "sourcemap.h"
 #include "plugins.h"
+#include "foreach.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -706,12 +707,14 @@ static int second_pass(Arguments *args)
 
     Buffer *buf = buffer_init();
     Buffer *for_buf = buffer_init();
+    Buffer *foreach_buf = buffer_init();
     int line_number = 0;
     char *line_number_str = NULL;
     int should_write = 1;
     int branch_taken = 0;
     int in_macro = 0;
     int in_for = 0;
+    int in_foreach = 0;
     int err = 0;
 
     if(args->prepend != NULL) {
@@ -777,6 +780,27 @@ static int second_pass(Arguments *args)
       if(strncmp(trimmed, "#> import ", 10) == 0) {
         free(line);
         continue;
+      }
+
+      if(enter_foreach(trimmed)) {
+        in_foreach = 1;
+        buffer_reset(foreach_buf);
+        buffer_append_nl(foreach_buf, line);
+        free(line);
+        continue;
+      }
+
+      if(in_foreach && !exit_foreach(trimmed)) {
+        buffer_append_nl(foreach_buf, line);
+        free(line);
+        continue;
+      }
+
+      if(exit_foreach(trimmed)) {
+        char *expanded = replace_foreach(foreach_buf->data, line);
+        free(line);
+        line = expanded;
+        in_foreach = 0;
       }
 
       if(enter_for(trimmed)) {

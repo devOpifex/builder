@@ -183,6 +183,27 @@ validate_col_5 <- function(x) check(x$col5)
 
 The range is inclusive on both ends. Multiple occurrences of `..variable..` in each line are all replaced.
 
+## #> foreach
+
+Generate repetitive code by iterating over a comma-separated list of values. The loop variable is replaced using the `..variable..` syntax within the loop body.
+
+**Syntax:** `#> foreach VARIABLE in value1, value2, ... #> endforeach`
+
+```r
+#> foreach v in hello, world
+print_..v.. <- \() printf("..v..")
+#> endforeach
+```
+
+Expands to:
+
+```r
+print_hello <- \() printf("hello")
+print_world <- \() printf("world")
+```
+
+This is similar to `#> for` but iterates over string values instead of a numeric range. Multiple occurrences of `..variable..` in each line are all replaced.
+
 ## Nesting Limitation
 
 Nested conditionals are **not supported**. Each `#> ifdef`/`#> ifndef`/`#> if` block must be independent:

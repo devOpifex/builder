@@ -35,6 +35,7 @@ FILES = src/main.c \
 	src/create.c \
 	src/assert.c \
 	src/buffer.c \
+	src/foreach.c \
 	src/config.c
 
 # Development commands
