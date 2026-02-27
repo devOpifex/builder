@@ -51,7 +51,9 @@ plugin: pkg1::fn1 pkg2::fn2
 
 A plugin is an R function that returns a list of lifecycle methods. Each method is called at a specific point during the build process.
 
-See [builder.air](https://github.com/devOpifex/builder.air) for a real-world example plugin.
+See [builder.air](https://github.com/devOpifex/builder.air), and 
+[fassplyr](https://github.com/devOpifex/fassplyr)
+for real-world examples.
 
 ### Lifecycle Methods
 
