@@ -26,6 +26,7 @@ pages=(
   tests
   prepend-append
   deadcode
+  s7
   sourcemap
   watch
   syntax-highlighting

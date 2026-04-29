@@ -1,6 +1,7 @@
 pre,
 code {
   background-color: #080808;
+  padding: 0.1rem;
 }
 
 pre {
@@ -156,7 +157,9 @@ nav.top-nav {
   padding: 0.35rem 0.7rem;
   border-radius: 4px;
   text-decoration: none;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .nav-links > a:hover {
@@ -173,7 +176,9 @@ nav.top-nav {
   color: #7788aa;
   padding: 0.35rem 0.7rem;
   border-radius: 4px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
   list-style: none;
 }
 
@@ -245,7 +250,9 @@ nav.top-nav {
   text-decoration: none;
   font-size: 0.9rem;
   white-space: nowrap;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .dropdown-content a:hover {
@@ -265,7 +272,9 @@ nav.top-nav {
   list-style: none;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .hamburger:hover {
@@ -297,7 +306,9 @@ nav.top-nav {
   padding: 0.45rem 0.6rem;
   text-decoration: none;
   border-radius: 4px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .mobile-menu-content > a:hover {
@@ -376,7 +387,12 @@ article {
 }
 
 /* Heading anchor links */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   position: relative;
 }
 
@@ -418,7 +434,9 @@ h6:hover .heading-anchor {
   border: 1px solid #444444;
   border-radius: 4px;
   text-decoration: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .nav-prev:hover,
