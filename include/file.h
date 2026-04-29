@@ -20,6 +20,7 @@ typedef int(*Callback)(char *src);
 
 struct Arguments_t {
   int deadcode;
+  int s7;
   int sourcemap;
   int dry_run;
   int strip;

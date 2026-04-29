@@ -20,6 +20,7 @@ typedef struct {
   Registry *registry;
   int argc;
   int deadcode;
+  int s7;
   int must_clean;
   int sourcemap;
   int watch;

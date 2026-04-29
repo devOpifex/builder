@@ -135,6 +135,7 @@ BuildContext *get_config(Registry **registry, char *profile)
   ctx->registry = NULL;
   ctx->depends = NULL;
   ctx->deadcode = 0;
+  ctx->s7 = 0;
   ctx->sourcemap = 0;
   ctx->must_clean = 1;
   ctx->watch = 0;
@@ -192,6 +193,11 @@ BuildContext *get_config(Registry **registry, char *profile)
 
     if (strstr(line, "deadcode:") != NULL) {
       ctx->deadcode = get_bool(line);
+      continue;
+    }
+
+    if (strstr(line, "S7:") != NULL) {
+      ctx->s7 = get_bool(line);
       continue;
     }
 

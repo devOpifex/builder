@@ -59,6 +59,7 @@ static int build(BuildContext* ctx)
                     .bundle = ctx->bundle,
                     .sourcemap = ctx->sourcemap,
                     .deadcode = ctx->deadcode,
+                    .s7 = ctx->s7,
                     .registry = &ctx->registry,
                     .dry_run = ctx->dry_run,
                     .strip = ctx->strip,
@@ -146,6 +147,7 @@ int main(int argc, char* argv[])
         "  -watch                  Watch input directory and rebuild on "
         "changes\n");
     printf("  -deadcode               Enable dead variable/function detection\n");
+    printf("  -S7                     Enable S7 class/property static checks\n");
     printf("  -sourcemap              Enable source map generation\n");
     printf(
         "  -dry-run                Build to temporary directory without "
@@ -373,6 +375,11 @@ int main(int argc, char* argv[])
     deadcode = cfg->deadcode;
   }
 
+  int s7 = has_arg(argc, argv, "-S7");
+  if (!s7 && cfg != NULL) {
+    s7 = cfg->s7;
+  }
+
   int sourcemap = has_arg(argc, argv, "-sourcemap");
   if (!sourcemap && cfg != NULL) {
     sourcemap = cfg->sourcemap;
@@ -417,6 +424,7 @@ int main(int argc, char* argv[])
     .append = append,
     .bundle = bundle,
     .deadcode = deadcode,
+    .s7 = s7,
     .sourcemap = sourcemap,
     .must_clean = must_clean,
     .watch = watch_mode,

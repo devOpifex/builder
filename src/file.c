@@ -23,6 +23,7 @@
 #include "r.h"
 #include "buffer.h"
 #include "deadcode.h"
+#include "s7check.h"
 
 int exists(char *path)
 {
@@ -971,6 +972,10 @@ int two_pass(Arguments *args)
 
   if(args->deadcode) {
     analyse_deadcode(args->files);
+  }
+
+  if(args->s7) {
+    analyse_s7(args->files);
   }
 
   return 0;

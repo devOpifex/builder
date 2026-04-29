@@ -28,6 +28,7 @@ FILES = src/main.c \
 	src/plugins.c \
 	src/const.c \
 	src/deadcode.c \
+	src/s7check.c \
 	src/error.c \
 	src/sourcemap.c \
 	src/watch.c \
