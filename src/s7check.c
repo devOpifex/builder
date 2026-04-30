@@ -135,13 +135,18 @@ static S7Class* find_class(S7Class *list, const char *name)
   return NULL;
 }
 
-static S7Prop* find_prop(S7Class *cls, const char *name)
+static S7Prop* find_prop(S7Class *all, S7Class *cls, const char *name)
 {
-  if (cls == NULL) return NULL;
-  S7Prop *p = cls->props;
-  while (p != NULL) {
-    if (strcmp(p->name, name) == 0) return p;
-    p = p->next;
+  // Walk up the parent chain so inherited properties are visible.
+  // Bound the depth to defend against accidental cycles in user code.
+  for (int depth = 0; cls != NULL && depth < 64; depth++) {
+    S7Prop *p = cls->props;
+    while (p != NULL) {
+      if (strcmp(p->name, name) == 0) return p;
+      p = p->next;
+    }
+    if (cls->parent_name == NULL) return NULL;
+    cls = find_class(all, cls->parent_name);
   }
   return NULL;
 }
@@ -168,6 +173,7 @@ static void free_classes(S7Class *cls)
       p = next_p;
     }
     free(cls->var_name);
+    free(cls->parent_name);
     free(cls);
     cls = next_cls;
   }
@@ -202,15 +208,19 @@ static void collect_class_def(SEXP expr, S7Class **classes)
   if (TYPEOF(rhs) != LANGSXP) return;
   if (!call_head_matches(CAR(rhs), "new_class", "S7")) return;
 
-  // Find properties = list(...) argument
+  // Find properties = list(...) and parent = ... arguments
   SEXP args = CDR(rhs);
   SEXP props_arg = R_NilValue;
+  SEXP parent_arg = R_NilValue;
   while (args != R_NilValue) {
     SEXP tag = TAG(args);
-    if (tag != R_NilValue && TYPEOF(tag) == SYMSXP &&
-        strcmp(CHAR(PRINTNAME(tag)), "properties") == 0) {
-      props_arg = CAR(args);
-      break;
+    if (tag != R_NilValue && TYPEOF(tag) == SYMSXP) {
+      const char *tag_name = CHAR(PRINTNAME(tag));
+      if (strcmp(tag_name, "properties") == 0) {
+        props_arg = CAR(args);
+      } else if (strcmp(tag_name, "parent") == 0) {
+        parent_arg = CAR(args);
+      }
     }
     args = CDR(args);
   }
@@ -222,9 +232,29 @@ static void collect_class_def(SEXP expr, S7Class **classes)
   const char *cls_name = CHAR(PRINTNAME(lhs));
   if (find_class(*classes, cls_name) != NULL) return;
 
+  // Extract parent class name. Accepts a bare symbol (Animal) or a
+  // namespaced reference (S7::S7_object); anything else is left NULL.
+  const char *parent_name = NULL;
+  if (parent_arg != R_NilValue) {
+    if (TYPEOF(parent_arg) == SYMSXP) {
+      parent_name = CHAR(PRINTNAME(parent_arg));
+    } else if (TYPEOF(parent_arg) == LANGSXP) {
+      SEXP op = CAR(parent_arg);
+      if (TYPEOF(op) == SYMSXP &&
+          (strcmp(CHAR(PRINTNAME(op)), "::") == 0 ||
+           strcmp(CHAR(PRINTNAME(op)), ":::") == 0)) {
+        SEXP fn_sym = CADDR(parent_arg);
+        if (TYPEOF(fn_sym) == SYMSXP) {
+          parent_name = CHAR(PRINTNAME(fn_sym));
+        }
+      }
+    }
+  }
+
   S7Class *cls = malloc(sizeof(S7Class));
   if (cls == NULL) return;
   cls->var_name = strdup(cls_name);
+  cls->parent_name = parent_name ? strdup(parent_name) : NULL;
   cls->props = NULL;
   cls->next = *classes;
   *classes = cls;
@@ -280,7 +310,7 @@ static void walk_collect(SEXP expr, S7Class **classes)
   }
 }
 
-static void check_call_against_class(SEXP call, S7Class *cls,
+static void check_call_against_class(SEXP call, S7Class *all, S7Class *cls,
                                      int line, const char *file)
 {
   SEXP a = CDR(call);
@@ -289,7 +319,7 @@ static void check_call_against_class(SEXP call, S7Class *cls,
     SEXP val = CAR(a);
     if (tag != R_NilValue && TYPEOF(tag) == SYMSXP) {
       const char *prop_name = CHAR(PRINTNAME(tag));
-      S7Prop *p = find_prop(cls, prop_name);
+      S7Prop *p = find_prop(all, cls, prop_name);
       if (p == NULL) {
         LOG_WARNING("Unknown S7 property '%s' for class '%s' - %s:%d",
                     prop_name, cls->var_name, file, line);
@@ -307,7 +337,7 @@ static void check_call_against_class(SEXP call, S7Class *cls,
   }
 }
 
-static void check_at_access(SEXP at_call, S7Instance *instances,
+static void check_at_access(SEXP at_call, S7Class *all, S7Instance *instances,
                             int line, const char *file, SEXP assigned_value)
 {
   SEXP inst_sym = CADR(at_call);
@@ -320,7 +350,7 @@ static void check_at_access(SEXP at_call, S7Instance *instances,
   S7Instance *ins = find_instance(instances, iv);
   if (ins == NULL) return;
 
-  S7Prop *p = find_prop(ins->cls, pv);
+  S7Prop *p = find_prop(all, ins->cls, pv);
   if (p == NULL) {
     LOG_WARNING("Unknown S7 property '%s' for class '%s' - %s:%d",
                 pv, ins->cls->var_name, file, line);
@@ -368,7 +398,7 @@ static void walk_check(SEXP expr, S7Class *classes, S7Instance **instances,
         SEXP lhs_head = CAR(lhs);
         if (TYPEOF(lhs_head) == SYMSXP &&
             strcmp(CHAR(PRINTNAME(lhs_head)), "@") == 0) {
-          check_at_access(lhs, *instances, line, file, rhs);
+          check_at_access(lhs, classes, *instances, line, file, rhs);
           walk_check(rhs, classes, instances, line, file);
           return;
         }
@@ -388,7 +418,7 @@ static void walk_check(SEXP expr, S7Class *classes, S7Instance **instances,
               ni->next = *instances;
               *instances = ni;
             }
-            check_call_against_class(rhs, cls, line, file);
+            check_call_against_class(rhs, classes, cls, line, file);
             walk_args(CDR(rhs), classes, instances, line, file);
             return;
           }
@@ -402,14 +432,14 @@ static void walk_check(SEXP expr, S7Class *classes, S7Instance **instances,
 
     if (TYPEOF(head) == SYMSXP &&
         strcmp(CHAR(PRINTNAME(head)), "@") == 0) {
-      check_at_access(expr, *instances, line, file, R_NilValue);
+      check_at_access(expr, classes, *instances, line, file, R_NilValue);
       return;
     }
 
     if (TYPEOF(head) == SYMSXP) {
       S7Class *cls = find_class(classes, CHAR(PRINTNAME(head)));
       if (cls != NULL) {
-        check_call_against_class(expr, cls, line, file);
+        check_call_against_class(expr, classes, cls, line, file);
         walk_args(CDR(expr), classes, instances, line, file);
         return;
       }

@@ -12,6 +12,7 @@ typedef struct S7Prop {
 
 typedef struct S7Class {
     char *var_name;
+    char *parent_name;
     S7Prop *props;
     struct S7Class *next;
 } S7Class;

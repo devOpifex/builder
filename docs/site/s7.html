@@ -204,8 +204,6 @@
         Mapping</a></li>
         <li><a href="#limitations"
         id="toc-limitations">Limitations</a></li>
-        <li><a href="#best-practices" id="toc-best-practices">Best
-        Practices</a></li>
         </ul></li>
         </ul>
       </aside>
@@ -374,10 +372,6 @@
         warning.</p>
         <h2 id="limitations">Limitations</h2>
         <ul>
-        <li><strong>Parent classes</strong>:
-        <code>parent = ParentCls</code> is not yet followed. Properties
-        inherited from a parent class are not visible to the
-        checker.</li>
         <li><strong>Cross-file flow</strong>: only
         <code>instance &lt;- Cls(...)</code> bindings are tracked. If
         <code>instance</code> comes from a function call, an
@@ -397,17 +391,6 @@
         <a href="deadcode.html"><code>-deadcode</code></a>) since the
         post-strip output’s lines no longer match the original
         source.</li>
-        </ul>
-        <h2 id="best-practices">Best Practices</h2>
-        <ul>
-        <li>Enable <code>-S7</code> in your <code>dev</code> profile so
-        it runs alongside the rest of the build, then leave it off (or
-        enable selectively) in <code>prod</code>.</li>
-        <li>Treat warnings as informational — review each before
-        changing code, especially in code paths that mix S7 with dynamic
-        dispatch.</li>
-        <li>Pair with <a href="deadcode.html"><code>-deadcode</code></a>
-        for broader static coverage.</li>
         </ul>
         <footer class="page-nav">
                     <a href="deadcode.html" class="nav-prev">← Previous</a>
